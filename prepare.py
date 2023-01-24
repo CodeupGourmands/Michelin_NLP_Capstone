@@ -145,7 +145,7 @@ def process_nl(document_series: pd.Series,
     return ret_df
 
 
-def create_features(df:pd.DataFrame)->pd.DataFrame:
+def create_features(df: pd.DataFrame) -> pd.DataFrame:
     '''
     This function takes in the dataframe, drops unnecessary columns,
     and creates new columns/features for exploration and potential
