@@ -42,4 +42,3 @@ def get_michelin_pages():
             continue
     df['data'] = output
     return df
-
