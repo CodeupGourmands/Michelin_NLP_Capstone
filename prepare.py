@@ -15,7 +15,7 @@ EXTRA_WORDS: List[str] = ['dish', 'restaurant',
 EXCLUDE_WORDS: List[str] = []
 
 
-def change_dtype_str(df):
+def change_dtype_str(df: pd.DataFrame) -> pd.DataFrame:
     '''
     ## Description:
     This is a custom Function to change dtype to string
