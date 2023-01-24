@@ -137,6 +137,5 @@ def process_nl(document_series: pd.Series,
     ret_df = pd.DataFrame()
     ret_df['clean'] = document_series.apply(
         squeaky_clean, exclude_words=exclude_words, extra_words=extra_words)
-    ret_df['stemmed'] = ret_df['clean'].apply(stem)
     ret_df['lemmatized'] = ret_df['clean'].apply(lemmatize)
     return ret_df
