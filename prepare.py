@@ -1,6 +1,6 @@
 import re
 import unicodedata
-from typing import List
+from typing import List, Union, Tuple
 
 import nltk
 import numpy as np
@@ -211,3 +211,25 @@ def tvt_split(df: pd.DataFrame,
         train_validate, test_size=validate_split,
         random_state=911, stratify=strat)
     return train, validate, test
+
+
+def prepare_michelin(df: pd.DataFrame,
+                     split: bool = True) -> Union[pd.DataFrame,
+                                                  Tuple[pd.DataFrame,
+                                                        pd.DataFrame,
+                                                        pd.DataFrame]]:
+    '''
+    Prepares Michelin DataFrame
+    ## Parameters
+    df: `DataFrame` with Michelin data
+    split: Boolean for whether or not to split the data, default True
+    ## Returns
+    either a DataFrame or a tuple of the Train, Validate, and Test
+    `DataFrame`
+    '''
+    df = create_features(df)
+    df = change_dtype_str(df)
+    df = pd.concat([df, process_nl(df.data)], axis=1)
+    if split:
+        return tvt_split(df)
+    return df
