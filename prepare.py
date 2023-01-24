@@ -6,11 +6,34 @@ import nltk
 import numpy as np
 import pandas as pd
 from nltk.corpus import stopwords as stpwrds
+from sklearn.model_selection import train_test_split
 
 stopwords = stpwrds.words('english')
 
-EXTRA_WORDS = []
-EXCLUDE_WORDS = []
+EXTRA_WORDS: List[str] = ['dish', 'restaurant',
+                          'dining', 'chef', 'menu', 'cuisine']
+EXCLUDE_WORDS: List[str] = []
+
+
+def change_dtype_str(df: pd.DataFrame) -> pd.DataFrame:
+    '''
+    ## Description:
+    This is a custom Function to change dtype to string
+        as appropraiate for this project.
+    ## Arguments:
+    df = DataFrame
+    ## Returns:
+    df - DataFrame
+    '''
+    df.name = df.name.fillna('').astype('string')
+    df.address = df.address.fillna('').astype('string')
+    df.location = df.location.fillna('').astype('string')
+    df.cuisine = df.cuisine.fillna('').astype('string')
+    df.facilities_and_services = df.facilities_and_services.fillna(
+        'NONE').astype('string')
+    df.award = df.award.fillna('').astype('string')
+    df.data = df.data.fillna('').astype('string')
+    return df
 
 
 def clean_michelin(df: pd.DataFrame) -> pd.DataFrame:
@@ -123,8 +146,8 @@ def squeaky_clean(string_to_clean: str,
 
 
 def process_nl(document_series: pd.Series,
-               extra_words: List[str] = [],
-               exclude_words: List[str] = []) -> pd.DataFrame:
+               extra_words: List[str] = EXTRA_WORDS,
+               exclude_words: List[str] = EXCLUDE_WORDS) -> pd.DataFrame:
     '''
     cleans, stems, and lemmatizes given series of document strings
     ## Parameters
@@ -136,6 +159,55 @@ def process_nl(document_series: pd.Series,
     '''
     ret_df = pd.DataFrame()
     ret_df['clean'] = document_series.apply(
-        squeaky_clean, exclude_words=exclude_words, extra_words=extra_words)
-    ret_df['lemmatized'] = ret_df['clean'].apply(lemmatize)
+        squeaky_clean,
+        exclude_words=exclude_words,
+        extra_words=extra_words).astype('string')
+    ret_df['lemmatized'] = ret_df['clean'].apply(lemmatize).astype('string')
     return ret_df
+
+
+def create_features(df: pd.DataFrame) -> pd.DataFrame:
+    '''
+    This function takes in the dataframe, drops unnecessary columns,
+    and creates new columns/features for exploration and potential
+    classification purposes. It returns the dataframe with applications
+    '''
+    # Dropping unnecessary columns
+    df = df.drop(['phone_number', 'website_url'], axis=1)
+
+    # Lower case all column values if column is object/string type
+    df = df.apply(lambda x: x.str.lower() if (x.dtype == 'object') else x)
+
+    # Turn NaN values in price to 'nothing', so that it can be recast
+    df['price'] = df['price'].fillna('').astype('str')
+    # Casting a new column, price level, using length of column
+    df['price_level'] = df['price'].apply(lambda x: len(x))
+    # impute price level "0" with the mode for this column
+    mode = df.price_level.mode()[0]
+    df['price_level'] = df['price_level'].replace(0, mode)
+
+    # splitting location columns into two columns
+    df[['city', 'country']] = df['location'].str.split(', ', 1, expand=True)
+    # Turn cities into city-states, impute these into country column
+    df['country'] = np.where(pd.isna(df['country']), df['city'], df['country'])
+
+    return df
+
+
+def tvt_split(df: pd.DataFrame,
+              stratify: str = None,
+              tv_split: float = .2,
+              validate_split: int = .3):
+    '''tvt_split takes a pandas DataFrame,
+    a string specifying the variable to stratify over,
+    as well as 2 floats where 0 < f < 1 and
+    returns a train, validate, and test split of the DataFame,
+    split by tv_split initially and validate_split thereafter. '''
+    strat = df[stratify]
+    train_validate, test = train_test_split(
+        df, test_size=tv_split, random_state=911, stratify=strat)
+    strat = train_validate[stratify]
+    train, validate = train_test_split(
+        train_validate, test_size=validate_split,
+        random_state=911, stratify=strat)
+    return train, validate, test
