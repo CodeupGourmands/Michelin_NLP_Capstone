@@ -6,6 +6,7 @@ import nltk
 import numpy as np
 import pandas as pd
 from nltk.corpus import stopwords as stpwrds
+from sklearn.model_selection import train_test_split
 
 stopwords = stpwrds.words('english')
 
@@ -167,3 +168,20 @@ def create_features(df):
     df['country'] = np.where(pd.isna(df['country']), df['city'], df['country'])
 
     return df
+def tvt_split(df: pd.DataFrame,
+              stratify: str = None,
+              tv_split: float = .2,
+              validate_split: int = .3):
+    '''tvt_split takes a pandas DataFrame,
+    a string specifying the variable to stratify over,
+    as well as 2 floats where 0 < f < 1 and
+    returns a train, validate, and test split of the DataFame,
+    split by tv_split initially and validate_split thereafter. '''
+    strat = df[stratify]
+    train_validate, test = train_test_split(
+        df, test_size=tv_split, random_state=911, stratify=strat)
+    strat = train_validate[stratify]
+    train, validate = train_test_split(
+        train_validate, test_size=validate_split,
+        random_state=911, stratify=strat)
+    return train, validate, test
