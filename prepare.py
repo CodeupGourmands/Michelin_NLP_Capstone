@@ -1,10 +1,12 @@
 import re
 import unicodedata
+from typing import List
+
+import nltk
 import numpy as np
 import pandas as pd
-from typing import List
-import nltk
 from nltk.corpus import stopwords as stpwrds
+
 stopwords = stpwrds.words('english')
 
 EXTRA_WORDS = []
@@ -28,7 +30,8 @@ def clean_michelin(df: pd.DataFrame) -> pd.DataFrame:
 
 def basic_clean(string_to_clean: str) -> str:
     '''
-    Changes string to lowercase and removes any non-ASCII characters from a document string
+    Changes string to lowercase and removes any non-ASCII characters
+    from a document string
     ## Parameters
     string_to_clean: string containing the document to be cleaned
     ## Returns
@@ -127,7 +130,7 @@ def process_nl(document_series: pd.Series,
     ## Parameters
     document_series: `Series` containing document strings
     extra_words: additional stopwords to remove from document string
-    exclude_words: stopwords to keep in document string   
+    exclude_words: stopwords to keep in document string
     ## Returns
     `DataFrame` containing the cleaned, stemmed, and lemmatized string
     '''
