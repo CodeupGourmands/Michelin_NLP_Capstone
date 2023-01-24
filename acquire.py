@@ -4,7 +4,6 @@ from os.path import isfile
 
 import numpy as np
 import pandas as pd
-
 # Webscraping
 import requests
 from bs4 import BeautifulSoup
@@ -15,7 +14,7 @@ import prepare as p
 MICHELIN_DF_PATH = 'data/michelin_df.pickle'
 
 
-def get_michelin_pages():
+def get_michelin_pages() -> pd.DataFrame:
     '''
     This function takes the original kaggle dataset, applies a cleaning
     function, and then scrapes the michelin website for all review text,
