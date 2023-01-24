@@ -10,8 +10,9 @@ from sklearn.model_selection import train_test_split
 
 stopwords = stpwrds.words('english')
 
-EXTRA_WORDS = []
-EXCLUDE_WORDS = []
+EXTRA_WORDS: List[str] = ['dish', 'restaurant',
+                          'dining', 'chef', 'menu', 'cuisine']
+EXCLUDE_WORDS: List[str] = []
 
 
 def clean_michelin(df: pd.DataFrame) -> pd.DataFrame:
@@ -124,8 +125,8 @@ def squeaky_clean(string_to_clean: str,
 
 
 def process_nl(document_series: pd.Series,
-               extra_words: List[str] = [],
-               exclude_words: List[str] = []) -> pd.DataFrame:
+               extra_words: List[str] = EXTRA_WORDS,
+               exclude_words: List[str] = EXCLUDE_WORDS) -> pd.DataFrame:
     '''
     cleans, stems, and lemmatizes given series of document strings
     ## Parameters
@@ -137,9 +138,12 @@ def process_nl(document_series: pd.Series,
     '''
     ret_df = pd.DataFrame()
     ret_df['clean'] = document_series.apply(
-        squeaky_clean, exclude_words=exclude_words, extra_words=extra_words)
-    ret_df['lemmatized'] = ret_df['clean'].apply(lemmatize)
+        squeaky_clean,
+        exclude_words=exclude_words,
+        extra_words=extra_words).astype('string')
+    ret_df['lemmatized'] = ret_df['clean'].apply(lemmatize).astype('string')
     return ret_df
+
 
 def tvt_split(df: pd.DataFrame,
               stratify: str = None,
