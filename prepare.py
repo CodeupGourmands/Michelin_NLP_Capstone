@@ -215,9 +215,9 @@ def tvt_split(df: pd.DataFrame,
 
 def prepare_michelin(df: pd.DataFrame,
                      split: bool = True) -> Union[pd.DataFrame,
-                                                   Tuple[pd.DataFrame,
-                                                         pd.DataFrame,
-                                                         pd.DataFrame]]:
+                                                  Tuple[pd.DataFrame,
+                                                        pd.DataFrame,
+                                                        pd.DataFrame]]:
     '''
     Prepares Michelin DataFrame
     ## Parameters
