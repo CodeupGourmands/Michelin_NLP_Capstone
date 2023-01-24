@@ -15,6 +15,27 @@ EXTRA_WORDS: List[str] = ['dish', 'restaurant',
 EXCLUDE_WORDS: List[str] = []
 
 
+def change_dtype_str(df):
+    '''
+    ## Description:
+    This is a custom Function to change dtype to string
+        as appropraiate for this project.
+    ## Arguments:
+    df = DataFrame
+    ## Returns:
+    df - DataFrame
+    '''
+    df.name = df.name.fillna('').astype('string')
+    df.address = df.address.fillna('').astype('string')
+    df.location = df.location.fillna('').astype('string')
+    df.cuisine = df.cuisine.fillna('').astype('string')
+    df.facilities_and_services = df.facilities_and_services.fillna(
+        'NONE').astype('string')
+    df.award = df.award.fillna('').astype('string')
+    df.data = df.data.fillna('').astype('string')
+    return df
+
+
 def clean_michelin(df: pd.DataFrame) -> pd.DataFrame:
     '''
     This function was the basic clean used before scraping the data
@@ -155,7 +176,7 @@ def create_features(df: pd.DataFrame) -> pd.DataFrame:
     df = df.drop(['phone_number', 'website_url'], axis=1)
 
     # Lower case all column values if column is object/string type
-    df = df.apply(lambda x: x.str.lower() if(x.dtype == 'object') else x)
+    df = df.apply(lambda x: x.str.lower() if (x.dtype == 'object') else x)
 
     # Turn NaN values in price to 'nothing', so that it can be recast
     df['price'] = df['price'].fillna('').astype('str')
