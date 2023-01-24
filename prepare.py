@@ -145,6 +145,32 @@ def process_nl(document_series: pd.Series,
     return ret_df
 
 
+def create_features(df):
+    '''
+    This function takes in the dataframe, drops unnecessary columns,
+    and creates new columns/features for exploration and potential
+    classification purposes. It returns the dataframe with applications
+    '''
+    # Dropping unnecessary columns
+    df = df.drop(['phone_number', 'website_url'], axis=1)
+    
+    # Lower case all column values if column is object/string type
+    df = df.apply(lambda x: x.str.lower() if(x.dtype == 'object') else x)
+    
+    # Turn NaN values in price to 'nothing', so that it can be recast
+    df['price'] = df['price'].fillna('').astype('str')
+    # Casting a new column, price level, using length of column
+    df['price_level'] = df['price'].apply(lambda x: len(x))
+    # impute price level "0" with the mode for this column
+    mode = df.price_level.mode()[0]
+    df['price_level'] = df['price_level'].replace(0, mode)
+    
+    # splitting location columns into two columns
+    df[['city', 'country']] = df['location'].str.split(', ', 1, expand=True)
+    # Turn cities into city-states, impute these into country column
+    df['country'] = np.where(pd.isna(df['country']), df['city'], df['country'])
+
+    return df
 def tvt_split(df: pd.DataFrame,
               stratify: str = None,
               tv_split: float = .2,
