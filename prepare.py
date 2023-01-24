@@ -231,5 +231,5 @@ def prepare_michelin(df: pd.DataFrame,
     df = change_dtype_str(df)
     df = pd.concat([df, process_nl(df.data)], axis=1)
     if split:
-        return tvt_split(df)
+        return tvt_split(df,stratify='award')
     return df
