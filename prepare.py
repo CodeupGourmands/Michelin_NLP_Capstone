@@ -222,7 +222,7 @@ def prepare_michelin(df: pd.DataFrame,
     Prepares Michelin DataFrame
     ## Parameters
     df: `DataFrame` with Michelin data
-    split: Boolean for whether or not to split the data
+    split: Boolean for whether or not to split the data, default True
     ## Returns
     either a DataFrame or a tuple of the Train, Validate, and Test
     `DataFrame`
