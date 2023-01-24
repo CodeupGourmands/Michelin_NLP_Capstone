@@ -214,16 +214,18 @@ def tvt_split(df: pd.DataFrame,
 
 
 def prepare_michelin(df: pd.DataFrame,
-                     split: bool = False) -> Union[pd.DataFrame,
+                     split: bool = True) -> Union[pd.DataFrame,
                                                    Tuple[pd.DataFrame,
                                                          pd.DataFrame,
                                                          pd.DataFrame]]:
     '''
-    
+    Prepares Michelin DataFrame
     ## Parameters
-    
+    df: `DataFrame` with Michelin data
+    split: Boolean for whether or not to split the data
     ## Returns
-    
+    either a DataFrame or a tuple of the Train, Validate, and Test
+    `DataFrame`
     '''
     df = create_features(df)
     df = change_dtype_str(df)
