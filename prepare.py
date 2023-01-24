@@ -135,7 +135,7 @@ def process_nl(document_series: pd.Series,
     `DataFrame` containing the cleaned, stemmed, and lemmatized string
     '''
     ret_df = pd.DataFrame()
-    ret_df = document_series.apply(
+    ret_df['clean'] = document_series.apply(
         squeaky_clean, exclude_words=exclude_words, extra_words=extra_words)
     ret_df['stemmed'] = ret_df['clean'].apply(stem)
     ret_df['lemmatized'] = ret_df['clean'].apply(lemmatize)
