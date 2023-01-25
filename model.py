@@ -75,6 +75,7 @@ def predict(model: ModelType,
     y_hat.index = features.index
     return y_hat
 
+
 def tf_idf(documents: pd.Series, tfidf: TfidfVectorizer) -> pd.DataFrame:
     # TODO Docstring
     tfidf_docs = np.empty((0, 5))
@@ -83,3 +84,19 @@ def tf_idf(documents: pd.Series, tfidf: TfidfVectorizer) -> pd.DataFrame:
     except NotFittedError:
         tfidf_docs = tfidf.fit_transform(documents.values)
     return pd.DataFrame(tfidf_docs.todense(), index=documents.index, columns=tfidf.get_feature_names_out())
+
+
+def get_features_and_target(df: pd.DataFrame,
+                            scaler: MinMaxScaler = MinMaxScaler(),
+                            tfidf: TfidfVectorizer = TfidfVectorizer()) -> Tuple[pd.DataFrame,pd.Series]
+    '''
+    scales relevant variables, performs TFIDF, and divides into feature and target
+    ## Parameters
+    df: `DataFrame` of prepped data
+    scaler: `MinMaxScaler` used for scaling
+    tfidf: `TfidfVectorizer` used to perform TFIDF
+    ## Returns
+    Tuple containing the features and the Target
+    '''
+    #TODO Make this function
+    pass
