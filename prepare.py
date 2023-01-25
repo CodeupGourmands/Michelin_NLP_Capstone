@@ -170,8 +170,12 @@ def create_features(df: pd.DataFrame) -> pd.DataFrame:
     '''
     This function takes in the dataframe, drops unnecessary columns,
     and creates new columns/features for exploration and potential
-    classification purposes. It returns the dataframe with applications
+    classification purposes. It returns the dataframe with additional
+    columns created.
     '''
+    # Dropping restaurants no longer listed in guide
+    df = df[df.data != 'None']
+     
     # Dropping unnecessary columns
     df = df.drop(['phone_number', 'website_url'], axis=1)
 
