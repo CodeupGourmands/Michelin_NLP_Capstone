@@ -5,34 +5,31 @@ import nltk
 import seaborn as sns
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
-
-
-
+from scipy import stats
 
 
 def get_stats_ttest(df):
     '''Function returns statistical T test'''
     One_Star = df[df.award == '1 michelin star']
-    Two_Star =df[df.award == '2 michelin star']
-    stat, pval =stats.levene(One_Star.sentiment_score, javaScript_sem.sentiment_score)
+    Two_Star = df[df.award == '2 michelin stars']
+    stat, pval = stats.levene(One_Star.sentiment_score,
+                              Two_Star.sentiment_score)
     alpha = 0.05
     if pval < alpha:
         variance = False
 
     else:
-        variance = True
-        
-    t_stat, p_val = stats.ttest_ind( java_sem.sentiment_score,javaScript_sem.sentiment_score,
-                                    equal_var=True,random_state=123)
+        variance = True    
+    t_stat, p_val = stats.ttest_ind(One_Star.sentiment_score,
+                                    Two_Star.sentiment_score,
+                                    equal_var=True, random_state=123)
 
-    
-    print (f't_stat= {t_stat}, p_value= {p_val/2}')
-    print ('-----------------------------------------------------------')
-    
+    print(f't_stat= {t_stat}, p_value= {p_val/2}')
+    print('-----------------------------------------------------------')
     if (p_val/2) < alpha:
-        print (f'We reject the null Hypothesis')
+        print(f'We reject the null Hypothesis')
     else:
-        print (f'We fail to reject the null Hypothesis.')
+        print(f'We fail to reject the null Hypothesis.')
 
 
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:

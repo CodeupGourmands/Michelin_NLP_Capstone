@@ -242,10 +242,9 @@ def prepare_michelin(df: pd.DataFrame,
     df = create_features(df)
     df = change_dtype_str(df)
     lemmatized = process_nl(df.data)
-    sentiment = sentiment_score(lemmatized.lemmatized)
-    print(lemmatized.dtypes)
-    df = pd.concat([df, lemmatized, sentiment], axis=1)
-    #df['word_count'] = df.lemmatized.str.split().apply(len)
+    df = pd.concat([df, lemmatized], axis=1)
+    df['sentiment'] = sentiment_score(df.lemmatized)
+    df['word_count'] = df.lemmatized.str.split().apply(len)
 
     if split:
         return tvt_split(df, stratify='award')
