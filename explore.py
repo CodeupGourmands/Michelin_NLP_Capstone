@@ -6,6 +6,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 
+
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
     # TODO Docstring
     words = ' '.join(ser).split()
@@ -27,6 +28,7 @@ def generate_word_cloud(ser: pd.Series, ngram: int = 1,
         return ax
     plt.imshow(wc)
     plt.show()
+
 
 def get_award_freq(train):
     '''
@@ -64,3 +66,22 @@ def get_wordcount_bar(train):
     plt.ylabel('Award Level')
     plt.show()
     
+
+def top_10_country_viz(train):
+    '''
+    This function takes in the training dataset and creates a bar plot of the
+    top 10 countries with Michelin restaurants
+    '''
+    # Use groupby to get an average length per language
+    top_10_countries = train['country'].value_counts().head(10)
+    # Set style, make a chart
+    sns.set_style("darkgrid")
+    fig, axes = plt.subplots(figsize=(9, 6))
+    ax = sns.barplot (x=top_10_countries.index,
+                      y=top_10_countries.values,
+                      palette='mako')
+    plt.title('Countries with the Most Michelin Restaurants')
+    plt.xlabel("Countries")
+    plt.ylabel('Number of Restaurants')
+    plt.show()
+
