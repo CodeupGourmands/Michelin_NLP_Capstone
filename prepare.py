@@ -218,7 +218,11 @@ def tvt_split(df: pd.DataFrame,
 
 
 def sentiment_score(lemmatized: pd.Series) -> pd.Series:
-    pass
+    sia = nltk.sentiment.SentimentIntensityAnalyzer()
+    scores = []
+    for l in lemmatized:
+        scores.append(sia.polarity_scores(l)['compound'])
+    return pd.Series(scores, name='sentiment')
 
 
 def prepare_michelin(df: pd.DataFrame,
@@ -238,9 +242,11 @@ def prepare_michelin(df: pd.DataFrame,
     df = create_features(df)
     df = change_dtype_str(df)
     lemmatized = process_nl(df.data)
-    sentiment = sentiment_analysis(df.lemmatized)
-    df = pd.concat([df, lemmatized], axis=1)
-    df['word_count'] = df.lemmatized.str.split().apply(len)
+    sentiment = sentiment_score(lemmatized.lemmatized)
+    print(lemmatized.dtypes)
+    df = pd.concat([df, lemmatized, sentiment], axis=1)
+    #df['word_count'] = df.lemmatized.str.split().apply(len)
+
     if split:
         return tvt_split(df, stratify='award')
     return df
