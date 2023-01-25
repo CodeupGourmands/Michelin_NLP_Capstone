@@ -144,6 +144,9 @@ def squeaky_clean(string_to_clean: str,
     string_to_clean = tokenize(string_to_clean)
     return remove_stopwords(string_to_clean, extra_words, exclude_words)
 
+def sentiment_score(lemmatized:pd.Series)->pd.Series:
+    pass
+
 
 def process_nl(document_series: pd.Series,
                extra_words: List[str] = EXTRA_WORDS,
@@ -234,6 +237,7 @@ def prepare_michelin(df: pd.DataFrame,
     df = create_features(df)
     df = change_dtype_str(df)
     lemmatized = process_nl(df.data)
+    sentiment = sentiment_analysis(df.lemmatized)
     df = pd.concat([df, lemmatized], axis=1)
     df['word_count'] = df.lemmatized.str.split().apply(len)
     if split:
