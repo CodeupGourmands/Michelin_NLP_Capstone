@@ -27,3 +27,21 @@ def generate_word_cloud(ser: pd.Series, ngram: int = 1,
         return ax
     plt.imshow(wc)
     plt.show()
+
+def get_award_freq(train):
+    '''
+    This function takes in the training data set and creates a countplot
+    utilizing Seaborn to visualize the range and values of award
+    categories in the training dataset'''
+    sns.set_style("darkgrid")
+    fig, axes = plt.subplots(figsize=(9, 6))
+    cpt = sns.countplot(x='award',
+                        data=train,
+                        palette='RdYlGn_r',
+                        order = train['award'].value_counts().index)
+    plt.title('Bib Gourmand is the Most Common Award Level in our Dataset')
+    plt.xlabel("Award Level")
+    plt.ylabel('Count of Restaurants')
+    for tick in axes.xaxis.get_major_ticks():
+        tick.label1.set_fontsize(10)
+    plt.show()
