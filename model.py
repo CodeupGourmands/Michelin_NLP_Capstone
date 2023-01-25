@@ -70,7 +70,7 @@ def predict(model: ModelType,
             raise NotFittedError('Model not fit and target not provided')
         model.fit(features, target)
         y_hat = pd.Series(model.predict(features))
-    y_hat.name = (result_suffix if len(result_suffix) > 0 else '')
+    y_hat.name = ('yhat_' + result_suffix if len(result_suffix) > 0 else '')
     # changes indexes to match that of target
     y_hat.index = features.index
     return y_hat
@@ -87,8 +87,8 @@ def tf_idf(documents: pd.Series, tfidf: TfidfVectorizer) -> pd.DataFrame:
 
 
 def get_features_and_target(df: pd.DataFrame,
-                            scaler: MinMaxScaler = MinMaxScaler(),
-                            tfidf: TfidfVectorizer = TfidfVectorizer()) -> Tuple[pd.DataFrame,pd.Series]
+                            tfidf: TfidfVectorizer) -> Tuple[pd.DataFrame, pd.Series]:
+
     '''
     scales relevant variables, performs TFIDF, and divides into feature and target
     ## Parameters
@@ -98,5 +98,28 @@ def get_features_and_target(df: pd.DataFrame,
     ## Returns
     Tuple containing the features and the Target
     '''
-    #TODO Make this function
-    pass
+# TODO Add and scale additional features
+    X = tf_idf(df.lemmatized, tfidf)
+    y = df.award
+    return X, y
+
+
+def run_train_and_validate(train: pd.DataFrame, validate: pd.DataFrame) -> pd.DataFrame:
+    tfidf = TfidfVectorizer(ngram_range=(1, 2))
+    trainx, trainy = get_features_and_target(train, tfidf=tfidf)
+    validx, validy = get_features_and_target(validate, tfidf=tfidf)
+    models = [DecisionTreeClassifier(), RandomForestClassifier(),
+              LogisticRegression(), GradientBoostingClassifier()]
+    ret_df = pd.DataFrame()
+    for model in models:
+        model_results = {}
+        model_name = str(model)
+        model_name = model_name[:len(model_name)-2]
+        print('Running ' + model_name + ' On Train')
+        yhat = predict(model, trainx, trainy)
+        model_results['Train'] = accuracy_score(trainy, yhat)
+        print('Running ' + model_name + ' On Validate')
+        yhat = predict(model, validx)
+        model_results['Validate'] = accuracy_score(validy, yhat)
+        ret_df[model_name] = model_results
+    return ret_df.T
