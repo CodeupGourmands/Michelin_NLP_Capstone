@@ -122,4 +122,4 @@ def run_train_and_validate(train: pd.DataFrame, validate: pd.DataFrame) -> pd.Da
         yhat = predict(model, validx)
         model_results['Validate'] = accuracy_score(validy, yhat)
         ret_df[model_name] = model_results
-    return ret_df
+    return ret_df.T
