@@ -144,9 +144,6 @@ def squeaky_clean(string_to_clean: str,
     string_to_clean = tokenize(string_to_clean)
     return remove_stopwords(string_to_clean, extra_words, exclude_words)
 
-def sentiment_score(lemmatized:pd.Series)->pd.Series:
-    pass
-
 
 def process_nl(document_series: pd.Series,
                extra_words: List[str] = EXTRA_WORDS,
@@ -178,7 +175,7 @@ def create_features(df: pd.DataFrame) -> pd.DataFrame:
     '''
     # Dropping restaurants no longer listed in guide
     df = df[df.data != 'None']
-     
+
     # Dropping unnecessary columns
     df = df.drop(['phone_number', 'website_url'], axis=1)
 
@@ -218,6 +215,10 @@ def tvt_split(df: pd.DataFrame,
         train_validate, test_size=validate_split,
         random_state=911, stratify=strat)
     return train, validate, test
+
+
+def sentiment_score(lemmatized: pd.Series) -> pd.Series:
+    pass
 
 
 def prepare_michelin(df: pd.DataFrame,
