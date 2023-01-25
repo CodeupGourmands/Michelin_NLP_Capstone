@@ -23,9 +23,9 @@ def scale(features: DataType, scaler: MinMaxScaler) -> DataType:
     Fits (if applicable), and scales data with
     # Parameters
     features: either a `Series` or `DataFrame` containing data to be scale.
-    scaler: MinMaxScaler used for
+    scaler: MinMaxScaler used for scaling
     # Returns
-
+    scaled `Series` or `DataFrame`
     '''
     indexes = features.index
     columns = []
@@ -74,6 +74,7 @@ def predict(model: ModelType,
     # changes indexes to match that of target
     y_hat.index = features.index
     return y_hat
+
 
 def tf_idf(documents: pd.Series, tfidf: TfidfVectorizer) -> pd.DataFrame:
     # TODO Docstring
