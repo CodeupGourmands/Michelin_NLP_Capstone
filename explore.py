@@ -5,6 +5,8 @@ import nltk
 import seaborn as sns
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+import scipy.stats as stats
+from scipy.stats import ttest_ind, levene, f_oneway
 
 
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
@@ -86,3 +88,31 @@ def top_10_country_viz(train):
     plt.ylabel('Number of Restaurants')
     plt.show()
 
+
+##-----------------------------Stats Tests-------------------------------##
+
+def get_anova_wordcount(train):
+    '''
+    This function creates separate dataframes for
+    each award category, and utilizes an ANOVA test
+    to compare the mean word count of each category. It
+    returns the test statistic, p-value, and treatment
+    of the null hypothesis
+    '''
+    # Create separate df for each category
+    train_bib = train[train.award == 'bib gourmand']
+    train_onestar = train[train.award == '1 michelin star']
+    train_twostar = train[train.award == '2 michelin stars']
+    train_threestar = train[train.award == '3 michelin stars']
+    # set alpha
+    alpha = 0.05
+    # Run the test
+    f, p = stats.f_oneway(train_bib.word_count, train_onestar.word_count,
+                 train_twostar.word_count, train_threestar.word_count)
+    if p < alpha:
+        print("We reject the null hypothesis. There is sufficient \n\
+               evidence to conclude that the word count is significantly \n\
+               different between award categories.")
+    else:
+        print("We fail to reject the null hypothesis.")
+    return print(f'Test Statistic: {f}, P Statistic: {p}')
