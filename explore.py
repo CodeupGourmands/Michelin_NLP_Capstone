@@ -6,6 +6,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 
+
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
     # TODO Docstring
     words = ' '.join(ser).split()
@@ -28,6 +29,7 @@ def generate_word_cloud(ser: pd.Series, ngram: int = 1,
     plt.imshow(wc)
     plt.show()
 
+
 def get_award_freq(train):
     '''
     This function takes in the training data set and creates a countplot
@@ -38,29 +40,29 @@ def get_award_freq(train):
     cpt = sns.countplot(x='award',
                         data=train,
                         palette='RdYlGn_r',
-                        order = train['award'].value_counts().index)
+                        order=train['award'].value_counts().index)
     plt.title('Bib Gourmand is the Most Common Award Level in our Dataset')
     plt.xlabel("Award Level")
     plt.ylabel('Count of Restaurants')
     for tick in axes.xaxis.get_major_ticks():
         tick.label1.set_fontsize(10)
     plt.show()
-    
-    
+
+
 def get_wordcount_bar(train):
     '''
     This function takes in the training dataset and creates a bar plot of the
     average wordcount of a review based on the Michelin Star Award
     '''
     # Use groupby to get an average length per language
-    review_wordcount = train.groupby('award').word_count.mean().sort_values(ascending=False)
+    review_wordcount = train.groupby(
+        'award').word_count.mean().sort_values(ascending=False)
     # Set style, make a chart
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
-    ax = sns.barplot(x=review_wordcount.values, 
-                 y=review_wordcount.index, palette='coolwarm')
+    ax = sns.barplot(x=review_wordcount.values,
+                     y=review_wordcount.index, palette='coolwarm')
     plt.title('Average Wordcount of Michelin Star Level Restaurants')
     plt.xlabel("Average Word Count")
     plt.ylabel('Award Level')
     plt.show()
-    

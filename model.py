@@ -1,17 +1,14 @@
+from typing import Tuple, Union
+
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from typing import Union, Tuple, Dict
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+from sklearn.exceptions import NotFittedError
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.exceptions import NotFittedError
 from sklearn.metrics import accuracy_score
-from IPython.display import Markdown as md
-from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.tree import DecisionTreeClassifier
 
 DataType = Union[pd.Series, pd.DataFrame]
 ModelType = Union[DecisionTreeClassifier, RandomForestClassifier,
@@ -40,7 +37,9 @@ def scale(features: DataType, scaler: MinMaxScaler) -> DataType:
         scaler = scaler.fit(features)
         scaled_data = scaler.transform(features)
     if is_series:
-        return pd.Series(scaled_data, index=indexes, name='scaled_' + columns[0])
+        return pd.Series(scaled_data,
+                         index=indexes,
+                         name='scaled_' + columns[0])
     for c in columns:
         c = 'scaled_' + c
     return pd.DataFrame(scaled_data, index=indexes,
@@ -83,14 +82,17 @@ def tf_idf(documents: pd.Series, tfidf: TfidfVectorizer) -> pd.DataFrame:
         tfidf_docs = tfidf.transform(documents.values)
     except NotFittedError:
         tfidf_docs = tfidf.fit_transform(documents.values)
-    return pd.DataFrame(tfidf_docs.todense(), index=documents.index, columns=tfidf.get_feature_names_out())
+    return pd.DataFrame(tfidf_docs.todense(),
+                        index=documents.index,
+                        columns=tfidf.get_feature_names_out())
 
 
 def get_features_and_target(df: pd.DataFrame,
-                            tfidf: TfidfVectorizer) -> Tuple[pd.DataFrame, pd.Series]:
-
+                            tfidf: TfidfVectorizer) -> Tuple[pd.DataFrame,
+                                                             pd.Series]:
     '''
-    scales relevant variables, performs TFIDF, and divides into feature and target
+    scales relevant variables, performs TFIDF,
+    and divides into feature and target
     ## Parameters
     df: `DataFrame` of prepped data
     scaler: `MinMaxScaler` used for scaling
@@ -104,7 +106,8 @@ def get_features_and_target(df: pd.DataFrame,
     return X, y
 
 
-def run_train_and_validate(train: pd.DataFrame, validate: pd.DataFrame) -> pd.DataFrame:
+def run_train_and_validate(train: pd.DataFrame,
+                           validate: pd.DataFrame) -> pd.DataFrame:
     tfidf = TfidfVectorizer(ngram_range=(1, 2))
     trainx, trainy = get_features_and_target(train, tfidf=tfidf)
     validx, validy = get_features_and_target(validate, tfidf=tfidf)
