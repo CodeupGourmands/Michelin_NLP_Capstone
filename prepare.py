@@ -234,6 +234,7 @@ def prepare_michelin(df: pd.DataFrame,
     df = create_features(df)
     df = change_dtype_str(df)
     df = pd.concat([df, process_nl(df.data)], axis=1)
+    df['word_count'] = df.lemmatized.str.split().apply(len)
     if split:
         return tvt_split(df, stratify='award')
     return df
