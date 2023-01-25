@@ -23,9 +23,9 @@ def scale(features: DataType, scaler: MinMaxScaler) -> DataType:
     Fits (if applicable), and scales data with
     # Parameters
     features: either a `Series` or `DataFrame` containing data to be scale.
-    scaler: MinMaxScaler used for
+    scaler: MinMaxScaler used for scaling
     # Returns
-
+    scaled `Series` or `DataFrame`
     '''
     indexes = features.index
     columns = []
