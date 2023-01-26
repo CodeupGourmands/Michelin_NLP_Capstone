@@ -2,6 +2,7 @@ from typing import Tuple, Union
 
 import numpy as np
 import pandas as pd
+import pickle
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.exceptions import NotFittedError
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -126,3 +127,12 @@ def run_train_and_validate(train: pd.DataFrame,
         model_results['Validate'] = accuracy_score(validy, yhat)
         ret_df[model_name] = pd.Series(model_results.values(), index=model_results.keys())
     return ret_df.T
+
+def pickle_model(model:ModelType,filename:str)->None:
+    with open(filename,'wb') as file:
+        pickle.dump(model,file)
+
+def unpickle_model(model:ModelType,filename:str)->ModelType:
+    with open(filename,'wb') as file:
+        model = pickle.load(file)
+        return model
