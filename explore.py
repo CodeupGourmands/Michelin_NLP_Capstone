@@ -99,7 +99,7 @@ def sentiment_scores_bar(train):
     plt.yticks(fontsize=22)
     plt.show()
 
-## -----------------------------Stats Tests-------------------------------##
+# -----------------------------Stats Tests-------------------------------#
 
 
 def get_anova_wordcount(train):
