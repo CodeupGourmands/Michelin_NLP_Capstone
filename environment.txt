@@ -9,7 +9,6 @@ https://repo.anaconda.com/pkgs/main/osx-64/c-ares-1.18.1-hca72f7f_0.conda
 https://repo.anaconda.com/pkgs/main/osx-64/ca-certificates-2022.07.19-hecd8cb5_0.conda
 https://repo.anaconda.com/pkgs/main/osx-64/fftw-3.3.9-h9ed2024_1.conda
 https://repo.anaconda.com/pkgs/main/osx-64/giflib-5.2.1-haf1e3a3_0.conda
-https://repo.anaconda.com/pkgs/main/osx-64/intel-openmp-2021.4.0-hecd8cb5_3538.conda
 https://repo.anaconda.com/pkgs/main/osx-64/jpeg-9e-hca72f7f_0.conda
 https://repo.anaconda.com/pkgs/main/osx-64/jxrlib-1.1-haf1e3a3_2.conda
 https://repo.anaconda.com/pkgs/main/osx-64/ldid-2.1.2-h2d21305_2.conda
@@ -434,7 +433,6 @@ https://repo.anaconda.com/pkgs/main/osx-64/scikit-learn-1.0.2-py39hae1ba45_1.con
 https://repo.anaconda.com/pkgs/main/osx-64/bkcharts-0.2-py39hecd8cb5_1.conda
 https://repo.anaconda.com/pkgs/main/osx-64/dask-2022.7.0-py39hecd8cb5_0.conda
 https://repo.anaconda.com/pkgs/main/osx-64/holoviews-1.15.0-py39hecd8cb5_0.conda
-https://repo.anaconda.com/pkgs/main/osx-64/scikit-learn-intelex-2021.6.0-py39hecd8cb5_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/seaborn-0.11.2-pyhd3eb1b0_0.conda
 https://repo.anaconda.com/pkgs/main/osx-64/statsmodels-0.13.2-py39hca72f7f_0.conda
 https://repo.anaconda.com/pkgs/main/noarch/xarray-0.20.1-pyhd3eb1b0_1.conda
