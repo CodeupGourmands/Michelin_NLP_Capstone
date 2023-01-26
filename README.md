@@ -33,21 +33,18 @@
 |[![Yuvia's_GitHub](https://img.shields.io/badge/Yuvia's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yuvia-cardenas)|[![Justin's_GitHub](https://img.shields.io/badge/Justin's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/QMCBT-JustinEvans)|[![Cristina's_GitHub](https://img.shields.io/badge/Cristina's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/cristinalucin)|[![Woody's_GitHub](https://img.shields.io/badge/Woodrow's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Is0metry)|
 
 # Project Overview:
-Codeup Capstone Team Project using Natural Language Processing on a target of Michelin food star ratings to determine key indicators of past performance in order to assist aspiring recipients with success.
+Our Capstone Team Project utilizes Web-scraping & Natural Language Processing to create a predictive model that determines Michelin food star award ratings based on content from the official Michelin review.
 
-We will attempt to accomplish this Using **Natural Language Processing** and following the full *Data Science Pipeline*
-We will explore the data and use insights gained to feature engineer our dataset to try and improve our models accuracy
-We will create and run  multiple models on the final manipulations of our data on train and validation sets and find our best/most efficient model.
-We will than test that model on more outside data and create a function that will take in a readme file text and output the models assignment of the texts main coding language.
+Following the *Data Science Pipeline*
+First, our team will acquire and prepare the data for exploration. Then, we will explore the data to gain insight on which features to engineer that ultimately improve our model's accuracy. After we create several types of machine learning models that can effectly predict the Michelin food star award rating using the train and validate we will compare each model's performance. The model that performed the best will move forward with test data set for final results. 
 
 
 # Project Goals:
-* Produce a Final GitHub repository containing our work
+* Create a model that effectively predicts Michelin food star award ratings based on content from the official Michelin review
 * Provide a well-documented jupyter notebook that contains our analysis
-* Display a `README` file that contains a description of our project and instructions on how to run it with a link to our Google Slide Presentation
-* Present a google slide deck suitable for a general audience which summarizes our findings in exploration and documents the results of our modeling
-with well-labeled visualizations
-* Produce and demonstrate a function that will take in the text of a `README` file, and attempt to predict the programming language using our best model.
+* Produce a Final GitHub repository
+* Present a Canva slide deck suitable for a general audience which summarizes our findings and documents the results with well-labeled visualizations.
+
 
 # Reproduction of this Data:
 * Can be accomplished using a local `env.py` containing `github_username`, `github_token`, and host Repository link information for access to the GitHub project Readme file search results that you want to explore.

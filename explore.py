@@ -68,7 +68,7 @@ def get_wordcount_bar(train):
     plt.xlabel("Average Word Count")
     plt.ylabel('Award Level')
     plt.show()
-    
+
 
 def top_10_country_viz(train):
     '''
@@ -80,16 +80,27 @@ def top_10_country_viz(train):
     # Set style, make a chart
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
-    ax = sns.barplot (x=top_10_countries.index,
-                      y=top_10_countries.values,
-                      palette='mako')
+    ax = sns.barplot(x=top_10_countries.index,
+                     y=top_10_countries.values,
+                     palette='mako')
     plt.title('Countries with the Most Michelin Restaurants')
     plt.xlabel("Countries")
     plt.ylabel('Number of Restaurants')
     plt.show()
 
 
-##-----------------------------Stats Tests-------------------------------##
+def sentiment_scores_bar(train):
+    dfg = train.groupby(['award'])[
+        'sentiment'].mean().sort_values(ascending=False)
+    # create a bar plot
+    dfg.plot(kind='bar', title='Sentiment Score', ylabel='Mean Sentiment Score',
+             xlabel='', fontsize=20, color=['#beaed4', '#f0027f', '#7fc97f', '#fdc086'])
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=22)
+    plt.show()
+
+## -----------------------------Stats Tests-------------------------------##
+
 
 def get_anova_wordcount(train):
     '''
@@ -108,7 +119,7 @@ def get_anova_wordcount(train):
     alpha = 0.05
     # Run the test
     f, p = stats.f_oneway(train_bib.word_count, train_onestar.word_count,
-                 train_twostar.word_count, train_threestar.word_count)
+                          train_twostar.word_count, train_threestar.word_count)
     if p < alpha:
         print("We reject the null hypothesis. There is sufficient \n\
                evidence to conclude that the word count is significantly \n\
@@ -116,3 +127,27 @@ def get_anova_wordcount(train):
     else:
         print("We fail to reject the null hypothesis.")
     return print(f'Test Statistic: {f}, P Statistic: {p}')
+
+
+def get_stats_ttest(df):
+    '''Function returns statistical T test'''
+    One_Star = df[df.award == '1 michelin star']
+    Two_Star = df[df.award == '2 michelin stars']
+    stat, pval = stats.levene(One_Star.sentiment,
+                              Two_Star.sentiment)
+    alpha = 0.05
+    if pval < alpha:
+        variance = False
+
+    else:
+        variance = True
+    t_stat, p_val = stats.ttest_ind(One_Star.sentiment,
+                                    Two_Star.sentiment,
+                                    equal_var=True, random_state=123)
+
+    print(f't_stat= {t_stat}, p_value= {p_val/2}')
+    print('-----------------------------------------------------------')
+    if (p_val/2) < alpha:
+        print(f'We reject the null Hypothesis')
+    else:
+        print(f'We fail to reject the null Hypothesis. There is no significant difference between the sentiment scores.')
