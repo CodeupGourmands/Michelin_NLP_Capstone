@@ -5,6 +5,9 @@ import nltk
 import seaborn as sns
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+import scipy.stats as stats
+from scipy.stats import ttest_ind, levene, f_oneway
+
 
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
     # TODO Docstring
@@ -28,6 +31,7 @@ def generate_word_cloud(ser: pd.Series, ngram: int = 1,
     plt.imshow(wc)
     plt.show()
 
+
 def get_award_freq(train):
     '''
     This function takes in the training data set and creates a countplot
@@ -38,29 +42,112 @@ def get_award_freq(train):
     cpt = sns.countplot(x='award',
                         data=train,
                         palette='RdYlGn_r',
-                        order = train['award'].value_counts().index)
+                        order=train['award'].value_counts().index)
     plt.title('Bib Gourmand is the Most Common Award Level in our Dataset')
     plt.xlabel("Award Level")
     plt.ylabel('Count of Restaurants')
     for tick in axes.xaxis.get_major_ticks():
         tick.label1.set_fontsize(10)
     plt.show()
-    
-    
+
+
 def get_wordcount_bar(train):
     '''
     This function takes in the training dataset and creates a bar plot of the
     average wordcount of a review based on the Michelin Star Award
     '''
     # Use groupby to get an average length per language
-    review_wordcount = train.groupby('award').word_count.mean().sort_values(ascending=False)
+    review_wordcount = train.groupby(
+        'award').word_count.mean().sort_values(ascending=False)
     # Set style, make a chart
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
-    ax = sns.barplot(x=review_wordcount.values, 
-                 y=review_wordcount.index, palette='coolwarm')
+    ax = sns.barplot(x=review_wordcount.values,
+                     y=review_wordcount.index, palette='coolwarm')
     plt.title('Average Wordcount of Michelin Star Level Restaurants')
     plt.xlabel("Average Word Count")
     plt.ylabel('Award Level')
     plt.show()
-    
+
+
+def top_10_country_viz(train):
+    '''
+    This function takes in the training dataset and creates a bar plot of the
+    top 10 countries with Michelin restaurants
+    '''
+    # Use groupby to get an average length per language
+    top_10_countries = train['country'].value_counts().head(10)
+    # Set style, make a chart
+    sns.set_style("darkgrid")
+    fig, axes = plt.subplots(figsize=(9, 6))
+    ax = sns.barplot(x=top_10_countries.index,
+                     y=top_10_countries.values,
+                     palette='mako')
+    plt.title('Countries with the Most Michelin Restaurants')
+    plt.xlabel("Countries")
+    plt.ylabel('Number of Restaurants')
+    plt.show()
+
+
+def sentiment_scores_bar(train):
+    dfg = train.groupby(['award'])[
+        'sentiment'].mean().sort_values(ascending=False)
+    # create a bar plot
+    dfg.plot(kind='bar', title='Sentiment Score', ylabel='Mean Sentiment Score',
+             xlabel='', fontsize=20, color=['#beaed4', '#f0027f', '#7fc97f', '#fdc086'])
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=22)
+    plt.show()
+
+## -----------------------------Stats Tests-------------------------------##
+
+
+def get_anova_wordcount(train):
+    '''
+    This function creates separate dataframes for
+    each award category, and utilizes an ANOVA test
+    to compare the mean word count of each category. It
+    returns the test statistic, p-value, and treatment
+    of the null hypothesis
+    '''
+    # Create separate df for each category
+    train_bib = train[train.award == 'bib gourmand']
+    train_onestar = train[train.award == '1 michelin star']
+    train_twostar = train[train.award == '2 michelin stars']
+    train_threestar = train[train.award == '3 michelin stars']
+    # set alpha
+    alpha = 0.05
+    # Run the test
+    f, p = stats.f_oneway(train_bib.word_count, train_onestar.word_count,
+                          train_twostar.word_count, train_threestar.word_count)
+    if p < alpha:
+        print('We reject the null hypothesis. There is sufficient\n'
+               'evidence to conclude that the word count is significantly\n'
+               'different between award categories.)
+    else:
+        print("We fail to reject the null hypothesis.")
+    return print(f'Test Statistic: {f}, P Statistic: {p}')
+
+
+def get_stats_ttest(df):
+    '''Function returns statistical T test'''
+    One_Star = df[df.award == '1 michelin star']
+    Two_Star = df[df.award == '2 michelin stars']
+    stat, pval = stats.levene(One_Star.sentiment,
+                              Two_Star.sentiment)
+    alpha = 0.05
+    if pval < alpha:
+        variance = False
+
+    else:
+        variance = True
+    t_stat, p_val = stats.ttest_ind(One_Star.sentiment,
+                                    Two_Star.sentiment,
+                                    equal_var=True, random_state=123)
+
+    print(f't_stat= {t_stat}, p_value= {p_val/2}')
+    print('-----------------------------------------------------------')
+    if (p_val/2) < alpha:
+        print(f'We reject the null Hypothesis')
+    else:
+        print(f'We fail to reject the null Hypothesis. There is no significant difference between the sentiment scores.')

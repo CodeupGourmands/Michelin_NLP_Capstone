@@ -3,6 +3,7 @@ import unicodedata
 from typing import List, Union, Tuple
 
 import nltk
+from nltk.sentiment import SentimentIntensityAnalyzer
 import numpy as np
 import pandas as pd
 from nltk.corpus import stopwords as stpwrds
@@ -175,7 +176,7 @@ def create_features(df: pd.DataFrame) -> pd.DataFrame:
     '''
     # Dropping restaurants no longer listed in guide
     df = df[df.data != 'None']
-     
+
     # Dropping unnecessary columns
     df = df.drop(['phone_number', 'website_url'], axis=1)
 
@@ -217,6 +218,14 @@ def tvt_split(df: pd.DataFrame,
     return train, validate, test
 
 
+def sentiment_score(lemmatized: pd.Series) -> pd.Series:
+    sia = SentimentIntensityAnalyzer()
+    scores = []
+    for l in lemmatized:
+        scores.append(sia.polarity_scores(l)['compound'])
+    return pd.Series(scores, name='sentiment')
+
+
 def prepare_michelin(df: pd.DataFrame,
                      split: bool = True) -> Union[pd.DataFrame,
                                                   Tuple[pd.DataFrame,
@@ -233,8 +242,11 @@ def prepare_michelin(df: pd.DataFrame,
     '''
     df = create_features(df)
     df = change_dtype_str(df)
-    df = pd.concat([df, process_nl(df.data)], axis=1)
+    lemmatized = process_nl(df.data)
+    df = pd.concat([df, lemmatized], axis=1)
+    df['sentiment'] = sentiment_score(df.lemmatized)
     df['word_count'] = df.lemmatized.str.split().apply(len)
+
     if split:
         return tvt_split(df, stratify='award')
     return df

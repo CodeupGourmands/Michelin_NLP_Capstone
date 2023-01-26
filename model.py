@@ -1,17 +1,17 @@
+from typing import Tuple, Union
+
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from typing import Union, Tuple, Dict
+import pickle
+from os.path import isfile
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+from sklearn.exceptions import NotFittedError
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.exceptions import NotFittedError
 from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.tree import DecisionTreeClassifier
 from IPython.display import Markdown as md
-from sklearn.metrics import ConfusionMatrixDisplay
 
 DataType = Union[pd.Series, pd.DataFrame]
 ModelType = Union[DecisionTreeClassifier, RandomForestClassifier,
@@ -40,7 +40,9 @@ def scale(features: DataType, scaler: MinMaxScaler) -> DataType:
         scaler = scaler.fit(features)
         scaled_data = scaler.transform(features)
     if is_series:
-        return pd.Series(scaled_data, index=indexes, name='scaled_' + columns[0])
+        return pd.Series(scaled_data,
+                         index=indexes,
+                         name='scaled_' + columns[0])
     for c in columns:
         c = 'scaled_' + c
     return pd.DataFrame(scaled_data, index=indexes,
@@ -70,7 +72,7 @@ def predict(model: ModelType,
             raise NotFittedError('Model not fit and target not provided')
         model.fit(features, target)
         y_hat = pd.Series(model.predict(features))
-    y_hat.name = (result_suffix if len(result_suffix) > 0 else '')
+    y_hat.name = ('yhat_' + result_suffix if len(result_suffix) > 0 else '')
     # changes indexes to match that of target
     y_hat.index = features.index
     return y_hat
@@ -83,14 +85,17 @@ def tf_idf(documents: pd.Series, tfidf: TfidfVectorizer) -> pd.DataFrame:
         tfidf_docs = tfidf.transform(documents.values)
     except NotFittedError:
         tfidf_docs = tfidf.fit_transform(documents.values)
-    return pd.DataFrame(tfidf_docs.todense(), index=documents.index, columns=tfidf.get_feature_names_out())
+    return pd.DataFrame(tfidf_docs.todense(),
+                        index=documents.index,
+                        columns=tfidf.get_feature_names_out())
 
 
 def get_features_and_target(df: pd.DataFrame,
-                            scaler: MinMaxScaler = MinMaxScaler(),
-                            tfidf: TfidfVectorizer = TfidfVectorizer()) -> Tuple[pd.DataFrame,pd.Series]
+                            tfidf: TfidfVectorizer) -> Tuple[pd.DataFrame,
+                                                             pd.Series]:
     '''
-    scales relevant variables, performs TFIDF, and divides into feature and target
+    scales relevant variables, performs TFIDF,
+    and divides into feature and target
     ## Parameters
     df: `DataFrame` of prepped data
     scaler: `MinMaxScaler` used for scaling
@@ -98,5 +103,56 @@ def get_features_and_target(df: pd.DataFrame,
     ## Returns
     Tuple containing the features and the Target
     '''
-    #TODO Make this function
-    pass
+# TODO Add and scale additional features
+    X = tf_idf(df.lemmatized, tfidf)
+    y = df.award
+    return X, y
+
+
+def get_baseline(train: pd.DataFrame) -> md:
+    baseline = train.award.value_counts(normalize=True)
+    return md('Baseline Value | Baseline'
+                  '\n---|---'
+                  f'\n{baseline.index[0]} | {baseline.values[0] * 100:.2f}')
+
+
+def run_train_and_validate(train: pd.DataFrame,
+                           validate: pd.DataFrame) -> pd.DataFrame:
+    tfidf = TfidfVectorizer(ngram_range=(1, 2))
+    trainx, trainy = get_features_and_target(train, tfidf=tfidf)
+    validx, validy = get_features_and_target(validate, tfidf=tfidf)
+    models = [DecisionTreeClassifier(), RandomForestClassifier(),
+              LogisticRegression(), GradientBoostingClassifier()]
+    ret_df = pd.DataFrame()
+    for model in models:
+        model_results = {}
+        model_name = str(model)
+        model_name = model_name[:len(model_name)-2]
+        pickle_path = 'data/cached_models/' + model_name + '.pkl'
+        pickle_exists = isfile(pickle_path)
+        if pickle_exists:
+            model = unpickle_model(pickle_path)
+            print(type(model))
+        print('Running ' + model_name + ' On Train')
+        yhat = predict(model, trainx, trainy)
+        if not pickle_exists:
+            print('Pickling model!')
+            pickle_model(model, pickle_path)
+        model_results['Train'] = accuracy_score(trainy, yhat)
+        print('Running ' + model_name + ' On Validate')
+        yhat = predict(model, validx)
+        model_results['Validate'] = accuracy_score(validy, yhat)
+        ret_df[model_name] = pd.Series(
+            model_results.values(), index=model_results.keys())
+    return ret_df.T
+
+
+def pickle_model(model: ModelType, filename: str) -> None:
+    with open(filename, 'wb') as file:
+        pickle.dump(model, file)
+
+
+def unpickle_model(filename: str) -> ModelType:
+    with open(filename, 'rb') as file:
+        model = pickle.load(file)
+        return model
