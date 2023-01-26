@@ -3,6 +3,7 @@ from typing import Tuple, Union
 import numpy as np
 import pandas as pd
 import pickle
+from os.path import isfile
 from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
 from sklearn.exceptions import NotFittedError
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -119,20 +120,31 @@ def run_train_and_validate(train: pd.DataFrame,
         model_results = {}
         model_name = str(model)
         model_name = model_name[:len(model_name)-2]
+        pickle_path = 'data/cached_models/' + model_name + '.pkl'
+        pickle_exists = isfile(pickle_path)
+        if pickle_exists:
+            model = unpickle_model(pickle_path)
+            print(type(model))
         print('Running ' + model_name + ' On Train')
         yhat = predict(model, trainx, trainy)
+        if not pickle_exists:
+            print('Pickling model!')
+            pickle_model(model,pickle_path)
         model_results['Train'] = accuracy_score(trainy, yhat)
         print('Running ' + model_name + ' On Validate')
         yhat = predict(model, validx)
         model_results['Validate'] = accuracy_score(validy, yhat)
-        ret_df[model_name] = pd.Series(model_results.values(), index=model_results.keys())
+        ret_df[model_name] = pd.Series(
+            model_results.values(), index=model_results.keys())
     return ret_df.T
 
-def pickle_model(model:ModelType,filename:str)->None:
-    with open(filename,'wb') as file:
-        pickle.dump(model,file)
 
-def unpickle_model(model:ModelType,filename:str)->ModelType:
-    with open(filename,'wb') as file:
+def pickle_model(model: ModelType, filename: str) -> None:
+    with open(filename, 'wb') as file:
+        pickle.dump(model, file)
+
+
+def unpickle_model(filename: str) -> ModelType:
+    with open(filename, 'rb') as file:
         model = pickle.load(file)
         return model
