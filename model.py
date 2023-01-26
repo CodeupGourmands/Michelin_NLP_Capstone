@@ -124,6 +124,7 @@ def run_train_and_validate(train: pd.DataFrame,
         pickle_exists = isfile(pickle_path)
         if pickle_exists:
             model = unpickle_model(pickle_path)
+            print(type(model))
         print('Running ' + model_name + ' On Train')
         yhat = predict(model, trainx, trainy)
         if not pickle_exists:
