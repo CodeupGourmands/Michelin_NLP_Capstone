@@ -3,6 +3,7 @@ import unicodedata
 from typing import List, Union, Tuple
 
 import nltk
+from nltk.sentiment import SentimentIntensityAnalyzer
 import numpy as np
 import pandas as pd
 from nltk.corpus import stopwords as stpwrds
@@ -218,7 +219,7 @@ def tvt_split(df: pd.DataFrame,
 
 
 def sentiment_score(lemmatized: pd.Series) -> pd.Series:
-    sia = nltk.sentiment.SentimentIntensityAnalyzer()
+    sia = SentimentIntensityAnalyzer()
     scores = []
     for l in lemmatized:
         scores.append(sia.polarity_scores(l)['compound'])
