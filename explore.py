@@ -110,9 +110,9 @@ def get_anova_wordcount(train):
     f, p = stats.f_oneway(train_bib.word_count, train_onestar.word_count,
                  train_twostar.word_count, train_threestar.word_count)
     if p < alpha:
-        print("We reject the null hypothesis. There is sufficient \n\
-               evidence to conclude that the word count is significantly \n\
-               different between award categories.")
+        print('We reject the null hypothesis. There is sufficient\n'
+               'evidence to conclude that the word count is significantly\n'
+               'different between award categories.)
     else:
         print("We fail to reject the null hypothesis.")
     return print(f'Test Statistic: {f}, P Statistic: {p}')

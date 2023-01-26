@@ -11,6 +11,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
+from IPython.display import Markdown as md
 
 DataType = Union[pd.Series, pd.DataFrame]
 ModelType = Union[DecisionTreeClassifier, RandomForestClassifier,
@@ -108,6 +109,13 @@ def get_features_and_target(df: pd.DataFrame,
     return X, y
 
 
+def get_baseline(train: pd.DataFrame) -> md:
+    baseline = train.award.value_counts(normalize=True)
+    return md('Baseline Value | Baseline'
+                  '\n---|---'
+                  f'\n{baseline.index[0]} | {baseline.values[0] * 100:.2f}')
+
+
 def run_train_and_validate(train: pd.DataFrame,
                            validate: pd.DataFrame) -> pd.DataFrame:
     tfidf = TfidfVectorizer(ngram_range=(1, 2))
@@ -129,7 +137,7 @@ def run_train_and_validate(train: pd.DataFrame,
         yhat = predict(model, trainx, trainy)
         if not pickle_exists:
             print('Pickling model!')
-            pickle_model(model,pickle_path)
+            pickle_model(model, pickle_path)
         model_results['Train'] = accuracy_score(trainy, yhat)
         print('Running ' + model_name + ' On Validate')
         yhat = predict(model, validx)
