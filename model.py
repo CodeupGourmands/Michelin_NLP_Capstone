@@ -94,6 +94,7 @@ def tf_idf(documents: pd.Series, tfidf: TfidfVectorizer) -> pd.DataFrame:
 
 
 def get_features_and_target(df: pd.DataFrame,
+                            scaler: MinMaxScaler,
                             tfidf: TfidfVectorizer) -> Tuple[pd.DataFrame,
                                                              pd.Series]:
     '''
@@ -107,7 +108,11 @@ def get_features_and_target(df: pd.DataFrame,
     Tuple containing the features and the Target
     '''
 # TODO Add and scale additional features
-    X = tf_idf(df.lemmatized, tfidf)
+    tfi_df = tf_idf(df.lemmatized, tfidf)
+    dummies = pd.get_dummies(
+        df, columns=['country', 'price_level'], drop_first=False)
+    scaled_data = scale(df[['word_count', 'sentiment']], scaler)
+    X = pd.concat([tfi_df, dummies, scaled_data], axis=1)
     y = df.award
     return X, y
 
@@ -127,7 +132,7 @@ def run_train_and_validate(train: pd.DataFrame,
     models = [DecisionTreeClassifier(), RandomForestClassifier(),
               LogisticRegression(), GradientBoostingClassifier()]
     ret_df = pd.DataFrame()
-    
+
     for model in models:
         model_results = {}
         model_name = str(model)
