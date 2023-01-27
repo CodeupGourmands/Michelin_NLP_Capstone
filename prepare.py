@@ -248,7 +248,6 @@ def prepare_michelin(df: pd.DataFrame,
     sia = SentimentIntensityAnalyzer()
     df['sentiment'] = df.lemmatized.apply(sentiment_score, sia=sia)
     df['word_count'] = df.lemmatized.str.split().apply(len)
-
     if split:
         return tvt_split(df, stratify='award')
     return df
@@ -260,10 +259,6 @@ def prep_classification_data(train, validate, test):
     train, validate, and test prepped for classification modeling
     '''
     # Impute NaN values in sentiment with the mean
-    train['sentiment'].fillna(int(train['sentiment'].mean()), inplace=True)
-    validate['sentiment'].fillna(
-        int(validate['sentiment'].mean()), inplace=True)
-    test['sentiment'].fillna(int(test['sentiment'].mean()), inplace=True)
     # Create dummy columns
     dummy_train = pd.get_dummies(
         train, columns=['country', 'price_level'], drop_first=False)
