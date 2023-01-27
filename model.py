@@ -20,7 +20,8 @@ ModelType = Union[DecisionTreeClassifier, RandomForestClassifier,
                   LogisticRegression, GradientBoostingClassifier]
 NumberType = Union[float, int, np.number]
 
-N_COUNTRIES = 5
+N_COUNTRIES = 10
+
 
 def scale(features: DataType, scaler: MinMaxScaler) -> DataType:
     '''
