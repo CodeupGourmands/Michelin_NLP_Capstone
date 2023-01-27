@@ -1,4 +1,4 @@
-from typing import Tuple, Union
+from typing import Tuple, Union, Dict, List
 
 import numpy as np
 import pandas as pd
@@ -11,11 +11,14 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import make_scorer
 from IPython.display import Markdown as md
 
 DataType = Union[pd.Series, pd.DataFrame]
 ModelType = Union[DecisionTreeClassifier, RandomForestClassifier,
                   LogisticRegression, GradientBoostingClassifier]
+NumberType = Union[float, int, np.number]
 
 
 def scale(features: DataType, scaler: MinMaxScaler) -> DataType:
@@ -112,8 +115,8 @@ def get_features_and_target(df: pd.DataFrame,
 def get_baseline(train: pd.DataFrame) -> md:
     baseline = train.award.value_counts(normalize=True)
     return md('Baseline Value | Baseline'
-                  '\n---|---'
-                  f'\n{baseline.index[0]} | {baseline.values[0] * 100:.2f}')
+              '\n---|---'
+              f'\n{baseline.index[0]} | {baseline.values[0] * 100:.2f}')
 
 
 def run_train_and_validate(train: pd.DataFrame,
@@ -156,3 +159,18 @@ def unpickle_model(filename: str) -> ModelType:
     with open(filename, 'rb') as file:
         model = pickle.load(file)
         return model
+
+
+def tune_model(model: ModelType, train: pd.DataFrame,
+               validate: pd.DataFrame,
+               parameters: Dict[str, List[NumberType]]) -> pd.DataFrame:
+    scorer = make_scorer(accuracy_score)
+    train_validate = pd.concat([train, validate]).sort_index()
+    tfidf = TfidfVectorizer(ngram_range=(1,2))
+    trainx,trainy = get_features_and_target(train_validate,tfidf)
+    grid_search = GridSearchCV(model,parameters,verbose=2,scoring=scorer,n_jobs=3)
+    grid_search.fit(trainx,trainy)
+    print(f'Best results are:\n{grid_search.best_params_}\n')
+    return grid_search.best_estimator_
+
+    
