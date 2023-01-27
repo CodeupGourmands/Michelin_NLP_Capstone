@@ -37,6 +37,8 @@ def scale(features: DataType, scaler: MinMaxScaler) -> DataType:
         columns.append(features.name)
         features = features.values.reshape(-1, 1)
         is_series = True
+    else:
+        columns = features.columns
     try:
         scaled_data = scaler.transform(features)
     except NotFittedError as e:
@@ -110,7 +112,7 @@ def get_features_and_target(df: pd.DataFrame,
 # TODO Add and scale additional features
     tfi_df = tf_idf(df.lemmatized, tfidf)
     dummies = pd.get_dummies(
-        df, columns=['country', 'price_level'], drop_first=False)
+        df[['country','price_level']])
     scaled_data = scale(df[['word_count', 'sentiment']], scaler)
     X = pd.concat([tfi_df, dummies, scaled_data], axis=1)
     y = df.award
@@ -127,10 +129,12 @@ def get_baseline(train: pd.DataFrame) -> md:
 def run_train_and_validate(train: pd.DataFrame,
                            validate: pd.DataFrame) -> pd.DataFrame:
     tfidf = TfidfVectorizer(ngram_range=(1, 2))
-    trainx, trainy = get_features_and_target(train, tfidf=tfidf)
-    validx, validy = get_features_and_target(validate, tfidf=tfidf)
+    scaler = MinMaxScaler()
+    trainx, trainy = get_features_and_target(train, scaler=scaler, tfidf=tfidf)
+    validx, validy = get_features_and_target(
+        validate, scaler=scaler, tfidf=tfidf)
     models = [DecisionTreeClassifier(), RandomForestClassifier(),
-              LogisticRegression(), GradientBoostingClassifier()]
+              LogisticRegression()]
     ret_df = pd.DataFrame()
 
     for model in models:
