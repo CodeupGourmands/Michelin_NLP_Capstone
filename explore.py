@@ -93,11 +93,19 @@ def sentiment_scores_bar(train):
     dfg = train.groupby(['award'])[
         'sentiment'].mean().sort_values(ascending=False)
     # create a bar plot
-    dfg.plot(kind='bar', title='Sentiment Score', ylabel='Mean Sentiment Score',
+    dfg.plot(kind='bar', title='Sentiment Score by Award', ylabel='Mean Sentiment Score',
              xlabel='', fontsize=20, color=['#beaed4', '#f0027f', '#7fc97f', '#fdc086'])
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=22)
     plt.show()
+
+
+def sentiment_country(train):  
+    dfg = train.groupby(['country'])[
+        'sentiment'].mean().sort_values(ascending=False)
+    # create a bar plot
+    dfg.plot(kind='bar', title='Sentiment Score by Country', ylabel='Mean Sentiment Score',
+             xlabel='', fontsize=10)
 
 # -----------------------------Stats Tests-------------------------------#
 
