@@ -15,6 +15,7 @@ EXTRA_WORDS: List[str] = ['dish', 'restaurant',
                           'dining', 'chef', 'menu', 'cuisine']
 EXCLUDE_WORDS: List[str] = []
 
+NGRAMS_TO_REMOVE:List[str] = []
 
 def change_dtype_str(df: pd.DataFrame) -> pd.DataFrame:
     '''

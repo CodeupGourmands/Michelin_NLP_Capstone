@@ -130,17 +130,8 @@ def run_train_and_validate(train: pd.DataFrame,
     for model in models:
         model_results = {}
         model_name = str(model)
-        model_name = model_name[:len(model_name)-2]
-        pickle_path = 'data/cached_models/' + model_name + '.pkl'
-        pickle_exists = isfile(pickle_path)
-        if pickle_exists:
-            model = unpickle_model(pickle_path)
-            print(type(model))
-        print('Running ' + model_name + ' On Train')
+        model_name = model_name.split('(')[0]
         yhat = predict(model, trainx, trainy)
-        if not pickle_exists:
-            print('Pickling model!')
-            pickle_model(model, pickle_path)
         model_results['Train'] = accuracy_score(trainy, yhat)
         print('Running ' + model_name + ' On Validate')
         yhat = predict(model, validx)
@@ -166,11 +157,10 @@ def tune_model(model: ModelType, train: pd.DataFrame,
                parameters: Dict[str, List[NumberType]]) -> pd.DataFrame:
     scorer = make_scorer(accuracy_score)
     train_validate = pd.concat([train, validate]).sort_index()
-    tfidf = TfidfVectorizer(ngram_range=(1,2))
-    trainx,trainy = get_features_and_target(train_validate,tfidf)
-    grid_search = GridSearchCV(model,parameters,verbose=2,scoring=scorer,n_jobs=3)
-    grid_search.fit(trainx,trainy)
+    tfidf = TfidfVectorizer(ngram_range=(1, 2))
+    trainx, trainy = get_features_and_target(train_validate, tfidf)
+    grid_search = GridSearchCV(
+        model, parameters, verbose=2, scoring=scorer, n_jobs=3)
+    grid_search.fit(trainx, trainy)
     print(f'Best results are:\n{grid_search.best_params_}\n')
     return grid_search.best_estimator_
-
-    
