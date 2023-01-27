@@ -15,6 +15,8 @@ EXTRA_WORDS: List[str] = ['dish', 'restaurant',
                           'dining', 'chef', 'menu', 'cuisine']
 EXCLUDE_WORDS: List[str] = []
 
+NGRAMS_TO_REMOVE: List[str] = []
+
 
 def change_dtype_str(df: pd.DataFrame) -> pd.DataFrame:
     '''
@@ -143,7 +145,10 @@ def squeaky_clean(string_to_clean: str,
     '''
     string_to_clean = basic_clean(string_to_clean)
     string_to_clean = tokenize(string_to_clean)
-    return remove_stopwords(string_to_clean, extra_words, exclude_words)
+    string_to_clean = remove_stopwords(
+        string_to_clean, extra_words, exclude_words)
+    string_to_clean = remove_ngrams(string_to_clean, NGRAMS_TO_REMOVE)
+    return string_to_clean
 
 
 def process_nl(document_series: pd.Series,
@@ -218,12 +223,8 @@ def tvt_split(df: pd.DataFrame,
     return train, validate, test
 
 
-def sentiment_score(lemmatized: pd.Series) -> pd.Series:
-    sia = SentimentIntensityAnalyzer()
-    scores = []
-    for l in lemmatized:
-        scores.append(sia.polarity_scores(l)['compound'])
-    return pd.Series(scores, name='sentiment')
+def sentiment_score(lemmatized: str, sia: SentimentIntensityAnalyzer) -> float:
+    return sia.polarity_scores(lemmatized)['compound']
 
 
 def prepare_michelin(df: pd.DataFrame,
@@ -244,9 +245,51 @@ def prepare_michelin(df: pd.DataFrame,
     df = change_dtype_str(df)
     lemmatized = process_nl(df.data)
     df = pd.concat([df, lemmatized], axis=1)
-    df['sentiment'] = sentiment_score(df.lemmatized)
+    sia = SentimentIntensityAnalyzer()
+    df['sentiment'] = df.lemmatized.apply(sentiment_score, sia=sia)
     df['word_count'] = df.lemmatized.str.split().apply(len)
 
     if split:
         return tvt_split(df, stratify='award')
     return df
+
+
+def prep_classification_data(train, validate, test):
+    '''
+    This function takes in train, validate, and test and returns
+    train, validate, and test prepped for classification modeling
+    '''
+    # Impute NaN values in sentiment with the mean
+    train['sentiment'].fillna(int(train['sentiment'].mean()), inplace=True)
+    validate['sentiment'].fillna(
+        int(validate['sentiment'].mean()), inplace=True)
+    test['sentiment'].fillna(int(test['sentiment'].mean()), inplace=True)
+    # Create dummy columns
+    dummy_train = pd.get_dummies(
+        train, columns=['country', 'price_level'], drop_first=False)
+    dummy_validate = pd.get_dummies(
+        validate, columns=['country', 'price_level'], drop_first=False)
+    dummy_test = pd.get_dummies(
+        test, columns=['country', 'price_level'], drop_first=False)
+    # Add the dummy variables to the original dataframe
+    train = train.assign(**dummy_train)
+    validate = validate.assign(**dummy_validate)
+    test = test.assign(**dummy_test)
+    # Keep only the columns we need for modeling
+    columns_to_keep = ['award', 'sentiment', 'word_count',
+                       'price_level_1', 'price_level_2',
+                       'price_level_3', 'price_level_4',
+                       'country_france', 'country_japan',
+                       'country_italy', 'country_usa', 'country_germany']
+    train = train[columns_to_keep]
+    validate = validate[columns_to_keep]
+    test = test[columns_to_keep]
+
+    return train, validate, test
+
+
+def remove_ngrams(lemmatized: str, ngrams=List[str]) -> str:
+    # TODO Docstring
+    for n in ngrams:
+        lemmatized = ''.join(lemmatized.split(n))
+    return lemmatized
