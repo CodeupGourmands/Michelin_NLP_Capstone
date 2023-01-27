@@ -154,7 +154,7 @@ def unpickle_model(filename: str) -> ModelType:
 
 def tune_model(model: ModelType, train: pd.DataFrame,
                validate: pd.DataFrame,
-               parameters: Dict[str, List[NumberType]]) -> pd.DataFrame:
+               parameters: Dict[str, List[NumberType]]) -> ModelType:
     scorer = make_scorer(accuracy_score)
     train_validate = pd.concat([train, validate]).sort_index()
     tfidf = TfidfVectorizer(ngram_range=(1, 2))
