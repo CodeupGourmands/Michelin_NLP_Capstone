@@ -1,2 +1,4 @@
-sudo chmod 775 ~/.conda/environments.txt
-conda env create -f capstone.yml -n capstone
+conda create -n capstone
+conda activate capstone
+conda install -c defaults mamba
+mamba install --file capstone.yml
