@@ -251,3 +251,32 @@ def prepare_michelin(df: pd.DataFrame,
     if split:
         return tvt_split(df, stratify='award')
     return df
+
+
+def prep_classification_data(train, validate, test):
+    '''
+    This function takes in train, validate, and test and returns
+    train, validate, and test prepped for classification modeling
+    '''
+    # Impute NaN values in sentiment with the mean
+    train['sentiment'].fillna(int(train['sentiment'].mean()), inplace=True)
+    validate['sentiment'].fillna(int(validate['sentiment'].mean()), inplace=True)
+    test['sentiment'].fillna(int(test['sentiment'].mean()), inplace=True)
+    # Create dummy columns
+    dummy_train = pd.get_dummies(train, columns=['country', 'price_level'], drop_first=False)
+    dummy_validate = pd.get_dummies(validate, columns=['country', 'price_level'], drop_first=False)
+    dummy_test = pd.get_dummies(test, columns=['country', 'price_level'], drop_first=False)
+    # Add the dummy variables to the original dataframe
+    train = train.assign(**dummy_train)
+    validate = validate.assign(**dummy_validate)
+    test = test.assign(**dummy_test)
+    # Keep only the columns we need for modeling
+    columns_to_keep = ['award', 'sentiment', 'word_count', 'price_level_1', 'price_level_2',
+                       'price_level_3', 'price_level_4', 'country_france', 'country_japan',
+                       'country_italy', 'country_usa', 'country_germany']
+    train = train[columns_to_keep]
+    validate = validate[columns_to_keep]
+    test = test[columns_to_keep]
+    
+    return train, validate, test
+
