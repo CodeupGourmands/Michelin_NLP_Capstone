@@ -144,7 +144,9 @@ def squeaky_clean(string_to_clean: str,
     '''
     string_to_clean = basic_clean(string_to_clean)
     string_to_clean = tokenize(string_to_clean)
-    return remove_stopwords(string_to_clean, extra_words, exclude_words)
+    string_to_clean = remove_stopwords(string_to_clean, extra_words, exclude_words)
+    string_to_clean = remove_ngrams(string_to_clean,NGRAMS_TO_REMOVE)
+    return string_to_clean
 
 
 def process_nl(document_series: pd.Series,
@@ -248,6 +250,7 @@ def prepare_michelin(df: pd.DataFrame,
     df['sentiment'] = sentiment_score(df.lemmatized)
     df['word_count'] = df.lemmatized.str.split().apply(len)
 
+
     if split:
         return tvt_split(df, stratify='award')
     return df
@@ -280,3 +283,8 @@ def prep_classification_data(train, validate, test):
     
     return train, validate, test
 
+def remove_ngrams(lemmatized:str,ngrams=List[str])->str:
+    # TODO Docstring
+    for n in ngrams:
+        lemmatized = ''.join(lemmatized.split(n))
+    return lemmatized

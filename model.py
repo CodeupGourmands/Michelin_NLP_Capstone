@@ -127,6 +127,7 @@ def run_train_and_validate(train: pd.DataFrame,
     models = [DecisionTreeClassifier(), RandomForestClassifier(),
               LogisticRegression(), GradientBoostingClassifier()]
     ret_df = pd.DataFrame()
+    
     for model in models:
         model_results = {}
         model_name = str(model)
