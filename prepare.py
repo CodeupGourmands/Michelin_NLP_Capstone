@@ -258,7 +258,6 @@ def prep_classification_data(train, validate, test):
     This function takes in train, validate, and test and returns
     train, validate, and test prepped for classification modeling
     '''
-    # Impute NaN values in sentiment with the mean
     # Create dummy columns
     dummy_train = pd.get_dummies(
         train, columns=['country', 'price_level'], drop_first=False)
