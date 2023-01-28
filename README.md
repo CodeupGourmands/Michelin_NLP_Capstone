@@ -4,7 +4,7 @@
 * Click the buttons below to see the Project Repo and Canva presentation.  
 
 [![GitHub](https://img.shields.io/badge/Project%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/CodeupGourmands/Michelin_NLP_Capstone)
-[![Canva](https://img.shields.io/badge/Project%20Canva-%2300C4CC.svg?style=for-the-badge&logo=Canva&logoColor=white)](https://www.canva.com)
+[![Canva](https://img.shields.io/badge/Project%20Canva-%2300C4CC.svg?style=for-the-badge&logo=Canva&logoColor=white)](https://www.canva.com/design/DAFYvwhJqEo/gAIwb8yj4v1KezlRXNb4LA/edit?utm_content=DAFYvwhJqEo&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 [![Trello](https://img.shields.io/badge/Project%20Trello-0052CC?style=for-the-badge&logo=trello&logoColor=white)](https://trello.com/b/RCNLGlKK)
 
 ## Meet Team Codeup Gourmands!
