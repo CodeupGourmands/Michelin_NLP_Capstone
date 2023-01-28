@@ -5,25 +5,7 @@
 
 [![GitHub](https://img.shields.io/badge/Project%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/CodeupGourmands/Michelin_NLP_Capstone)
 [![Canva](https://img.shields.io/badge/Project%20Canva-%2300C4CC.svg?style=for-the-badge&logo=Canva&logoColor=white)](https://www.canva.com)
-
-<!--
-## Meet Group 1
-|Team Member         |[LinkedIn]                                                |[GitHub]                               |
-|:-------------------|:---------------------------------------------------------|:--------------------------------------|
-|Yuvia Cardenas      |https://www.linkedin.com/in/yuvia-cardenas-083080126/     |https://github.com/yuvia-cardenas      |
-|Justin Evans        |https://www.linkedin.com/in/qmcbt                         |https://github.com/QMCBT-JustinEvans   |
-|Cristina Lucin      |https://www.linkedin.com/in/cristina-lucin/               |https://github.com/cristinalucin       |
-|Woodrow Sims        |https://www.linkedin.com/in/woodrow-sims/                 |https://github.com/Is0metry            |
--->
-<!--
-## Meet Team Codeup Gourmands!
-|PIC|Team Member         |[LinkedIn]                                               |[GitHub]                              |
-|:-:|:-------------------|:--------------------------------------------------------|:-------------------------------------|
-|![Yuvia's_LinkedIn](https://media.licdn.com/dms/image/D4E35AQEVdVWd6q4e0Q/profile-framedphoto-shrink_200_200/0/1673045277264?e=1675101600&v=beta&t=COJMpilKwgjdlvkMt3zjjf9LZI7ECWdrYUZ_vRkSLSM)|Yuvia Cardenas      |[![LinkedIn](https://img.shields.io/badge/Yuvia's%20linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/yuvia-cardenas-083080126/)|[![GitHub](https://img.shields.io/badge/Yuvia's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yuvia-cardenas)|
-|![Justin's_LinkedIn](https://media.licdn.com/dms/image/D5635AQEHlbOPQOxX3g/profile-framedphoto-shrink_200_200/0/1674053257186?e=1675101600&v=beta&t=krAlXEipppaBNbcLkHXmaWFOS5AFzFBuAHZ3KGVI-kE)|Justin Evans        |[![LinkedIn](https://img.shields.io/badge/Justin's%20linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/qmcbt)|[![GitHub](https://img.shields.io/badge/Justin's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/QMCBT-JustinEvans)|
-|![Cristina's_LinkedIn](https://media.licdn.com/dms/image/D5603AQHE8_X2lzZ0YA/profile-displayphoto-shrink_200_200/0/1665181074756?e=1680134400&v=beta&t=_wEP-h7f7oBrY6cKyRyAgWc5xGDpnXfdU_J0ktgLPuU)|Cristina Lucin      |[![LinkedIn](https://img.shields.io/badge/Cristina's%20linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/cristina-lucin/)|[![GitHub](https://img.shields.io/badge/Cristina's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/cristinalucin)|
-|![Woody's_LinkedIn](https://media.licdn.com/dms/image/D4E35AQEMzstSHpne1w/profile-framedphoto-shrink_200_200/0/1658367242220?e=1675101600&v=beta&t=_4-2eSZyOIixU5xtf9XUoAFJjGg_hOjB4ERDaK3yfGI)|Woodrow Sims        |[![LinkedIn](https://img.shields.io/badge/Woodrow's%20linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/woodrow-sims/)|[![GitHub](https://img.shields.io/badge/Woodrow's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Is0metry)|
--->
+[![Trello](https://img.shields.io/badge/Project%20Trello-0052CC?style=for-the-badge&logo=trello&logoColor=white)](https://trello.com/b/RCNLGlKK)
 
 ## Meet Team Codeup Gourmands!
 |Yuvia Cardenas|Justin Evans|Cristina Lucin|Woodrow Sims|
@@ -47,8 +29,13 @@ First, our team will acquire and prepare the data for exploration. Then, we will
 
 
 # Reproduction of this Data:
-* Can be accomplished using a local `env.py` containing `github_username`, `github_token`, and host Repository link information for access to the GitHub project Readme file search results that you want to explore.
+Can be accomplished using a local `env.py` containing `github_username`, `github_token`, and host Repository link information for access to the GitHub project Readme file search results that you want to explore.
 **Warning** to make the scraping successfull we added pauses 20 sec/per page. This slows down the first run of the program. After the scraping all data is saved locally in the `data.json` file.
+
+<details open="">
+<summary><b>Reproduction Instructions:</b></summary><br>
+<p align="left">    
+
   * To retrieve a github personal access token:
     * 1. Go here and generate a personal access token: https://github.com/settings/tokens  
          You do _not_ need to select any scopes, i.e. leave all the checkboxes unchecked
@@ -63,7 +50,9 @@ First, our team will acquire and prepare the data for exploration. Then, we will
    * `modeling.py`
 
 * A step by step walk through of each piece of the Data Science pipeline can be found by reading and running the support files located in the individual team members folders on our ```Codeup-Mirzakhani-GitHub-Scrape-NLP-Project``` github repository found here: https://github.com/Codeup-Mirzakhani-Group1-NLP-Project/Codeup-Mirzakhani-GitHub-Scrape-NLP-Project
-    
+</details>
+
+#  
 # Initial Thoughts
 Our initial thoughts were that since we centered our `GitHub` repositories around the topic of **Space**, that possibly unique scientific terms found within the readme files would be deterministic of the primary coding language used to conduct exploration and modeling of those projects. Another thought was that the readme files would be peppered with code specific terminology that would reveal the primary language used to code the projects.
 
