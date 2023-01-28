@@ -20,6 +20,8 @@ ModelType = Union[DecisionTreeClassifier, RandomForestClassifier,
                   LogisticRegression, GradientBoostingClassifier]
 NumberType = Union[float, int, np.number]
 
+N_COUNTRIES = 10
+
 
 def scale(features: DataType, scaler: MinMaxScaler) -> DataType:
     '''
@@ -109,10 +111,13 @@ def get_features_and_target(df: pd.DataFrame,
     ## Returns
     Tuple containing the features and the Target
     '''
-# TODO Add and scale additional features
     tfi_df = tf_idf(df.lemmatized, tfidf)
+    top_n_countries = df.country.value_counts(
+    )[:N_COUNTRIES].index.to_list()
+    language_mask = (~df.country.isin(top_n_countries))
+    df.loc[language_mask, 'country'] = 'Other'
     dummies = pd.get_dummies(
-        df[['country','price_level']])
+        df[['country', 'price_level']])
     scaled_data = scale(df[['word_count', 'sentiment']], scaler)
     X = pd.concat([tfi_df, dummies, scaled_data], axis=1)
     y = df.award
