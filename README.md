@@ -71,22 +71,24 @@ Our initial thoughts were that since we centered our `GitHub` repositories aroun
 * Acquire data from `GitHub` `Readme` files by scraping the `Github API`
 * Clean and Prepare the data using `RegEx` and `Beautiful soup`.
 * Explore data in search of relevant keyword grouping using bi-grams and n-grams 
-* Answer the following initial questions:
-
-    * **Question 1.** How is the target variable represented in the sample?
-    
-    * **Question 2.** Are there any specific words or word groups that can assist with identifying the Language JavaScript or Java over the other languages?
-
-    * **Question 3.** What are the top words used in cleaned C#?
-
-    * **Question 4.** What are the most used words in cleaned python strings?
-    
-    * **Question 5.** Is there an association between coding language and the lemmatized mean length of the string?
-    
-    * **Question 6.** Is there a significant difference in Sentiment across all four languages?
-
-    * **Question 7.** How different are the bi-grams among four programming languages?
-
+* Conduct statistical testing as necessary
+<details open="">
+<summary>▪︎ Answer the following initial questions:</summary><br>
+<p align="left">
+    <b>Question 1.</b> How is the target variable represented in the sample?
+    <br>
+    <b>Question 2.</b> Are there any specific words or word groups that can assist with identifying the Language JavaScript or Java over the other languages?
+    <br>
+    <b>Question 3.</b> What are the top words used in cleaned C#?
+    <br>
+    <b>Question 4.</b> What are the most used words in cleaned python strings?
+    <br>
+    <b>Question 5.</b> Is there an association between coding language and the lemmatized mean length of the string?
+    <br>
+    <b>Question 6.</b> Is there a significant difference in Sentiment across all four languages?
+    <br>
+    <b>Question 7.</b> How different are the bi-grams among four programming languages?
+</details>
 
 * Develop a Model to predict program language of space related projects using either `Python`, `Javascript`, `Java`, or `C#` based on input from `GitHub` Project `Readme` files.
     * Evaluate models on train and validate data using accuracy score
@@ -97,36 +99,79 @@ Our initial thoughts were that since we centered our `GitHub` repositories aroun
 
 # Data Dictionary:
 
-    
-## Features
+<details open="">
+<summary><b>Original Features:</b></summary><br>
+<p align="left">    
+
 |Feature    |Description       |
 |:----------|:-----------------|
-|`original`| The original data we pulled from the `GitHub`|	
+|name|The name of the awardee restaurant|
+|address|The address of the awardee restaurant|
+|location|The city and country or province of the awardee restaurant|
+|price|This is a representation of the price value from one to four (min-max) using the curency symbol of the location country|
+|cousine|This is the main style of cousine served by the awardee restaurant (Some restaurants have cousine styles)|
+|longitude|This is the geographical longitude of the awardee restaurant|
+|latitude|This is the geographical latitude of the awardee restaurant|
+|url|This is the url address to theMichelin Review of the awardee restaurant|
+|facilities_and_services|Thes are the facilities and services provided by or available at the awardee restaurant|
+|data|This is the scraped review for each awardee document|	
 |`first_clean`| Text after cleaning the `html` and `markdown` code|
-|`clean`|Tokenized text in lower case, with latin symbols only|
-|`lemmatized`|Lemmatized text|
+
+
+</details>
+
+<details open="">
+<summary><b>Feature Engineered:</b></summary><br>
+<p align="left">    
+
+|Feature    |Description       |
+|:----------|:-----------------|
+|price_level|This is a numeric categorical of the price column from 1 to 4 (min-max) representing the same relative level of expense across all countries|
+|city|This is the city as captured by the first position of the location feature|
+|country|This is the country as captured by the second position of the location feature; also captures provinces that only had one entry in the location feature|
+|clean|Tokenized text in lower case, with latin symbols only from the original data column containing the scraped reviews|
+|lemmatized |This is the original data column containing the scraped reviews after being cleaned and lemmatzed|
+|word_count|This feature shows the word count of the review each corresponding document|
 |`sentiment`|The coumpound sentiment score of each observation|
 |`lem_length`|The length of the lemmatized text in symbols|
 |`original_length`|The length of the original text in symbols|
 |`length_diff`|The difference in length between the orignal_length and the length of the `clean` text|
+</details>
 
-## Target Variable
-|Feature    |Description       |
-|:----------|:-----------------|
-|`language`|`JavaScript`, `C#`, `Java` or `Python` programming languages|
+<details open="">
+<summary><b>Target Variable:</b></summary><br>
+<p align="left">    
 
+|Feature|Value|Description       |
+|:------|:---:|:-----------------|
+|award|['1 michelin star', '2 michelin stars', '3 michelin stars', 'bib gourmand']|This feature identifies which award was presented to the restaurant belonging to each document|
+|     |1 michelin star |Entry level award|
+|     |2 michelin stars|Mid level award  |
+|     |3 michelin stars|Highest Award    |
+|     |bib gourmand    |Special category award for premiere cousine provided at a low price point|. 
+</details>
 
+#  
 # Acquire
+Our data was acquired from the `[NAME](LINK)` GitHub repository which is updated regularly with the last update being SEP 2022 as of the completion of our project.  From this initial data set, we used the url's for each Michelin award to scrape the Reviews to enhance the original data set. The details can be seen under the acquisition actions below.
+<details open="">
+<summary><b>Acquisition Actions:</b></summary><br>
+<p align="left">
 
 * We scraped our data from `github.com` using `Beautiful Soup`.
 * We grabbed the link of **space themed repos** where the main coding language was either `Python`, `C#`, `Java` or `Javasript` on the first 100 pages of `github`.
 * Each row represents a `Readme` file from a different project repository.
 * Each column represents a feature created to try and predict the primary coding languge used.
 We acquired 432 entries.
+</details>
 
+#  
 # Prepare
+Our data set was prepared following standard Data Processing procedures and the details can be explored under the prepare actions below.
 
-**Prepare Actions:**
+<details open="">
+<summary><b>Prepare Actions:</b></summary><br>
+<p align="left">
 
 * **NULLS:** There were no null values all repositories contained a readme for us to reference
 * **FEATURE ENGINEER:** Use exploration with bag of words to create new  categorical features from polarizing words. We created columns with `clean` text ,`lemmatized` text , and columns containing the lengths of them as well. We also created a column that we filled with the sentiment score of the text in the readme. 
@@ -136,8 +181,9 @@ We acquired 432 entries.
 * **DROP 2:** Drop Location Reference Columns unsuitable for use with ML without categorical translation. 
 * **ENCODED:** No encoding required.
 * **MELT:** No melts needed.
+</details>
 
-
+#  
 # Summary of Data Cleansing
 * Luckily all of our data was usable so we had 0 nulls or drops.
     
