@@ -12,7 +12,9 @@ from sklearn.model_selection import train_test_split
 stopwords = stpwrds.words('english')
 
 EXTRA_WORDS: List[str] = ['dish', 'restaurant',
-                          'dining', 'chef', 'menu', 'cuisine']
+                          'dining', 'chef', 'menu', 'cuisine',
+                          'there', 'ingredient', 'flavour',
+                          'also', 'wine']
 EXCLUDE_WORDS: List[str] = []
 
 NGRAMS_TO_REMOVE: List[str] = []
