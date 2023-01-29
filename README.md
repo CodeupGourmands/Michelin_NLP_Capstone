@@ -29,32 +29,31 @@ First, our team will acquire and prepare the data for exploration. Then, we will
 
 
 # Reproduction of this Data:
-Can be accomplished using a local `env.py` containing `github_username`, `github_token`, and host Repository link information for access to the GitHub project Readme file search results that you want to explore.
-**Warning** to make the scraping successfull we added pauses 20 sec/per page. This slows down the first run of the program. After the scraping all data is saved locally in the `data.json` file.
+Can be accomplished by simply cloning our project and running the final notebook as explained in the instructions below:
+
+**Warning** to ensure you are not banned from the host while scraping, you will need to add a 2sec sleep pause per page with a backup 5sec sleep command in case of error. This slows down the initial scraping run of the program. After web scraping each of the 6700+ reviews, all data is saved locally to the `michelin_df.pickle` file.
 
 <details open="">
 <summary><b>Reproduction Instructions:</b></summary><br>
 <p align="left">    
 
-  * To retrieve a github personal access token:
-    * 1. Go here and generate a personal access token: https://github.com/settings/tokens  
-         You do _not_ need to select any scopes, i.e. leave all the checkboxes unchecked
-    * 2. Save it in your env.py file under the variable ```github_token```  
-         Add your github username to your env.py file under the variable ```github_username```  
-         
-* Clone the Repository using this code ```git clone git@github.com:Codeup-Mirzakhani-Group1-NLP-Project/Codeup-Mirzakhani-GitHub-Scrape-NLP-Project.git``` then run the ```Final_Report_NLP-Project.ipynb``` Jupyter Notebook. You will need to ensure the below listed files, at a minimum, are included in the repo in order to be able to run.
+* Clone the Repository using this code in your terminal ```git clone git@github.com:CodeupGourmands/Michelin_NLP_Capstone.git``` then run the ```mvp_notebook.ipynb``` Jupyter Notebook.  
+
+* You will need to ensure the below listed files, at a minimum, are included in the repo in order to be able to run.
    * `Final_Report_NLP-Project.ipynb`
    * `acquire.py`
    * `prepare.py`
-   * `explore_final.py`
-   * `modeling.py`
-
-* A step by step walk through of each piece of the Data Science pipeline can be found by reading and running the support files located in the individual team members folders on our ```Codeup-Mirzakhani-GitHub-Scrape-NLP-Project``` github repository found here: https://github.com/Codeup-Mirzakhani-Group1-NLP-Project/Codeup-Mirzakhani-GitHub-Scrape-NLP-Project
+   * `explore.py`
+   * `model.py`
+   * `evaluate.py`  
+<br>
+* A step by step walk through of each piece of the Data Science pipeline can be found by reading and running the support files located in the individual team branches by visiting our ```Codeup-Mirzakhani-GitHub-Scrape-NLP-Project``` main github repository by clicking the "Project GitHub" button at the top of this readme file.
 </details>
 
-#  
+<br>
+
 # Initial Thoughts
-Our initial thoughts were that since we centered our `GitHub` repositories around the topic of **Space**, that possibly unique scientific terms found within the readme files would be deterministic of the primary coding language used to conduct exploration and modeling of those projects. Another thought was that the readme files would be peppered with code specific terminology that would reveal the primary language used to code the projects.
+Our initial thoughts after a very cursery glance at some of the data distribution were that country, cuisine, and Tri-Grams may be very good features to predict our target 'award'. Another thought was that maybe price and available facilities could weigh in heavily to help determine the award level obtained.
 
 # The Plan
 * Acquire data from `GitHub` `Readme` files by scraping the `Github API`
@@ -62,7 +61,7 @@ Our initial thoughts were that since we centered our `GitHub` repositories aroun
 * Explore data in search of relevant keyword grouping using bi-grams and n-grams 
 * Conduct statistical testing as necessary
 <details open="">
-<summary>▪︎ Answer the following initial questions:</summary><br>
+<summary>▪︎ Answer 10 initial exploratory questions:</summary><br>
 <p align="left">
     <b>Question 1.</b> How is the target variable represented in the sample?
     <br>
@@ -103,10 +102,7 @@ Our initial thoughts were that since we centered our `GitHub` repositories aroun
 |latitude|This is the geographical latitude of the awardee restaurant|
 |url|This is the url address to theMichelin Review of the awardee restaurant|
 |facilities_and_services|Thes are the facilities and services provided by or available at the awardee restaurant|
-|data|This is the scraped review for each awardee document|	
-|`first_clean`| Text after cleaning the `html` and `markdown` code|
-
-
+|data|This is the scraped review for each awardee document|
 </details>
 
 <details open="">
@@ -139,8 +135,8 @@ Our initial thoughts were that since we centered our `GitHub` repositories aroun
 |     |3 michelin stars|Highest Award    |
 |     |bib gourmand    |Special category award for premiere cousine provided at a low price point|. 
 </details>
+<br>
 
-#  
 # Acquire
 Our data was acquired from the `[NAME](LINK)` GitHub repository which is updated regularly with the last update being SEP 2022 as of the completion of our project.  From this initial data set, we used the url's for each Michelin award to scrape the Reviews to enhance the original data set. The details can be seen under the acquisition actions below.
 <details open="">
@@ -153,8 +149,8 @@ Our data was acquired from the `[NAME](LINK)` GitHub repository which is updated
 * Each column represents a feature created to try and predict the primary coding languge used.
 We acquired 432 entries.
 </details>
-
-#  
+<br>
+  
 # Prepare
 Our data set was prepared following standard Data Processing procedures and the details can be explored under the prepare actions below.
 
@@ -162,29 +158,25 @@ Our data set was prepared following standard Data Processing procedures and the 
 <summary><b>Prepare Actions:</b></summary><br>
 <p align="left">
 
-* **NULLS:** There were no null values all repositories contained a readme for us to reference
-* **FEATURE ENGINEER:** Use exploration with bag of words to create new  categorical features from polarizing words. We created columns with `clean` text ,`lemmatized` text , and columns containing the lengths of them as well. We also created a column that we filled with the sentiment score of the text in the readme. 
-* **DROP:** All Data acquired was used.
-* **RENAME:** Columns for Human readability.    
-* **REORDER:** Rearange order of columns for convenient manipulation.   
-* **DROP 2:** Drop Location Reference Columns unsuitable for use with ML without categorical translation. 
-* **ENCODED:** No encoding required.
+* **FEATURE ENGINEER:** Used exploration with bag of words to create new  categorical features from polarizing words. We created columns with `clean` text ,`lemmatized` text , and a column containing the word_count length of the reviews as well. We also created a column that we filled with the sentiment score of the text in the reviews. 
+* **DROP:** We dropped two columns that contained Nulls because we determined they would not be used as features for this itteration of our project.
+* **RENAME:** Columns to lowercase with no spaces.    
+* **ENCODED:** [DISCUSS ENCODING].
 * **MELT:** No melts needed.
 </details>
-
-#  
+<br>
+  
 # Summary of Data Cleansing
-* Luckily all of our data was usable so we had 0 nulls or drops.
-    
-* Note: Special care was taken to ensure that there was no leakage of this data. All code parts were removed
-
+[EXPLICITLY DISCUSS NULLS & IMPUTING]
+* **NULLS:** There were no Nulls in our Target feature, we dropped phone_number and website_url features since they contained nulls and we did not need them for this itteration of the project.
+* **IMPUTED:** There were missing values in the price column that were imputed with the mode.
+* **Note:** Special care was taken to ensure that there was no leakage of this data.  
 
 # Split
 
-* **SPLIT:** train, validate and test (approx. 50/30/20), stratifying on target of `language`
+* **SPLIT:** train, validate and test (approx. 56/24/20), stratifying on target of `award`
 * **SCALED:** We scaled all numeric columns. ['lem_length','original_length','clean_length','length_diff']
 * **Xy SPLIT:** split each DataFrame (train, validate, test) into X (features) and y (target) 
-
 
 ## A Summary of the data
 
