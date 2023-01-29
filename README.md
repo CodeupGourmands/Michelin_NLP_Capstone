@@ -31,7 +31,7 @@ First, our team will acquire and prepare the data for exploration. Then, we will
 # Reproduction of this Data:
 Can be accomplished by simply cloning our project and running the final notebook as explained in the instructions below:
 
-**Warning** to ensure you are not banned from the host while scraping, you will need to add a 2sec sleep pause per page with a backup 5sec sleep command in case of error. This slows down the initial scraping run of the program. After web scraping each of the 6700+ reviews, all data is saved locally to the `michelin_df.pickle` file.
+**Warning** to ensure you are not banned from the host while scraping, a 2sec sleep pause per page with a backup 5sec sleep command in case of error was implemented in the acquire function. This slows down the initial scraping run of the program. After web scraping each of the 6700+ reviews, all data is saved locally to the `michelin_df.pickle` file.
 
 <details open="">
 <summary><b>Reproduction Instructions:</b></summary><br>
@@ -53,12 +53,13 @@ Can be accomplished by simply cloning our project and running the final notebook
 <br>
 
 # Initial Thoughts
-Our initial thoughts after a very cursery glance at some of the data distribution were that country, cuisine, and Tri-Grams may be very good features to predict our target 'award'. Another thought was that maybe price and available facilities could weigh in heavily to help determine the award level obtained.
+Our initial thoughts are that country, cuisine, and words/groups of words (bigrams and trigrams) may be very impactful features to predict our target 'award'. Another thought was that price level and available facilities could help determine the award level obtained.
 
 # The Plan
-* Acquire data from `GitHub` `Readme` files by scraping the `Github API`
-* Clean and Prepare the data using `RegEx` and `Beautiful soup`.
-* Explore data in search of relevant keyword grouping using bi-grams and n-grams 
+* Acquire initial data (CSV file) via `Kaggle` download
+* Acquire review data using `Beautifl Soup` via 'get_michelin_pages' function in acquire file
+* Clean and Prepare the data utilizing `RegEx` and string functions
+* Explore data in search of significant relationships to target (Michelin Star Ratings) 
 * Conduct statistical testing as necessary
 <details open="">
 <summary>▪︎ Answer 10 initial exploratory questions:</summary><br>
@@ -67,22 +68,22 @@ Our initial thoughts after a very cursery glance at some of the data distributio
     <br>
     <b>Question 2.</b> Are there any specific words or word groups that can assist with identifying the Language JavaScript or Java over the other languages?
     <br>
-    <b>Question 3.</b> What are the top words used in cleaned C#?
+    <b>Question 3.</b> What are the top words used in Michelin Reviews? By Award Category?
     <br>
     <b>Question 4.</b> What are the most used words in cleaned python strings?
     <br>
-    <b>Question 5.</b> Is there an association between coding language and the lemmatized mean length of the string?
+    <b>Question 5.</b> Is there an association between award level and the lemmatized mean length of the review?
     <br>
-    <b>Question 6.</b> Is there a significant difference in Sentiment across all four languages?
+    <b>Question 6.</b> Is there a significant difference in Sentiment by Award Category?
     <br>
     <b>Question 7.</b> How different are the bi-grams among four programming languages?
 </details>
 
-* Develop a Model to predict program language of space related projects using either `Python`, `Javascript`, `Java`, or `C#` based on input from `GitHub` Project `Readme` files.
+* Develop a Model to predict Award Category of Michelin restaurants:
     * Evaluate models on train and validate data using accuracy score
     * Select the best model based on the smallest difference in the accuracy score on the train and validate sets.
     * Evaluate the best model on test data
-* Run Custom Function on a single random Data input from `GitHub` `Readme` file to predict program language of that project.
+* Run Custom Function on a single random Data input from Michelin Restaurant Review text to predict award level of that restaurant.
 * Draw conclusions
 
 # Data Dictionary:
@@ -97,10 +98,10 @@ Our initial thoughts after a very cursery glance at some of the data distributio
 |address|The address of the awardee restaurant|
 |location|The city and country or province of the awardee restaurant|
 |price|This is a representation of the price value from one to four (min-max) using the curency symbol of the location country|
-|cousine|This is the main style of cousine served by the awardee restaurant (Some restaurants have cousine styles)|
+|cuisine|This is the main style of cousine served by the awardee restaurant|
 |longitude|This is the geographical longitude of the awardee restaurant|
 |latitude|This is the geographical latitude of the awardee restaurant|
-|url|This is the url address to theMichelin Review of the awardee restaurant|
+|url|This is the url address to the Michelin Review of the awardee restaurant|
 |facilities_and_services|Thes are the facilities and services provided by or available at the awardee restaurant|
 |data|This is the scraped review for each awardee document|
 </details>
@@ -130,24 +131,24 @@ Our initial thoughts after a very cursery glance at some of the data distributio
 |Feature|Value|Description       |
 |:------|:---:|:-----------------|
 |award|['1 michelin star', '2 michelin stars', '3 michelin stars', 'bib gourmand']|This feature identifies which award was presented to the restaurant belonging to each document|
-|     |1 michelin star |Entry level award|
-|     |2 michelin stars|Mid level award  |
-|     |3 michelin stars|Highest Award    |
-|     |bib gourmand    |Special category award for premiere cousine provided at a low price point|. 
+|     |1 michelin star |"High quality cooking, worth a stop!"|
+|     |2 michelin stars|"Excellent cooking, worth a detour!"|
+|     |3 michelin stars|"Exceptional cuisine, worth a special journey!" |
+|     |bib gourmand    |"Good quality, good value cooking"|. 
 </details>
 <br>
 
 # Acquire
-Our data was acquired from the `[NAME](LINK)` GitHub repository which is updated regularly with the last update being SEP 2022 as of the completion of our project.  From this initial data set, we used the url's for each Michelin award to scrape the Reviews to enhance the original data set. The details can be seen under the acquisition actions below.
+Our dataset of all Michelin Awardee restaurants worldwide was acquired January 17, 2023 from the Kaggle. This dataset is updated quarterly with addition/subtraction of Michelin Awardee restaurants.  From this initial data set, we utilized the Michelin Guide URL for each restaurant and Beautiful Soup to scrape the review text for reach restaurant, enhancing the original data set.
 <details open="">
 <summary><b>Acquisition Actions:</b></summary><br>
 <p align="left">
 
-* We scraped our data from `github.com` using `Beautiful Soup`.
-* We grabbed the link of **space themed repos** where the main coding language was either `Python`, `C#`, `Java` or `Javasript` on the first 100 pages of `github`.
-* Each row represents a `Readme` file from a different project repository.
-* Each column represents a feature created to try and predict the primary coding languge used.
-We acquired 432 entries.
+* We scraped our data from `guide.michelin.com` using `Beautiful Soup`
+* We grabbed the review text for each restaurant and appended the data back to the original dataframe
+* Each row represents a Michein Awardee restaurant
+* Each column represents a feature of the restaurant, including feature-engineered columns
+We acquired 6780 restaurant reviews (6 NaN values caused by restaurants no longer active Michelin Awardees).
 </details>
 <br>
   
@@ -161,36 +162,34 @@ Our data set was prepared following standard Data Processing procedures and the 
 * **FEATURE ENGINEER:** Used exploration with bag of words to create new  categorical features from polarizing words. We created columns with `clean` text ,`lemmatized` text , and a column containing the word_count length of the reviews as well. We also created a column that we filled with the sentiment score of the text in the reviews. 
 * **DROP:** We dropped two columns that contained Nulls because we determined they would not be used as features for this itteration of our project.
 * **RENAME:** Columns to lowercase with no spaces.    
-* **ENCODED:** [DISCUSS ENCODING].
-* **MELT:** No melts needed.
+* **ENCODED:** For modeling, price_category and country were encoded into dummy variables
 </details>
 <br>
   
 # Summary of Data Cleansing
 [EXPLICITLY DISCUSS NULLS & IMPUTING]
-* **NULLS:** There were no Nulls in our Target feature, we dropped phone_number and website_url features since they contained nulls and we did not need them for this itteration of the project.
-* **IMPUTED:** There were missing values in the price column that were imputed with the mode.
-* **Note:** Special care was taken to ensure that there was no leakage of this data.  
+* **NULLS:** There were no Nulls in our Target feature (award), we dropped phone_number and website_url features since they contained nulls and we did not need them for this iteration of the project. Six restaurants from the original Kaggle dataset are no longer Michelin restaurants, and those establishments were dropped
+* **IMPUTED:** There were missing values in the price column that were imputed with the mode
+* **Note:** Special care was taken to ensure that there was no leakage of this data
 
 # Split
 
 * **SPLIT:** train, validate and test (approx. 56/24/20), stratifying on target of `award`
-* **SCALED:** We scaled all numeric columns. ['lem_length','original_length','clean_length','length_diff']
+* **SCALED:** We scaled all numeric columns for modeling ['lem_length','original_length','clean_length','length_diff']
 * **Xy SPLIT:** split each DataFrame (train, validate, test) into X (features) and y (target) 
 
 ## A Summary of the data
 
-### There are 432 records (rows) in our data consisting of 1621 features (columns).
-* There are 1616 categorical features
-* There are 4 continuous features that represent measurements of value, size, time, or ratio.
-* One of the columns contains our target feature 'language'
+### There are 6780 records (rows) in our data consisting of XXXX features (columns).
+* There are XXXX categorical features
+* There are XXXX continuous features that represent measurements of value, size, time, or ratio.
+* One of the columns contains our target feature 'award'
 
 # Explore
 
-* In the exploration part we tried to identify if there are words, bigrams or trigrams that could help our model to identify the programming language. 
-* We ran statistical tests on the numerical features that we have created.
-* We explored differences between cleaned and lemmatized versions of c# and python.
-* We explore the association between coding language and the lemmatized mean of string lengths.
+* In the exploration part we tried to identify if there are words, bigrams or trigrams that could help our model to identify the award category
+* We ran statistical tests on the numerical and categorical features that we have created
+* We explore the association between award category and the lemmatized mean of review length
 
 ## Exploration Summary of Findings:
 * In the space thematic Javascript is the most popular language. It makes up 35% of the data sample.
