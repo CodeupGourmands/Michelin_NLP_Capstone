@@ -9,14 +9,16 @@ import pandas as pd
 from nltk.corpus import stopwords as stpwrds
 from sklearn.model_selection import train_test_split
 
-stopwords = stpwrds.words('english')
 
-EXTRA_WORDS: List[str] = ['dish', 'restaurant',
-                          'dining', 'chef', 'menu', 'cuisine']
+EXTRA_WORDS: List[str] = ['dish', 'dishes','ingredients','restaurant',
+                          'dining', 'chef', 'menu', 'cuisine',
+                          'there', 'ingredient', 'flavour',
+                          'also', 'wine']
 EXCLUDE_WORDS: List[str] = []
 
 NGRAMS_TO_REMOVE: List[str] = []
 
+stopwords = stpwrds.words('english') + EXTRA_WORDS
 
 def change_dtype_str(df: pd.DataFrame) -> pd.DataFrame:
     '''
@@ -66,7 +68,7 @@ def basic_clean(string_to_clean: str) -> str:
     string_to_clean = string_to_clean.lower()
     string_to_clean = unicodedata.normalize('NFKD', string_to_clean).encode(
         'ascii', 'ignore').decode('utf-8', 'ignore')
-    string_to_clean = re.sub(r"[^a-z0-9'\s]", '', string_to_clean)
+    string_to_clean = re.sub(r"[^a-z0-9\s]", '', string_to_clean)
     return string_to_clean
 
 
@@ -109,8 +111,8 @@ def lemmatize(tokens: str) -> str:
 
 
 def remove_stopwords(string_to_clean: str,
-                     extra_words: List[str] = EXTRA_WORDS,
-                     exclude_words: List[str] = EXCLUDE_WORDS) -> str:
+                     extra_words: List[str],
+                     exclude_words: List[str]) -> str:
     '''
     Removes stopwords from string
     ## Parameters
@@ -120,12 +122,7 @@ def remove_stopwords(string_to_clean: str,
     ## Returns
     document string with stopwords removed
     '''
-    string_to_clean = [t for t in string_to_clean.split()]
-    for exc in exclude_words:
-        stopwords.remove(exc)
-    for ext in extra_words:
-        stopwords.append(ext)
-    stopped = [t for t in string_to_clean if t not in stopwords]
+    stopped = [word for word in string_to_clean.split() if word not in stopwords]
     return ' '.join(stopped)
 
 

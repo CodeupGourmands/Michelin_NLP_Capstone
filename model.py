@@ -167,15 +167,12 @@ def unpickle_model(filename: str) -> ModelType:
         return model
 
 
-def tune_model(model: ModelType, train: pd.DataFrame,
-               validate: pd.DataFrame,
+def tune_model(model: ModelType,
+               trainx: pd.DataFrame, trainy: pd.DataFrame,
                parameters: Dict[str, List[NumberType]]) -> ModelType:
     scorer = make_scorer(accuracy_score)
-    train_validate = pd.concat([train, validate]).sort_index()
-    tfidf = TfidfVectorizer(ngram_range=(1, 2))
-    trainx, trainy = get_features_and_target(train_validate, tfidf)
+
     grid_search = GridSearchCV(
-        model, parameters, verbose=2, scoring=scorer, n_jobs=3)
+        model, parameters, verbose=2, scoring=scorer, n_jobs=5)
     grid_search.fit(trainx, trainy)
-    print(f'Best results are:\n{grid_search.best_params_}\n')
-    return grid_search.best_estimator_
+    return grid_search.best_params_
