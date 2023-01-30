@@ -7,6 +7,8 @@ import nltk
 import seaborn as sns
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+from PIL import Image
+import matplotlib.colors as mcolors
 import scipy.stats as stats
 from scipy.stats import ttest_ind, levene, f_oneway
 
