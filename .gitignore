@@ -4,8 +4,8 @@ env.py
 __pycache__/*
 .vscode/*
 cristina_*
-drafts.ipynb
-QMCBT_*
 woody_*
+QMCBT_*
 yuvia_*
+drafts.ipynb
 data/cache/*
