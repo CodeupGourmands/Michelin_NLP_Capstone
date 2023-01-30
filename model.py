@@ -16,7 +16,6 @@ import numpy as np
 import pandas as pd
 
 
-
 DataType = Union[pd.Series, pd.DataFrame]
 ModelType = Union[DecisionTreeClassifier, RandomForestClassifier,
                   LogisticRegression, GradientBoostingClassifier]
@@ -126,9 +125,9 @@ def get_features_and_target(df: pd.DataFrame,
     return X, y
 
 
-def get_baseline(train: pd.DataFrame) ->pd.DataFrame:
+def get_baseline(train: pd.DataFrame) -> pd.DataFrame:
     baseline = train.award.value_counts(normalize=True)[0]
-    return pd.DataFrame([baseline],index=['Baseline'],columns=['Accuracy Score'])
+    return pd.DataFrame([baseline], index=['Baseline'], columns=['Accuracy Score'])
 
 
 def run_train_and_validate(train: pd.DataFrame,
@@ -187,4 +186,6 @@ def run_test(test: pd.DataFrame, model: ModelType, tfidf: TfidfVectorizer, scale
     accuracy = accuracy_score(testy, yhat)
     model_name = str(model)
     model_name = model_name.split('(')[0]
-    return pd.DataFrame([accuracy], columns=['Accuracy Score'],index=[model_name])
+    return pd.DataFrame([accuracy],
+                        columns=['Accuracy Score'],
+                        index=[model_name])
