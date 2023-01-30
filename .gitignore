@@ -3,9 +3,4 @@ env.py
 .ipynb_checkpoints/*
 __pycache__/*
 .vscode/*
-cristina_*
-drafts.ipynb
-QMCBT_*
-woody_*
-yuvia_*
 data/cache/*
