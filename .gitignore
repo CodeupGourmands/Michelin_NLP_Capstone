@@ -1,8 +1,6 @@
 .DS_Store
 env.py
-.ipynb_checkpoints/
+.ipynb_checkpoints/*
 __pycache__/*
 .vscode/*
-.gitignore
-
 data/cache/*
