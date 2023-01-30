@@ -3,7 +3,6 @@ env.py
 .ipynb_checkpoints/*
 __pycache__/*
 .vscode/*
-.gitignore
 cristina_*
 woody_*
 QMCBT_*
