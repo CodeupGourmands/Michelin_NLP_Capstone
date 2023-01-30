@@ -271,8 +271,7 @@ freq_all_facilities = pd.Series(all_facilities_words).value_counts()
 ## Create Frequency DataFrame ##
 ## -------------------------- ##
 
-
-word_counts = pd.concat([freq_all_facilities,
+data= [freq_all_facilities,
                         freq_one_star_facilities,
                         freq_two_star_facilities,
                         freq_three_star_facilities,
@@ -281,10 +280,8 @@ word_counts = pd.concat([freq_all_facilities,
                         freq_one_star_reviews,
                         freq_two_star_reviews,
                         freq_three_star_reviews,
-                        freq_bib_gourmand_reviews], axis=1
-                        ).fillna(0).astype(int)
-
-word_counts.columns = ['all_facilities',
+                        freq_bib_gourmand_reviews]
+cols = ['all_facilities',
                        'one_star_facilities',
                        'two_star_facilities',
                        'three_star_facilities',
@@ -295,19 +292,79 @@ word_counts.columns = ['all_facilities',
                        'three_star_reviews',
                        'bib_gourmand_reviews']
 
+word_counts = pd.DataFrame(data, cols)
+
+"""
+word_counts = pd.concat(, axis=1
+                        ).fillna(0).astype(int)
+
+word_counts.columns = 
+"""
+# Create word_count variables
+facilities_wc_by_award = f_train.groupby('award').word_count.mean()
+reviews_wc_by_award = train.groupby('award').word_count.mean()
 
 
 ##########################
 ##### Visualizations #####
 ##########################
 
-
+def QMCBT_viz_wc():
+    img = WordCloud(background_color='white'
+                ).generate(' '.join(all_reviews_words))
+    plt.imshow(img)
+    plt.axis('off')
+    plt.title('Most Common Review Words')
+    return plt.show()
 
 def QMCBT_viz_1():
 
-    # Create variables
-    facilities_wc_by_award = f_train.groupby('award').word_count.mean()
-    reviews_wc_by_award = train.groupby('award').word_count.mean()
+    # Plot Top-20 Review Words and compare by Awards
+    features_list = ['one_star_reviews','two_star_reviews','three_star_reviews','bib_gourmand_reviews']
+
+    fontsize = 20
+    plt.rc('font', size=20)
+    plt.figure(figsize=(10, 5), dpi=80)
+
+    word_counts.sort('all_reviews', ascending=False)[features_list].head(5).plot.barh()
+
+    plt.gca().invert_yaxis()
+    plt.title('Top-5 Review words by Award', fontdict={'fontsize': fontsize})
+
+    return plt.show()
+
+def QMCBT_viz_2():
+
+    # Display top Bigrams for All Review words
+
+    # Set the plot attributes
+    fontsize = 20
+    plt.figure(figsize=(10, 5), dpi=80)
+
+    # Plot
+    pd.Series(nltk.bigrams(all_reviews_words)
+            ).value_counts().head(5).plot.barh()
+    plt.gca().invert_yaxis()
+
+    plt.title('Top-5 Bigrams for All Review words', fontdict={'fontsize': fontsize})
+
+    return plt.show()
+
+def QMCBT_viz_3():
+
+    # Display top Trigrams for All Review words
+
+    fontsize = 20
+    plt.figure(figsize=(10, 5), dpi=80)
+
+    pd.Series(nltk.ngrams(all_reviews_words, 3)
+            ).value_counts().head(5).plot.barh()
+    plt.gca().invert_yaxis()
+    plt.title('Top-5 Trigrams for All Review words', fontdict={'fontsize': fontsize})
+
+    return plt.show()
+
+def QMCBT_viz_4():
 
     # REVIEWS
     viz_reviews_wc_by_award = reviews_wc_by_award.sort_values(ascending=False)
@@ -331,6 +388,41 @@ def QMCBT_viz_1():
 
     return plt.show()
 
+def stat_levene():
+    # Levene
+    from scipy import stats
+
+    t_stat, p_val = stats.levene(reviews_wc_by_award, facilities_wc_by_award)
+
+    # Set Alpha α
+    α = Alpha = alpha = 0.05
+
+    if p_val < α:
+        print('equal_var = False (we cannot assume equal variance)')
+        
+    else:
+        print('equal_var = True (we will assume equal variance)')
+        
+    print('_______________________________________________________________')  
+    print(f't-stat: {t_stat}')
+    print(f'p-value: {p_val}')
+
+def stat_pearson():
+
+    # Pearson's-R
+
+    alpha = 0.05
+    r, p_val = stats.pearsonr(reviews_wc_by_award, facilities_wc_by_award)
+        
+    if p_val < alpha:
+        print('Reject the null hypothesis')
+    else:
+        print('Fail to reject the null hypothesis')
+    r= r.round(4)
+    p_val = p_val.round(4)
+    print('_____________________')  
+    print(f'correlation {r}')
+    print(f'p-value {p_val}')
 
 ###############################
 ##### Universal Variables #####
