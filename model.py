@@ -1,4 +1,4 @@
-from typing import Tuple, Union
+from typing import Tuple, Union, Dict, List
 
 import numpy as np
 import pandas as pd
@@ -11,11 +11,16 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import make_scorer
 from IPython.display import Markdown as md
 
 DataType = Union[pd.Series, pd.DataFrame]
 ModelType = Union[DecisionTreeClassifier, RandomForestClassifier,
                   LogisticRegression, GradientBoostingClassifier]
+NumberType = Union[float, int, np.number]
+
+N_COUNTRIES = 10
 
 
 def scale(features: DataType, scaler: MinMaxScaler) -> DataType:
@@ -34,6 +39,8 @@ def scale(features: DataType, scaler: MinMaxScaler) -> DataType:
         columns.append(features.name)
         features = features.values.reshape(-1, 1)
         is_series = True
+    else:
+        columns = features.columns
     try:
         scaled_data = scaler.transform(features)
     except NotFittedError as e:
@@ -91,6 +98,7 @@ def tf_idf(documents: pd.Series, tfidf: TfidfVectorizer) -> pd.DataFrame:
 
 
 def get_features_and_target(df: pd.DataFrame,
+                            scaler: MinMaxScaler,
                             tfidf: TfidfVectorizer) -> Tuple[pd.DataFrame,
                                                              pd.Series]:
     '''
@@ -103,8 +111,15 @@ def get_features_and_target(df: pd.DataFrame,
     ## Returns
     Tuple containing the features and the Target
     '''
-# TODO Add and scale additional features
-    X = tf_idf(df.lemmatized, tfidf)
+    tfi_df = tf_idf(df.lemmatized, tfidf)
+    top_n_countries = df.country.value_counts(
+    )[:N_COUNTRIES].index.to_list()
+    language_mask = (~df.country.isin(top_n_countries))
+    df.loc[language_mask, 'country'] = 'Other'
+    dummies = pd.get_dummies(
+        df[['country', 'price_level']])
+    scaled_data = scale(df[['word_count', 'sentiment']], scaler)
+    X = pd.concat([tfi_df, dummies, scaled_data], axis=1)
     y = df.award
     return X, y
 
@@ -112,32 +127,26 @@ def get_features_and_target(df: pd.DataFrame,
 def get_baseline(train: pd.DataFrame) -> md:
     baseline = train.award.value_counts(normalize=True)
     return md('Baseline Value | Baseline'
-                  '\n---|---'
-                  f'\n{baseline.index[0]} | {baseline.values[0] * 100:.2f}')
+              '\n---|---'
+              f'\n{baseline.index[0]} | {baseline.values[0] * 100:.2f}')
 
 
 def run_train_and_validate(train: pd.DataFrame,
                            validate: pd.DataFrame) -> pd.DataFrame:
     tfidf = TfidfVectorizer(ngram_range=(1, 2))
-    trainx, trainy = get_features_and_target(train, tfidf=tfidf)
-    validx, validy = get_features_and_target(validate, tfidf=tfidf)
+    scaler = MinMaxScaler()
+    trainx, trainy = get_features_and_target(train, scaler=scaler, tfidf=tfidf)
+    validx, validy = get_features_and_target(
+        validate, scaler=scaler, tfidf=tfidf)
     models = [DecisionTreeClassifier(), RandomForestClassifier(),
-              LogisticRegression(), GradientBoostingClassifier()]
+              LogisticRegression()]
     ret_df = pd.DataFrame()
+
     for model in models:
         model_results = {}
         model_name = str(model)
-        model_name = model_name[:len(model_name)-2]
-        pickle_path = 'data/cached_models/' + model_name + '.pkl'
-        pickle_exists = isfile(pickle_path)
-        if pickle_exists:
-            model = unpickle_model(pickle_path)
-            print(type(model))
-        print('Running ' + model_name + ' On Train')
+        model_name = model_name.split('(')[0]
         yhat = predict(model, trainx, trainy)
-        if not pickle_exists:
-            print('Pickling model!')
-            pickle_model(model, pickle_path)
         model_results['Train'] = accuracy_score(trainy, yhat)
         print('Running ' + model_name + ' On Validate')
         yhat = predict(model, validx)
@@ -156,3 +165,17 @@ def unpickle_model(filename: str) -> ModelType:
     with open(filename, 'rb') as file:
         model = pickle.load(file)
         return model
+
+
+def tune_model(model: ModelType, train: pd.DataFrame,
+               validate: pd.DataFrame,
+               parameters: Dict[str, List[NumberType]]) -> ModelType:
+    scorer = make_scorer(accuracy_score)
+    train_validate = pd.concat([train, validate]).sort_index()
+    tfidf = TfidfVectorizer(ngram_range=(1, 2))
+    trainx, trainy = get_features_and_target(train_validate, tfidf)
+    grid_search = GridSearchCV(
+        model, parameters, verbose=2, scoring=scorer, n_jobs=3)
+    grid_search.fit(trainx, trainy)
+    print(f'Best results are:\n{grid_search.best_params_}\n')
+    return grid_search.best_estimator_
