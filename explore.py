@@ -98,7 +98,7 @@ def sentiment_scores_bar(train):
         'sentiment'].mean().sort_values(ascending=False)
     # create a bar plot
     dfg.plot(kind='bar', title='Sentiment Score', fontsize=20,
-             color=['#beaed4', '#f0027f', '#7fc97f', '#fdc086'])
+             color=['#040f0f','#0e3013','#656665','#289944'])
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=22)
     plt.ylabel("Mean Sentiment Score")
