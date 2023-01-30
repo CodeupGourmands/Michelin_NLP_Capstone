@@ -1,19 +1,21 @@
-from typing import Tuple, Union, Dict, List
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import accuracy_score, make_scorer
+from sklearn.linear_model import LogisticRegression
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.exceptions import NotFittedError
+from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+from IPython.display import Markdown as md
+import logging
+import pickle
+from os.path import isfile
+from typing import Dict, List, Tuple, Union
 
 import numpy as np
 import pandas as pd
-import pickle
-from os.path import isfile
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
-from sklearn.exceptions import NotFittedError
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import make_scorer
-from IPython.display import Markdown as md
+
+
 
 DataType = Union[pd.Series, pd.DataFrame]
 ModelType = Union[DecisionTreeClassifier, RandomForestClassifier,
@@ -124,44 +126,31 @@ def get_features_and_target(df: pd.DataFrame,
     return X, y
 
 
-def get_baseline(train: pd.DataFrame) -> md:
-    baseline = train.award.value_counts(normalize=True)
-    return md('Baseline Value | Baseline'
-              '\n---|---'
-              f'\n{baseline.index[0]} | {baseline.values[0] * 100:.2f}')
+def get_baseline(train: pd.DataFrame) ->pd.DataFrame:
+    baseline = train.award.value_counts(normalize=True)[0]
+    return pd.DataFrame([baseline],index=['Baseline'],columns=['Accuracy Score'])
 
 
 def run_train_and_validate(train: pd.DataFrame,
-                           validate: pd.DataFrame) -> pd.DataFrame:
-    tfidf = TfidfVectorizer(ngram_range=(1, 2))
-    scaler = MinMaxScaler()
+                           validate: pd.DataFrame,
+                           models: List[ModelType],
+                           tfidf: TfidfVectorizer,
+                           scaler: MinMaxScaler) -> pd.DataFrame:
+    logging.info('getting features and target for Train')
     trainx, trainy = get_features_and_target(train, scaler=scaler, tfidf=tfidf)
+    logging.info('getting features and target for Validate')
     validx, validy = get_features_and_target(
         validate, scaler=scaler, tfidf=tfidf)
-    models = [DecisionTreeClassifier(max_depth=2),
-              RandomForestClassifier(
-                  max_depth=5,
-                  n_estimators=50,
-                  min_samples_leaf=3,
-                  random_state=27),
-              LogisticRegression(C=.05,
-                                 penalty='l1',
-                                 random_state=27,
-                                 solver='liblinear',
-                                 tol=.0001),
-              GradientBoostingClassifier(n_estimators=50,
-                                         max_depth=4,
-                                         min_samples_leaf=4,
-                                         random_state=27)]
     ret_df = pd.DataFrame()
 
     for model in models:
         model_results = {}
         model_name = str(model)
         model_name = model_name.split('(')[0]
+        logging.info('Running {model_name} on Train')
         yhat = predict(model, trainx, trainy)
         model_results['Train'] = accuracy_score(trainy, yhat)
-        print('Running ' + model_name + ' On Validate')
+        logging.info(f'Running {model_name} on Validate')
         yhat = predict(model, validx)
         model_results['Validate'] = accuracy_score(validy, yhat)
         ret_df[model_name] = pd.Series(
@@ -189,3 +178,13 @@ def tune_model(model: ModelType,
         model, parameters, verbose=2, scoring=scorer, n_jobs=5)
     grid_search.fit(trainx, trainy)
     return grid_search.best_params_
+
+
+def run_test(test: pd.DataFrame, model: ModelType, tfidf: TfidfVectorizer, scaler: MinMaxScaler) -> pd.DataFrame:
+    # TODO Docstring
+    testx, testy = get_features_and_target(test, scaler, tfidf)
+    yhat = predict(model, testx)
+    accuracy = accuracy_score(testy, yhat)
+    model_name = str(model)
+    model_name = model_name.split('(')[0]
+    return pd.DataFrame([accuracy], columns=['Accuracy Score'],index=[model_name])
