@@ -84,8 +84,7 @@ Our initial thoughts are that country, cuisine, and words/groups of words (bigra
     <br>
     <b>Question 5.</b> What are the most frequent words used in Michelin Restaurant reviews?
     <br>
-    <b>Question 6.</b> Does higher rated restaurants have more facilities?
-    <br>
+  
 </details>
 
 * Develop a Model to predict Award Category of Michelin restaurants:
