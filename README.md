@@ -128,9 +128,8 @@ Our initial thoughts are that country, cuisine, and words/groups of words (bigra
 |lemmatized |Data column containing the web-scraped reviews after being cleaned and lemmatzed|
 |word_count|Word count of each corresponding review|
 |sentiment|Compound sentiment score of each observation|
-|lem_length|Length of the lemmatized text in symbols|
-|original_length|Length of the original text in symbols|
-|length_diff|Difference in length between the orignal_length and the length of the `clean` text|
+
+
 </details>
 
 <details open="">
