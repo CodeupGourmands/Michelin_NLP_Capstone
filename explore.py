@@ -133,18 +133,18 @@ def get_anova_wordcount(train):
 
 def get_stats_ttest(df):
     '''Function returns statistical T test'''
-    One_Star = df[df.award == '1 michelin star']
     Two_Star = df[df.award == '2 michelin stars']
-    stat, pval = stats.levene(One_Star.sentiment,
-                              Two_Star.sentiment)
+    Three_Star = df[df.award == '3 michelin stars']
+    stat, pval = stats.levene(Two_Star.sentiment,
+                              Three_Star.sentiment)
     alpha = 0.05
     if pval < alpha:
         variance = False
 
     else:
         variance = True
-    t_stat, p_val = stats.ttest_ind(One_Star.sentiment,
-                                    Two_Star.sentiment,
+    t_stat, p_val = stats.ttest_ind(Two_Star.sentiment,
+                                    Three_Star.sentiment,
                                     equal_var=True, random_state=123)
 
     print(f't_stat= {t_stat}, p_value= {p_val/2}')
