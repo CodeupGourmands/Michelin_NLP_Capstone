@@ -10,13 +10,14 @@ from nltk.corpus import stopwords as stpwrds
 from sklearn.model_selection import train_test_split
 
 
-EXTRA_WORDS: List[str] = ['dish', 'dishes','ingredients','restaurant',
-                          'dining', 'chef', 'menu', 'cuisine',
-                          'there', 'ingredient', 'flavour',
-                          'also', 'wine', 'room']
+EXTRA_WORDS: List[str] = ['dishes','restaurant','dining','chef',
+                          'menu', 'cuisine', 'there',
+                          'ingredients', 'flavour', 'also',
+                          'dish', 'ingredient']
 EXCLUDE_WORDS: List[str] = []
 
-NGRAMS_TO_REMOVE: List[str] = []
+NGRAMS_TO_REMOVE: List[str] = ['update september 2020', 'last update september',
+                               'wine list']
 
 stopwords = stpwrds.words('english') + EXTRA_WORDS
 
