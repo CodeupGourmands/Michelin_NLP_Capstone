@@ -1,3 +1,5 @@
+![My Image](/images/bib_gourmand_wordcloud.png)
+
 # <b><i><font size="20">Michelin_NLP_Capstone</font></i></b>
 
 ## Project Links
