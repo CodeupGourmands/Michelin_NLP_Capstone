@@ -138,8 +138,20 @@ def run_train_and_validate(train: pd.DataFrame,
     trainx, trainy = get_features_and_target(train, scaler=scaler, tfidf=tfidf)
     validx, validy = get_features_and_target(
         validate, scaler=scaler, tfidf=tfidf)
-    models = [DecisionTreeClassifier(), RandomForestClassifier(),
-              LogisticRegression()]
+    models = [DecisionTreeClassifier(max_depth=2),
+              RandomForestClassifier(
+                  max_depth=5,
+                  n_estimators=50,
+                  min_samples_leaf=3,
+                  random_state=27),
+              LogisticRegression(C=.05,
+                                 penalty='l1',
+                                 random_state=27,
+                                 solver='liblinear'),
+              GradientBoostingClassifier(n_estimators=50,
+                                         max_depth=4,
+                                         min_samples_leaf=4,
+                                         random_state=27)]
     ret_df = pd.DataFrame()
 
     for model in models:
