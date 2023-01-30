@@ -154,6 +154,140 @@ def get_stats_ttest(df):
     else:
         print(f'We fail to reject the null Hypothesis. There is no significant difference between the sentiment scores.')
 
+
+###---------------------------------WordClouds--------------------------------###
+
+def get_threestar_wordcloud():
+    '''
+    This function utilizes a text file of all three-star review
+    words and a pre-selected image to create a word cloud containing
+    all three star words in an image cloud format. It takes the text
+    file and image file from the /images folder.
+    '''
+    #Import TXT file of all three star words
+    threestar_text = open(
+            "./images/all_threestar_words.txt",
+            mode='r', encoding='utf-8').read()
+    #Import .png file of three star logo, create a Numpy array mask from the image
+    mask = np.array(Image.open("./images/three_stars.png"))
+    # replace 0 with 255 inside the mask to ensure white background
+    mask[mask == 0] = 255
+    # Define Colors
+    colors = ['purple', 'gold']
+    custom_cmap = mcolors.ListedColormap(colors)
+    #Make the wordcloud, generate the image
+    wc = WordCloud(
+               mask = mask, background_color = "black",
+               max_words = 400, max_font_size = 500,
+               random_state = 42, width = mask.shape[1],
+               colormap= custom_cmap,
+               contour_color='gold', contour_width=2,
+               height = mask.shape[0])
+    wc.generate(threestar_text)
+    plt.imshow(wc, interpolation="bilinear")
+    plt.axis('off')
+    plt.show()
+
+
+
+def get_twostar_wordcloud():
+    '''
+    This function utilizes a text file of all two-star review
+    words and a pre-selected image to create a word cloud containing
+    all two star words in an image cloud format. It takes the text
+    file and image file from the /images folder.
+    '''
+    #Import TXT file of all two star words
+    twostar_text = open("./images/all_twostar_words.txt",
+            mode='r', encoding='utf-8').read()
+    #Import .png file of three star logo, create a Numpy array mask from the image
+    mask = np.array(Image.open("./images/two_stars.png"))
+    # replace 0 with 255 inside the mask to ensure white background
+    mask[mask == 0] = 255
+    # Define Colors
+    colors = ['blue', 'red']
+    custom_cmap = mcolors.ListedColormap(colors)
+    #Make the wordcloud, generate the image
+    wc = WordCloud(
+               mask = mask, background_color = "lightyellow",
+               max_words = 1000, max_font_size = 500,
+               random_state = 42, width = mask.shape[1],
+               colormap= custom_cmap,
+               contour_color='red', contour_width=1,
+               height = mask.shape[0])
+    wc.generate(twostar_text)
+    plt.imshow(wc, interpolation="bilinear")
+    plt.axis('off')
+    plt.show()
+
+
+
+def get_onestar_wordcloud():
+    '''
+    This function utilizes a text file of all one-star review
+    words and a pre-selected image to create a word cloud containing
+    all one star words in an image cloud format. It takes the text
+    file and image file from the /images folder.
+    '''
+    #Import TXT file of all one star words
+    onestar_text = open("./images/all_onestar_words.txt",
+            mode='r', encoding='utf-8').read()
+    #Import .png file of three star logo, create a Numpy array mask from the image
+    mask = np.array(Image.open("./images/one_star_heart.png"))
+    # replace 0 with 255 inside the mask to ensure white background
+    mask[mask == 0] = 255
+    # Define Colors
+    colors = ['firebrick', 'orangered']
+    custom_cmap = mcolors.ListedColormap(colors)
+    #Make the wordcloud, generate the image
+    wc = WordCloud(
+               mask = mask, background_color = "lightgray",
+               max_words = 250, max_font_size = 500,
+               random_state = 42, width = mask.shape[1],
+               colormap= custom_cmap,
+               contour_color='crimson', contour_width=1.5,
+               height = mask.shape[0])
+    wc.generate(onestar_text)
+    plt.imshow(wc, interpolation="bilinear")
+    plt.axis('off')
+    plt.show()
+
+
+
+# Bib Gourmand Word Cloud
+
+def get_bib_wordcloud():
+    '''
+    This function utilizes a text file of all bib gourmand review
+    words and a pre-selected image to create a word cloud containing
+    all bib gourmand words in an image cloud format. It takes the text
+    file and image file from the /images folder.
+    '''
+    #Import TXT file of all bib gourmand star words
+    bib_text = open("./images/all_bib_words.txt",
+            mode='r', encoding='utf-8').read()
+    #Import .png file of bib gourmand image, create a Numpy array mask from the image
+    mask = np.array(Image.open("./images/bib_gourmand.png"))
+    # replace 0 with 255 inside the mask to ensure white background
+    mask[mask == 0] = 255
+    # Define Colors
+    colors = ['darkred', 'orangered']
+    custom_cmap = mcolors.ListedColormap(colors)
+    #Make the wordcloud, generate the image
+    wc = WordCloud(
+               mask = mask, background_color = "white",
+               max_words = 500, max_font_size = 500,
+               random_state = 42, width = mask.shape[1],
+               colormap= custom_cmap,
+               contour_color='maroon', contour_width=1.5,
+               height = mask.shape[0])
+    wc.generate(bib_text)
+    plt.imshow(wc, interpolation="bilinear")
+    plt.axis('off')
+    plt.show()
+
+
+
 #########################
 ##### Justin's Code #####
 #########################
