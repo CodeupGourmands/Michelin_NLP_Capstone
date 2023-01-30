@@ -1,25 +1,15 @@
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import accuracy_score, make_scorer
-from sklearn.linear_model import LogisticRegression
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.exceptions import NotFittedError
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
-from IPython.display import Markdown as md
 import logging
-import pickle
-from os.path import isfile
 from typing import Dict, List, Tuple, Union
 
 import numpy as np
 import pandas as pd
+from sklearn.exceptions import NotFittedError
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import accuracy_score, make_scorer
+from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import MinMaxScaler
 
-
-DataType = Union[pd.Series, pd.DataFrame]
-ModelType = Union[DecisionTreeClassifier, RandomForestClassifier,
-                  LogisticRegression, GradientBoostingClassifier]
-NumberType = Union[float, int, np.number]
+from datatypes import DataType, ModelType, NumberType
 
 N_COUNTRIES = 10
 
@@ -127,7 +117,8 @@ def get_features_and_target(df: pd.DataFrame,
 
 def get_baseline(train: pd.DataFrame) -> pd.DataFrame:
     baseline = train.award.value_counts(normalize=True)[0]
-    return pd.DataFrame([baseline], index=['Baseline'], columns=['Accuracy Score'])
+    return pd.DataFrame([baseline], index=['Baseline'],
+                        columns=['Accuracy Score'])
 
 
 def run_train_and_validate(train: pd.DataFrame,
@@ -157,17 +148,6 @@ def run_train_and_validate(train: pd.DataFrame,
     return ret_df.T
 
 
-def pickle_model(model: ModelType, filename: str) -> None:
-    with open(filename, 'wb') as file:
-        pickle.dump(model, file)
-
-
-def unpickle_model(filename: str) -> ModelType:
-    with open(filename, 'rb') as file:
-        model = pickle.load(file)
-        return model
-
-
 def tune_model(model: ModelType,
                trainx: pd.DataFrame, trainy: pd.DataFrame,
                parameters: Dict[str, List[NumberType]]) -> ModelType:
@@ -179,7 +159,9 @@ def tune_model(model: ModelType,
     return grid_search.best_params_
 
 
-def run_test(test: pd.DataFrame, model: ModelType, tfidf: TfidfVectorizer, scaler: MinMaxScaler) -> pd.DataFrame:
+def run_test(test: pd.DataFrame, model: ModelType,
+             tfidf: TfidfVectorizer,
+             scaler: MinMaxScaler) -> pd.DataFrame:
     # TODO Docstring
     testx, testy = get_features_and_target(test, scaler, tfidf)
     yhat = predict(model, testx)
