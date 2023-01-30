@@ -1,3 +1,5 @@
+import prepare as p
+from typing import List, Union, Tuple
 from typing import Union
 import numpy as np
 import pandas as pd
@@ -122,8 +124,8 @@ def get_anova_wordcount(train):
                           train_twostar.word_count, train_threestar.word_count)
     if p < alpha:
         print('We reject the null hypothesis. There is sufficient\n'
-               'evidence to conclude that the word count is significantly\n'
-               'different between award categories.')
+              'evidence to conclude that the word count is significantly\n'
+              'different between award categories.')
     else:
         print("We fail to reject the null hypothesis.")
     return print(f'Test Statistic: {f}, P Statistic: {p}')
@@ -151,3 +153,403 @@ def get_stats_ttest(df):
         print(f'We reject the null Hypothesis')
     else:
         print(f'We fail to reject the null Hypothesis. There is no significant difference between the sentiment scores.')
+
+#########################
+##### Justin's Code #####
+#########################
+
+
+# Custom function to create facilities DataFrame split
+def prepare_facilities(df: pd.DataFrame,
+                       split: bool = True) -> Union[pd.DataFrame,
+                                                    Tuple[pd.DataFrame,
+                                                          pd.DataFrame,
+                                                          pd.DataFrame]]:
+    '''
+    #### Description:
+    Prepares Michelin DataFrame
+
+    #### Required Imports:
+    from typing import List, Union, Tuple
+    import pandas as pd
+    import prepare as p
+
+    #### Parameters:
+    df: `DataFrame` with Michelin data
+    split: Boolean for whether or not to split the data, default True
+
+    #### Returns:
+    either a DataFrame or a tuple of the Train, Validate, and Test
+    `DataFrame`
+    '''
+
+    df = p.create_features(df)
+    df = p.change_dtype_str(df)
+    df = pd.concat([df, p.process_nl(df.facilities_and_services)], axis=1)
+    df['word_count'] = df.lemmatized.str.split().apply(len)
+    if split:
+        return p.tvt_split(df, stratify='award')
+    return df
+
+############################
+##### Global Variables #####
+############################
+import acquire as a
+import prepare as p
+
+# Get the data
+df = a.get_michelin_pages()
+
+# Splitting our data (56% Train, 24% Validate, 20% Test)
+train, validate, test = p.prepare_michelin(df)
+
+# Run Facilities split
+f_train, f_validate, f_test = prepare_facilities(df)
+train.head(2)
+
+# Assign all, 1_star, 2_star, 3_star and bib_gourmand reviews by passing the function with a join
+all_reviews = (' '.join(train['lemmatized']))
+one_star_reviews = (
+    ' '.join(train[train.award == '1 michelin star']['lemmatized']))
+two_star_reviews = (
+    ' '.join(train[train.award == '2 michelin stars']['lemmatized']))
+three_star_reviews = (
+    ' '.join(train[train.award == '3 michelin stars']['lemmatized']))
+bib_gourmand_reviews = (
+    ' '.join(train[train.award == 'bib gourmand']['lemmatized']))
+
+# Break them all into word lists with split
+all_reviews_words = all_reviews.split()
+one_star_reviews_words = one_star_reviews.split()
+two_star_reviews_words = two_star_reviews.split()
+three_star_reviews_words = three_star_reviews.split()
+bib_gourmand_reviews_words = bib_gourmand_reviews.split()
+
+# Assign word counts to Frequency Variables
+freq_one_star_reviews = pd.Series(one_star_reviews_words).value_counts()
+freq_two_star_reviews = pd.Series(two_star_reviews_words).value_counts()
+freq_three_star_reviews = pd.Series(
+    three_star_reviews_words).value_counts()
+freq_bib_gourmand_reviews = pd.Series(
+    bib_gourmand_reviews_words).value_counts()
+freq_all_reviews = pd.Series(all_reviews_words).value_counts()
+
+## --------------------------- ##
+## CREATE facilities variables ##
+## --------------------------- ##
+
+# Assign all, 1_star, 2_star, 3_star and bib_gourmand lists by passing the clean function with a join
+all_facilities = ' '.join(f_train['lemmatized'])
+one_star_facilities = ' '.join(
+    f_train[f_train.award == '1 michelin star']['lemmatized'])
+two_star_facilities = ' '.join(
+    f_train[f_train.award == '2 michelin stars']['lemmatized'])
+three_star_facilities = ' '.join(
+    f_train[f_train.award == '3 michelin stars']['lemmatized'])
+bib_gourmand_facilities = ' '.join(
+    f_train[f_train.award == 'bib gourmand']['lemmatized'])
+
+# Break them all into word lists with split
+all_facilities_words = all_facilities.split()
+one_star_facilities_words = one_star_facilities.split()
+two_star_facilities_words = two_star_facilities.split()
+three_star_facilities_words = three_star_facilities.split()
+bib_gourmand_facilities_words = bib_gourmand_facilities.split()
+
+# Assign word counts to Frequency Variables
+freq_one_star_facilities = pd.Series(
+    one_star_facilities_words).value_counts()
+freq_two_star_facilities = pd.Series(
+    two_star_facilities_words).value_counts()
+freq_three_star_facilities = pd.Series(
+    three_star_facilities_words).value_counts()
+freq_bib_gourmand_facilities = pd.Series(
+    bib_gourmand_facilities_words).value_counts()
+freq_all_facilities = pd.Series(all_facilities_words).value_counts()
+
+## -------------------------- ##
+## Create Frequency DataFrame ##
+## -------------------------- ##
+
+data= [freq_all_facilities,
+                        freq_one_star_facilities,
+                        freq_two_star_facilities,
+                        freq_three_star_facilities,
+                        freq_bib_gourmand_facilities,
+                        freq_all_reviews,
+                        freq_one_star_reviews,
+                        freq_two_star_reviews,
+                        freq_three_star_reviews,
+                        freq_bib_gourmand_reviews]
+cols = ['all_facilities',
+                       'one_star_facilities',
+                       'two_star_facilities',
+                       'three_star_facilities',
+                       'bib_gourmand_facilities',
+                       'all_reviews',
+                       'one_star_reviews',
+                       'two_star_reviews',
+                       'three_star_reviews',
+                       'bib_gourmand_reviews']
+
+word_counts = pd.DataFrame(data, cols)
+
+"""
+word_counts = pd.concat(, axis=1
+                        ).fillna(0).astype(int)
+
+word_counts.columns = 
+"""
+# Create word_count variables
+facilities_wc_by_award = f_train.groupby('award').word_count.mean()
+reviews_wc_by_award = train.groupby('award').word_count.mean()
+
+
+##########################
+##### Visualizations #####
+##########################
+
+def QMCBT_viz_wc():
+    img = WordCloud(background_color='white'
+                ).generate(' '.join(all_reviews_words))
+    plt.imshow(img)
+    plt.axis('off')
+    plt.title('Most Common Review Words')
+    return plt.show()
+
+def QMCBT_viz_1():
+
+    # Plot Top-20 Review Words and compare by Awards
+    features_list = ['one_star_reviews','two_star_reviews','three_star_reviews','bib_gourmand_reviews']
+
+    fontsize = 20
+    plt.rc('font', size=20)
+    plt.figure(figsize=(10, 5), dpi=80)
+
+    word_counts.sort('all_reviews', ascending=False)[features_list].head(5).plot.barh()
+
+    plt.gca().invert_yaxis()
+    plt.title('Top-5 Review words by Award', fontdict={'fontsize': fontsize})
+
+    return plt.show()
+
+def QMCBT_viz_2():
+
+    # Display top Bigrams for All Review words
+
+    # Set the plot attributes
+    fontsize = 20
+    plt.figure(figsize=(10, 5), dpi=80)
+
+    # Plot
+    pd.Series(nltk.bigrams(all_reviews_words)
+            ).value_counts().head(5).plot.barh()
+    plt.gca().invert_yaxis()
+
+    plt.title('Top-5 Bigrams for All Review words', fontdict={'fontsize': fontsize})
+
+    return plt.show()
+
+def QMCBT_viz_3():
+
+    # Display top Trigrams for All Review words
+
+    fontsize = 20
+    plt.figure(figsize=(10, 5), dpi=80)
+
+    pd.Series(nltk.ngrams(all_reviews_words, 3)
+            ).value_counts().head(5).plot.barh()
+    plt.gca().invert_yaxis()
+    plt.title('Top-5 Trigrams for All Review words', fontdict={'fontsize': fontsize})
+
+    return plt.show()
+
+def QMCBT_viz_4():
+
+    # REVIEWS
+    viz_reviews_wc_by_award = reviews_wc_by_award.sort_values(ascending=False)
+    Hex_Codes_Earthy = ['#854d27', '#dd7230', '#f4c95d', '#e7e393', '#04030f']
+
+    #create a bar plot
+    plt.subplot(1,2,1)
+    viz_reviews_wc_by_award.plot(kind='bar', title='Word Count of Reviews\n by Award', ylabel='',
+            xlabel='',fontsize =20, color=Hex_Codes_Earthy)
+    plt.xticks(rotation=45, ha='right')
+
+    # FACILITIES
+    viz_facilities_wc_by_award = facilities_wc_by_award.sort_values(ascending=False)
+    Hex_Codes_Earthy = ['#854d27', '#dd7230', '#f4c95d', '#e7e393', '#04030f']
+
+    #create a bar plot
+    plt.subplot(1,2,2)
+    viz_facilities_wc_by_award.plot(kind='bar', title='Word Count of Facilities\n by Award', ylabel='',
+            xlabel='',fontsize =20, color=Hex_Codes_Earthy)
+    plt.xticks(rotation=45, ha='right')
+
+    return plt.show()
+
+def stat_levene():
+    # Levene
+    from scipy import stats
+
+    t_stat, p_val = stats.levene(reviews_wc_by_award, facilities_wc_by_award)
+
+    # Set Alpha α
+    α = Alpha = alpha = 0.05
+
+    if p_val < α:
+        print('equal_var = False (we cannot assume equal variance)')
+        
+    else:
+        print('equal_var = True (we will assume equal variance)')
+        
+    print('_______________________________________________________________')  
+    print(f't-stat: {t_stat}')
+    print(f'p-value: {p_val}')
+
+def stat_pearson():
+
+    # Pearson's-R
+
+    alpha = 0.05
+    r, p_val = stats.pearsonr(reviews_wc_by_award, facilities_wc_by_award)
+        
+    if p_val < alpha:
+        print('Reject the null hypothesis')
+    else:
+        print('Fail to reject the null hypothesis')
+    r= r.round(4)
+    p_val = p_val.round(4)
+    print('_____________________')  
+    print(f'correlation {r}')
+    print(f'p-value {p_val}')
+
+###############################
+##### Universal Variables #####
+###############################
+
+## ----------------------- ##
+## CREATE review variables ##
+## ----------------------- ##
+
+
+def var_reviews(train):
+    # Assign all, 1_star, 2_star, 3_star and bib_gourmand reviews by passing the function with a join
+    all_reviews = (' '.join(train['lemmatized']))
+    one_star_reviews = (
+        ' '.join(train[train.award == '1 michelin star']['lemmatized']))
+    two_star_reviews = (
+        ' '.join(train[train.award == '2 michelin stars']['lemmatized']))
+    three_star_reviews = (
+        ' '.join(train[train.award == '3 michelin stars']['lemmatized']))
+    bib_gourmand_reviews = (
+        ' '.join(train[train.award == 'bib gourmand']['lemmatized']))
+    return all_reviews, one_star_reviews, two_star_reviews, three_star_reviews, bib_gourmand_reviews
+
+
+def var_review_words():
+    # Break them all into word lists with split
+    all_reviews_words = all_reviews.split()
+    one_star_reviews_words = one_star_reviews.split()
+    two_star_reviews_words = two_star_reviews.split()
+    three_star_reviews_words = three_star_reviews.split()
+    bib_gourmand_reviews_words = bib_gourmand_reviews.split()
+    return all_reviews_words, one_star_reviews_words, two_star_reviews_words, three_star_reviews_words, bib_gourmand_reviews_words
+
+
+def var_review_freq():
+    # Assign word counts to Frequency Variables
+    freq_one_star_reviews = pd.Series(one_star_reviews_words).value_counts()
+    freq_two_star_reviews = pd.Series(two_star_reviews_words).value_counts()
+    freq_three_star_reviews = pd.Series(
+        three_star_reviews_words).value_counts()
+    freq_bib_gourmand_reviews = pd.Series(
+        bib_gourmand_reviews_words).value_counts()
+    freq_all_reviews = pd.Series(all_reviews_words).value_counts()
+    return freq_one_star_reviews, freq_two_star_reviews, freq_three_star_reviews, freq_bib_gourmand_reviews, freq_all_reviews
+
+## --------------------------- ##
+## CREATE facilities variables ##
+## --------------------------- ##
+
+
+def var_facilities(f_train):
+    # Assign all, 1_star, 2_star, 3_star and bib_gourmand lists by passing the clean function with a join
+    all_facilities = ' '.join(f_train['lemmatized'])
+    one_star_facilities = ' '.join(
+        f_train[f_train.award == '1 michelin star']['lemmatized'])
+    two_star_facilities = ' '.join(
+        f_train[f_train.award == '2 michelin stars']['lemmatized'])
+    three_star_facilities = ' '.join(
+        f_train[f_train.award == '3 michelin stars']['lemmatized'])
+    bib_gourmand_facilities = ' '.join(
+        f_train[f_train.award == 'bib gourmand']['lemmatized'])
+    return all_facilities, one_star_facilities, two_star_facilities, three_star_facilities, bib_gourmand_facilities
+
+
+def var_facilities_words():
+    # Break them all into word lists with split
+    all_facilities_words = all_facilities.split()
+    one_star_facilities_words = one_star_facilities.split()
+    two_star_facilities_words = two_star_facilities.split()
+    three_star_facilities_words = three_star_facilities.split()
+    bib_gourmand_facilities_words = bib_gourmand_facilities.split()
+    return all_facilities_words, one_star_facilities_words, two_star_facilities_words, three_star_facilities_words, bib_gourmand_facilities_words
+
+
+def var_facilities_freq():
+    # Assign word counts to Frequency Variables
+    freq_one_star_facilities = pd.Series(
+        one_star_facilities_words).value_counts()
+    freq_two_star_facilities = pd.Series(
+        two_star_facilities_words).value_counts()
+    freq_three_star_facilities = pd.Series(
+        three_star_facilities_words).value_counts()
+    freq_bib_gourmand_facilities = pd.Series(
+        bib_gourmand_facilities_words).value_counts()
+    freq_all_facilities = pd.Series(all_facilities_words).value_counts()
+    return freq_one_star_facilities, freq_two_star_facilities, freq_three_star_facilities, freq_bib_gourmand_facilities, freq_all_facilities
+
+## -------------------------- ##
+## Create Frequency DataFrame ##
+## -------------------------- ##
+
+
+def word_counts():
+    word_counts = pd.concat([freq_all_facilities,
+                            freq_one_star_facilities,
+                            freq_two_star_facilities,
+                            freq_three_star_facilities,
+                            freq_bib_gourmand_facilities,
+                            freq_all_reviews,
+                            freq_one_star_reviews,
+                            freq_two_star_reviews,
+                            freq_three_star_reviews,
+                            freq_bib_gourmand_reviews], axis=1
+                            ).fillna(0).astype(int)
+
+    word_counts.columns = ['all_facilities',
+                           'one_star_facilities',
+                           'two_star_facilities',
+                           'three_star_facilities',
+                           'bib_gourmand_facilities',
+                           'all_reviews',
+                           'one_star_reviews',
+                           'two_star_reviews',
+                           'three_star_reviews',
+                           'bib_gourmand_reviews']
+
+    return word_counts
+
+# One Function to wrangle them all
+def universal_variables(train, f_train):
+    """
+    This Function is used to call all variables
+    """
+    all_reviews, one_star_reviews, two_star_reviews, three_star_reviews, bib_gourmand_reviews = var_reviews(train)
+    all_reviews_words, one_star_reviews_words, two_star_reviews_words, three_star_reviews_words, bib_gourmand_reviews_words = var_review_words()
+    freq_one_star_reviews, freq_two_star_reviews, freq_three_star_reviews, freq_bib_gourmand_reviews, freq_all_reviews = var_review_freq()
+    all_facilities, one_star_facilities, two_star_facilities, three_star_facilities, bib_gourmand_facilities = var_facilities(f_train)
+    all_facilities_words, one_star_facilities_words, two_star_facilities_words, three_star_facilities_words, bib_gourmand_facilities_words = var_facilities_words()
+    freq_one_star_facilities, freq_two_star_facilities, freq_three_star_facilities, freq_bib_gourmand_facilities, freq_all_facilities = var_facilities_freq()
+    word_counts = word_counts()
