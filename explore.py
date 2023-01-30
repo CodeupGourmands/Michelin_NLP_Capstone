@@ -310,6 +310,8 @@ reviews_wc_by_award = train.groupby('award').word_count.mean()
 ##########################
 
 def QMCBT_viz_wc():
+    plt.rc('font', size=20)
+    plt.figure(figsize=(10, 5), dpi=80)
     img = WordCloud(background_color='white'
                 ).generate(' '.join(all_reviews_words))
     plt.imshow(img)
@@ -345,7 +347,7 @@ def QMCBT_viz_2():
     pd.Series(nltk.bigrams(all_reviews_words)
             ).value_counts().head(5).plot.barh()
     plt.gca().invert_yaxis()
-
+    plt.ylabel='Count of Bigram Occurance'
     plt.title('Top-5 Bigrams for All Review words', fontdict={'fontsize': fontsize})
 
     return plt.show()
@@ -360,6 +362,7 @@ def QMCBT_viz_3():
     pd.Series(nltk.ngrams(all_reviews_words, 3)
             ).value_counts().head(5).plot.barh()
     plt.gca().invert_yaxis()
+    plt.ylabel='Count of Bigram Occurance'
     plt.title('Top-5 Trigrams for All Review words', fontdict={'fontsize': fontsize})
 
     return plt.show()
