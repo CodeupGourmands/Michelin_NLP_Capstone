@@ -80,7 +80,7 @@ def top_10_country_viz(train):
     top 10 countries with Michelin restaurants
     '''
     # Use groupby to get an average length per language
-    top_10_countries = train['country'].value_counts().head(10)
+    top_10_countries = train['country'].value_counts().head(9)
     # Set style, make a chart
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
