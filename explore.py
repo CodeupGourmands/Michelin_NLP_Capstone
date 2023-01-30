@@ -160,8 +160,6 @@ def get_stats_ttest(df):
 
 
 # Custom function to create facilities DataFrame split
-
-
 def prepare_facilities(df: pd.DataFrame,
                        split: bool = True) -> Union[pd.DataFrame,
                                                     Tuple[pd.DataFrame,
@@ -197,12 +195,9 @@ def prepare_facilities(df: pd.DataFrame,
 ##### Universal Variables #####
 ###############################
 
-
-def universal_variables(train, f_train):
-
-    ## ----------------------- ##
-    ## CREATE review variables ##
-    ## ----------------------- ##
+## ----------------------- ##
+## CREATE review variables ##
+## ----------------------- ##
 
 
 def var_reviews(train):
@@ -240,9 +235,9 @@ def var_review_freq():
     freq_all_reviews = pd.Series(all_reviews_words).value_counts()
     return freq_one_star_reviews, freq_two_star_reviews, freq_three_star_reviews, freq_bib_gourmand_reviews, freq_all_reviews
 
-    ## --------------------------- ##
-    ## CREATE facilities variables ##
-    ## --------------------------- ##
+## --------------------------- ##
+## CREATE facilities variables ##
+## --------------------------- ##
 
 
 def var_facilities(f_train):
@@ -282,9 +277,9 @@ def var_facilities_freq():
     freq_all_facilities = pd.Series(all_facilities_words).value_counts()
     return freq_one_star_facilities, freq_two_star_facilities, freq_three_star_facilities, freq_bib_gourmand_facilities, freq_all_facilities
 
-    ## -------------------------- ##
-    ## Create Frequency DataFrame ##
-    ## -------------------------- ##
+## -------------------------- ##
+## Create Frequency DataFrame ##
+## -------------------------- ##
 
 
 def word_counts():
@@ -312,3 +307,16 @@ def word_counts():
                            'bib_gourmand_reviews']
 
     return word_counts
+
+# One Function to wrangle them all
+def universal_variables(train, f_train):
+    """
+    This Function is used to call all variables
+    """
+    all_reviews, one_star_reviews, two_star_reviews, three_star_reviews, bib_gourmand_reviews = var_reviews(train)
+    all_reviews_words, one_star_reviews_words, two_star_reviews_words, three_star_reviews_words, bib_gourmand_reviews_words = var_review_words()
+    freq_one_star_reviews, freq_two_star_reviews, freq_three_star_reviews, freq_bib_gourmand_reviews, freq_all_reviews = var_review_freq()
+    all_facilities, one_star_facilities, two_star_facilities, three_star_facilities, bib_gourmand_facilities = var_facilities(f_train)
+    all_facilities_words, one_star_facilities_words, two_star_facilities_words, three_star_facilities_words, bib_gourmand_facilities_words = var_facilities_words()
+    freq_one_star_facilities, freq_two_star_facilities, freq_three_star_facilities, freq_bib_gourmand_facilities, freq_all_facilities = var_facilities_freq()
+    word_counts = word_counts()
