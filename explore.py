@@ -105,6 +105,14 @@ def sentiment_scores_bar(train):
     plt.xlabel("Award Category")
     plt.show()
 
+
+def sentiment_country(train):  
+    dfg = train.groupby(['country'])[
+        'sentiment'].mean().sort_values(ascending=False)
+    # create a bar plot
+    dfg.plot(kind='bar', title='Sentiment Score by Country', ylabel='Mean Sentiment Score',
+             xlabel='', fontsize=10)
+
 # -----------------------------Stats Tests-------------------------------#
 
 
