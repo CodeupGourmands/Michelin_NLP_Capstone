@@ -1,4 +1,8 @@
-# <b><i><font size="20">Michelin_NLP_Capstone</font></i></b>
+# <i><font size="16">Codeup Gourmands Presents...</font></i>
+
+![My Image](/images/bib_gourmand_wordcloud.png)
+
+# <b><i><font size="22">Michelin NLP Capstone</font></i></b>
 
 ## Project Links
 * Click the buttons below to see the Project Repo and Canva presentation.  
@@ -14,8 +18,15 @@
 |[![Yuvia's_LinkedIn](https://img.shields.io/badge/Yuvia's%20linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/yuvia-cardenas-083080126/)|[![Justin's_LinkedIn](https://img.shields.io/badge/Justin's%20linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/qmcbt)|[![Cristina's_LinkedIn](https://img.shields.io/badge/Cristina's%20linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/cristina-lucin/)|[![Woody's_LinkedIn](https://img.shields.io/badge/Woodrow's%20linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/woodrow-sims/)
 |[![Yuvia's_GitHub](https://img.shields.io/badge/Yuvia's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yuvia-cardenas)|[![Justin's_GitHub](https://img.shields.io/badge/Justin's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/QMCBT-JustinEvans)|[![Cristina's_GitHub](https://img.shields.io/badge/Cristina's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/cristinalucin)|[![Woody's_GitHub](https://img.shields.io/badge/Woodrow's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Is0metry)|
 
+# Project Inspiration:
+
+In 1900, there were fewer than 3,000 cars on the roads of France. In order to increase demand for cars and, accordingly, car tires, car tire manufacturers and brothers Édouard and André Michelin published a guide for French motorists, the Michelin Guide. It provided information to motorists, such as maps, car mechanics listings, petrol statins, hotels and restaurants throughout France. The guide began to award stars for fine dining establishments in 1926. Initially, there was only a single star awarded. Then, in 1931, the hierarchy of zero, one, two, and three stars was introduced. In 1955, a fourth category, "Bib Gourmand", identified restaurants with quality food at a value price.
+
+At present, a star award from the Michelin Guide is widely accepted as the pre-eminent culinary achievement of restauranteurs and chefs alike. Michelin reviewers (commonly called "inspectors") are anonymous. Many of the company's top executives have never met an inspector; inspectors themselves are advised not to disclose their line of work, even to their parents. The amount of secrecy in this process, and importance of this review in the culinary world, led us to ask the question--"What factors can be revealed by examining Michelin restaurant reviews?" Through our shared love of food, we embarked on a journey to utilize Data Science to distill the essence of fine dining perfection.
+
+
 # Project Overview:
-Our Capstone Team Project utilizes Web-scraping & Natural Language Processing to create a predictive model that determines Michelin food star award ratings based on content from the official Michelin review.
+Our Capstone Team Project utilizes Web-scraping & Natural Language Processing to develop a model that predicts Michelin food star award ratings based on content from the official Michelin review.
 
 Following the *Data Science Pipeline*
 First, our team will acquire and prepare the data for exploration. Then, we will explore the data to gain insight on which features to engineer that ultimately improve our model's accuracy. After we create several types of machine learning models that can effectly predict the Michelin food star award rating using the train and validate we will compare each model's performance. The model that performed the best will move forward with test data set for final results. 
