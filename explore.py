@@ -311,4 +311,4 @@ def word_counts():
                            'three_star_reviews',
                            'bib_gourmand_reviews']
 
-    word_counts
+    return word_counts
