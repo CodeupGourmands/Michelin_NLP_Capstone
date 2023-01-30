@@ -16,7 +16,7 @@ EXTRA_WORDS: List[str] = ['dish', 'dishes','ingredients','restaurant',
                           'also', 'wine']
 EXCLUDE_WORDS: List[str] = []
 
-NGRAMS_TO_REMOVE: List[str] = []
+NGRAMS_TO_REMOVE: List[str] = ['update september 2020', 'last update september', 'la carte']
 
 stopwords = stpwrds.words('english') + EXTRA_WORDS
 
