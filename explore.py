@@ -97,10 +97,12 @@ def sentiment_scores_bar(train):
     dfg = train.groupby(['award'])[
         'sentiment'].mean().sort_values(ascending=False)
     # create a bar plot
-    dfg.plot(kind='bar', title='Sentiment Score', ylabel='Mean Sentiment Score',
-             xlabel='', fontsize=20, color=['#beaed4', '#f0027f', '#7fc97f', '#fdc086'])
+    dfg.plot(kind='bar', title='Sentiment Score', fontsize=20,
+             color=['#beaed4', '#f0027f', '#7fc97f', '#fdc086'])
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=22)
+    plt.ylabel("Mean Sentiment Score")
+    plt.xlabel("Award Category")
     plt.show()
 
 # -----------------------------Stats Tests-------------------------------#
@@ -483,8 +485,10 @@ def QMCBT_viz_2():
     plt.gca().invert_yaxis()
 
     plt.title('Top-5 Bigrams for All Review words', fontdict={'fontsize': fontsize})
+    plt.ylabel("Bigram")
+    plt.xlabel("Count of Bigrams")
 
-    return plt.show()
+    plt.show()
 
 def QMCBT_viz_3():
 
@@ -497,8 +501,10 @@ def QMCBT_viz_3():
             ).value_counts().head(5).plot.barh()
     plt.gca().invert_yaxis()
     plt.title('Top-5 Trigrams for All Review words', fontdict={'fontsize': fontsize})
+    plt.ylabel("Trigram")
+    plt.xlabel("Count of Bigrams")
 
-    return plt.show()
+    plt.show()
 
 def QMCBT_viz_4():
 
