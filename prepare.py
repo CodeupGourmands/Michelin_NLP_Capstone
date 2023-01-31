@@ -37,7 +37,7 @@ def change_dtype_str(df: pd.DataFrame) -> pd.DataFrame:
     df.cuisine = df.cuisine.fillna('').astype('string')
     df.facilities_and_services = df.facilities_and_services.fillna(
         'NONE').astype('string')
-    df.award = df.award.fillna('').astype('string')
+    df.award = df.award.fillna('').astype('category')
     df.data = df.data.fillna('').astype('string')
     return df
 
