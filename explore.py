@@ -487,8 +487,8 @@ def QMCBT_viz_2():
     plt.gca().invert_yaxis()
     plt.ylabel='Count of Bigram Occurance'
     plt.title('Top-5 Bigrams for All Review words', fontdict={'fontsize': fontsize})
-    plt.ylabel("Bigram")
-    plt.xlabel("Count of Bigrams")
+    #plt.ylabel("Bigram")
+    #plt.xlabel("Count of Bigrams")
 
     plt.show()
 
@@ -504,8 +504,8 @@ def QMCBT_viz_3():
     plt.gca().invert_yaxis()
     plt.ylabel='Count of Bigram Occurance'
     plt.title('Top-5 Trigrams for All Review words', fontdict={'fontsize': fontsize})
-    plt.ylabel("Trigram")
-    plt.xlabel("Count of Bigrams")
+    #plt.ylabel("Trigram")
+    #plt.xlabel("Count of Bigrams")
 
     plt.show()
 
