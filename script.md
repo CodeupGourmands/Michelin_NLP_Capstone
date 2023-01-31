@@ -46,54 +46,46 @@ Aperitif
 
 Our data set was prepared following standard Data Processing procedures and the details can be explored under the prepare actions below.
 
-FEATURE ENGINEER: Used 'bag of words' to create new categorical features from polarizing words. 
+FEATURE ENGINEER: 
     * Created columns with `clean` and `lemmatized` text
     * Created a column containing the word_count length
     * Created a column containing sentiment score of the text 
-    * Dropped phone_number and website_url columns that contained Nulls values as determined would not be used as features for the iteration of this project. Dropped six restaurants from the original Kaggle dataset that are no longer Michelin restaurants.
-    * Converted column names to lowercase with no spaces.    
+    * Dropped columns not relevant for this project
+    * Cleaned column names and data utilizing REGEX and string methods
     * Features 'price_category' and 'country' were encoded into dummy variables
     * There were missing values in the price column that were imputed with the mode
-* Special care was taken to ensure that there was no leakage of this data
 
-* SPLIT train, validate and test (approx. 56/24/20), stratifying on target of `award`
+* SPLIT the dataset into train, validate and test, stratifying on target of `award`
 * We scaled all numeric columns for modeling
-* Xy SPLIT split each DataFrame (train, validate, test) into X (features) and y (target) 
 
 Salade
 
-#1 Our first question begining exploration is: What is the distribution of our target variable (award type)?
+#1 Our first question begining exploration was: What is the distribution of our target variable (award type)?
 
 Our initial hypothesis was that in comparison all awards would have an evenly distributed slope from bib gourmand being the most while gradually declining to 3 stars. 
 What we discovered was that the slope seemed gradual from bib gourmand to 1 star but the had a steep drop from 1 star to 2 star then gradual decline to 3 stars.
 
 #2 Our next question was: What countries have the most Michelin restaurants?
 
-We could visually see that France was by far the leader of Michelin restaurants understandably due to Michelin's country of origion. A surprising discovery to the team was that Japan came 2nd in the most Michelin restaurants and had sizable lead against Italy or other European countries. 
+As you can see, France has the most Michelin restaurants, likely due to it being Michelin's country of origion. A surprising discovery was that Japan had the second most Michelin restaurants, more than Italy or other European countries. 
 
 #3 What is the average wordcount of restaurant reviews, by award type?
-Again our initial hypothesis was that in comparison all awards would have an evenly distributed slope from 3 michelin stars being the most verbose while gradually declining to bib gourmand. 
-What we discovered was that the slope seemed gradual from 3 stars to 2 stars but then noticed the interesting observation of what seemed to be a plateau between 2 stars and 1 star before the natural decline to bib gourmand. 
 
-An ANOVA statistical test was conducted to determine if the difference in the wordcounts was significant.
-The results were conclusive our pvalue was less than the alpha rejecting the null hypothesis. 
-There is sufficient evidence to conclude that these is significance in difference for the wordcount among the awards categories.
+Our hypothesis was confirmed, that three star reviews had a higher wordcount. As you can see there is a small difference in word count between one and two star restaurant reviews, An ANOVA statistical test was conducted to determine if the difference in the wordcounts was significant. The statistical test confirmed that there is significance in difference for the wordcount among the awards categories.
 
 #4 Do three star Michelin restaurants have the highest sentiment score?
-The concensus was that the 3 star award reviews would have the highest sentiment score. What we found was that in fact 2 star reviews had the highest sentiment score. We can attribute this to ........ 
+The concensus was that the 3 star award reviews would have the highest sentiment score. What we found was that in fact 2 star reviews had the highest sentiment score. This finding was surprising, and leads to further questions regarding sentiment analysis and its application to culinary language.
 
 
 #5 What are the most frequent words used in Michelin Restaurant reviews?
-- “Modern”, “Room” and “Wine” are the most common words
-- “La Carte”, “Tasting Menu” and “Open Kitchen” are the most common two-word combinations (bi-grams)
-- “Two tasting menu” and “Take Pride Place” ar ethe most common three-word combinations (tri-grams)
+- “Modern”, “Room”, "Kitchen", "One" and "local" are the most common words
+- As you can see in the charts on the right, the common bigrams and trigrams reveal some interesting combinations found in the data
 
- Exploration Summary
-- “Bib Gourmand” Award Level is the most common award category (baseline is 50.3%)
-- France has the most Michelin awarded restaurants, followed by Japan, Italy, U.S.A and Germany)
-- Restaurants awarded three (3) Michelin stars had reviews with the most words, and Bib Gourmand Restaurants had the fewest word count
-- Restaurants awarded (2) Michelin stars had the highest sentiment score, and Bib Gourmand restaurants had the lowest sentiment score
-- Higher-rated restaurants had more facilities than lower rated restaurants
+#6 I'd like you to take a look at these two word clouds. On the left, is a wordcloud generated from all Bib Gourmand Reviews. On the right is a wordcloud generated from three star reviews. This graphic is a great representation of what this project has gleaned from the data--that what makes a three-star Michelin restaurant unique is the focus on service.
+- Take a look on the right, you can see "Service", "Experience", "Superb", "Always"
+- Take a look on the left, you can see "classic, traditional, beef, pork, chicken", a focus on ingredients, on the food
+- In general, what we found is that as a restaurant's Michelin ratings increased, the words used that related to service or unique experiences increased.
+
 
 Entree
 
@@ -125,7 +117,7 @@ Conclusions
 - Our results suggest that the way Michelin reviewers talk about restaurants is impactful and meaningful, and further exploration could yield valuable results
 
  Recommendations
-- To imrpove your chances for Michelin designation, “shoot for the stars”
+- To imrpove your chances for Michelin designation, “shoot for the stars”, utilize the uniqueness of three star restaurant reviews to develop a restaurant plan
 - The higher level a restaurant is rated, the more service focused words, groups of two and three words occur in the review
 - An improvement in dining experience, seems to be the biggest driver towards a three-star restaurant review
 
