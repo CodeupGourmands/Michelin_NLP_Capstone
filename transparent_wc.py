@@ -4,7 +4,7 @@ import matplotlib.colors as mcolors
 from wordcloud import WordCloud
 
 
-def get_threestar_wordcloud():
+def get_threestar_wordcloud(colors=['purple', 'white']):
     '''
     This function utilizes a text file of all three-star review
     words and a pre-selected image to create a word cloud containing
@@ -20,7 +20,7 @@ def get_threestar_wordcloud():
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
-    colors = ['purple', 'white']
+
     custom_cmap = mcolors.ListedColormap(colors)
     # Make the wordcloud, generate the image
     wc = WordCloud(
@@ -34,7 +34,7 @@ def get_threestar_wordcloud():
     wc.to_file('images/transparent_threestar.png')
 
 
-def get_twostar_wordcloud():
+def get_twostar_wordcloud(colors=['blue', 'red']):
     '''
     This function utilizes a text file of all two-star review
     words and a pre-selected image to create a word cloud containing
@@ -49,7 +49,7 @@ def get_twostar_wordcloud():
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
-    colors = ['blue', 'red']
+
     custom_cmap = mcolors.ListedColormap(colors)
     # Make the wordcloud, generate the image
     wc = WordCloud(
@@ -63,7 +63,7 @@ def get_twostar_wordcloud():
     wc.to_file('images/transparent_twostar.png')
 
 
-def get_onestar_wordcloud():
+def get_onestar_wordcloud(colors=['firebrick', 'orangered']):
     '''
     This function utilizes a text file of all one-star review
     words and a pre-selected image to create a word cloud containing
@@ -78,7 +78,7 @@ def get_onestar_wordcloud():
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
-    colors = ['firebrick', 'orangered']
+
     custom_cmap = mcolors.ListedColormap(colors)
     # Make the wordcloud, generate the image
     wc = WordCloud(
@@ -94,7 +94,7 @@ def get_onestar_wordcloud():
 
 # Bib Gourmand Word Cloud
 
-def get_bib_wordcloud():
+def get_bib_wordcloud(colors=['darkred', 'orangered']):
     '''
     This function utilizes a text file of all bib gourmand review
     words and a pre-selected image to create a word cloud containing
@@ -109,7 +109,7 @@ def get_bib_wordcloud():
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
-    colors = ['darkred', 'orangered']
+
     custom_cmap = mcolors.ListedColormap(colors)
     # Make the wordcloud, generate the image
     wc = WordCloud(
@@ -123,7 +123,7 @@ def get_bib_wordcloud():
     wc.to_file('images/transparent_bib_gourmand.png')
 
 
-def get_croissant_wordcloud():
+def get_croissant_wordcloud(colors=['peru', 'chocolate']):
     '''
     '''
     # Import TXT file of all france words
@@ -134,7 +134,7 @@ def get_croissant_wordcloud():
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
-    colors = ['peru', 'chocolate']
+
     custom_cmap = mcolors.ListedColormap(colors)
     # Make the wordcloud, generate the image
     wc = WordCloud(
@@ -147,7 +147,7 @@ def get_croissant_wordcloud():
     wc.to_file('images/transparent_croissant.png')
 
 
-def get_baguette_wordcloud():
+def get_baguette_wordcloud(colors=['peru', 'chocolate']):
     '''
     '''
     # Import TXT file of all france words
@@ -158,7 +158,7 @@ def get_baguette_wordcloud():
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
-    colors = ['peru', 'chocolate']
+
     custom_cmap = mcolors.ListedColormap(colors)
     # Make the wordcloud, generate the image
     wc = WordCloud(
@@ -171,7 +171,7 @@ def get_baguette_wordcloud():
     wc.to_file('images/transparent_baguette.png')
 
 
-def get_shrimp_wordcloud():
+def get_shrimp_wordcloud(colors=['darkorange', 'lightsalmon']):
     '''
     '''
     # Import TXT file of all japan words
@@ -182,7 +182,7 @@ def get_shrimp_wordcloud():
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
-    colors = ['darkorange', 'lightsalmon']
+
     custom_cmap = mcolors.ListedColormap(colors)
     # Make the wordcloud, generate the image
     wc = WordCloud(
@@ -196,7 +196,7 @@ def get_shrimp_wordcloud():
     wc.to_file('images/transparent_shrimp.png')
 
 
-def get_boot_wordcloud():
+def get_boot_wordcloud(colors=['red', 'green']):
     '''
     '''
     # Import TXT file of all italy words
@@ -207,7 +207,7 @@ def get_boot_wordcloud():
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
-    colors = ['red', 'green']
+
     custom_cmap = mcolors.ListedColormap(colors)
     # Make the wordcloud, generate the image
     wc = WordCloud(
