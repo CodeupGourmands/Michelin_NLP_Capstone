@@ -14,7 +14,7 @@
 ## Meet Team Codeup Gourmands!
 |Yuvia Cardenas|Justin Evans|Cristina Lucin|Woodrow Sims|
 |:-:|:-------------------:|:--------------------------------------------------------:|:-------------------------------------:|
-|![Yuvia's_PIC](https://media.licdn.com/dms/image/D4E35AQEVdVWd6q4e0Q/profile-framedphoto-shrink_200_200/0/1673045277264?e=1675101600&v=beta&t=COJMpilKwgjdlvkMt3zjjf9LZI7ECWdrYUZ_vRkSLSM)|![Justin's_PIC](https://media.licdn.com/dms/image/D5635AQEHlbOPQOxX3g/profile-framedphoto-shrink_200_200/0/1674053257186?e=1675101600&v=beta&t=krAlXEipppaBNbcLkHXmaWFOS5AFzFBuAHZ3KGVI-kE)|![Cristina's_PIC](https://media.licdn.com/dms/image/D5603AQHE8_X2lzZ0YA/profile-displayphoto-shrink_200_200/0/1665181074756?e=1680134400&v=beta&t=_wEP-h7f7oBrY6cKyRyAgWc5xGDpnXfdU_J0ktgLPuU)|![Woody's_PIC](https://media.licdn.com/dms/image/D4E35AQEMzstSHpne1w/profile-framedphoto-shrink_200_200/0/1658367242220?e=1675101600&v=beta&t=_4-2eSZyOIixU5xtf9XUoAFJjGg_hOjB4ERDaK3yfGI)
+|![Yuvia's_PIC](https://media.licdn.com/dms/image/D4E35AQEVdVWd6q4e0Q/profile-framedphoto-shrink_200_200/0/1673045277264?e=1675814400&v=beta&t=K0qTZXCX64ADRssR6AawLcL8rNB7BDv6jyiLmVpTr94)|![Justin's_PIC](https://media.licdn.com/dms/image/D5635AQEHlbOPQOxX3g/profile-framedphoto-shrink_200_200/0/1674053257186?e=1675814400&v=beta&t=qt6J9wysgSkZxgRgq-zn3b2G-653vdMRlNDybePR4mg)|![Cristina's_PIC](https://media.licdn.com/dms/image/D5603AQHE8_X2lzZ0YA/profile-displayphoto-shrink_200_200/0/1665181074756?e=1680134400&v=beta&t=_wEP-h7f7oBrY6cKyRyAgWc5xGDpnXfdU_J0ktgLPuU)|![Woody's_PIC](https://media.licdn.com/dms/image/D4E35AQEMzstSHpne1w/profile-framedphoto-shrink_200_200/0/1658367242220?e=1675814400&v=beta&t=nyFGsaK7Hyg8II-Pe31yS5aP2L4tgBu4FvtxoDlrEu8)
 |[![Yuvia's_LinkedIn](https://img.shields.io/badge/Yuvia's%20linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/yuvia-cardenas-083080126/)|[![Justin's_LinkedIn](https://img.shields.io/badge/Justin's%20linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/qmcbt)|[![Cristina's_LinkedIn](https://img.shields.io/badge/Cristina's%20linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/cristina-lucin/)|[![Woody's_LinkedIn](https://img.shields.io/badge/Woodrow's%20linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/woodrow-sims/)
 |[![Yuvia's_GitHub](https://img.shields.io/badge/Yuvia's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yuvia-cardenas)|[![Justin's_GitHub](https://img.shields.io/badge/Justin's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/QMCBT-JustinEvans)|[![Cristina's_GitHub](https://img.shields.io/badge/Cristina's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/cristinalucin)|[![Woody's_GitHub](https://img.shields.io/badge/Woodrow's%20GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Is0metry)|
 
@@ -44,7 +44,7 @@ Can be accomplished by simply cloning our project and running the final notebook
 
 **Warning** to ensure you are not banned from the host while scraping, a 2sec sleep pause per page with a backup 5sec sleep command in case of error was implemented in the acquire function. This slows down the initial scraping run of the program. After web scraping each of the 6700+ reviews, all data is saved locally to the `michelin_df.pickle` file.
 
-<details open="">
+<details>
 <summary><b>Reproduction Instructions:</b></summary><br>
 <p align="left">    
 
@@ -71,7 +71,7 @@ Our initial thoughts are that country, cuisine, and words/groups of words (bigra
 * Clean and Prepare the data utilizing `RegEx` and string functions
 * Explore data in search of significant relationships to target (Michelin Star Ratings) 
 * Conduct statistical testing as necessary
-<details open="">
+<details>
 <summary>▪︎ Answer 6 initial exploratory questions:</summary><br>
 <p align="left">
     <b>Question 1.</b> What is the distribution of our target variable (award type)?
@@ -84,7 +84,7 @@ Our initial thoughts are that country, cuisine, and words/groups of words (bigra
     <br>
     <b>Question 5.</b> What are the most frequent words used in Michelin Restaurant reviews?
     <br>
-    <b>Question 6.</b> Does higher rated restaurants have more facilities?
+    <b>Question 6.</b> Do higher rated restaurants have more facilities?
     <br>
 </details>
 
@@ -97,7 +97,7 @@ Our initial thoughts are that country, cuisine, and words/groups of words (bigra
 
 # Data Dictionary:
 
-<details open="">
+<details>
 <summary><b>Original Features:</b></summary><br>
 <p align="left">    
 
@@ -115,7 +115,7 @@ Our initial thoughts are that country, cuisine, and words/groups of words (bigra
 |data|Web-scraped review for each awardee document|
 </details>
 
-<details open="">
+<details>
 <summary><b>Feature Engineered:</b></summary><br>
 <p align="left">    
 
@@ -132,7 +132,7 @@ Our initial thoughts are that country, cuisine, and words/groups of words (bigra
 
 </details>
 
-<details open="">
+<details>
 <summary><b>Target Variable:</b></summary><br>
 <p align="left">    
 
@@ -148,7 +148,7 @@ Our initial thoughts are that country, cuisine, and words/groups of words (bigra
 
 # Acquire
 Our dataset of all Michelin Awardee restaurants worldwide was acquired January 17, 2023 from Kaggle. This dataset is updated quarterly with new additions of Michelin Awardee restaurants and removal of restaurants that no longer carry the award.  From this initial dataset, we utilized the Michelin Guide URL for each restaurant and Beautiful Soup to web-scrape the review text for each restaurant, enhancing the original dataset.
-<details open="">
+<details>
 <summary><b>Acquisition Actions:</b></summary><br>
 <p align="left">
 
@@ -163,7 +163,7 @@ Our dataset of all Michelin Awardee restaurants worldwide was acquired January 1
 # Prepare
 Our data set was prepared following standard Data Processing procedures and the details can be explored under the prepare actions below.
 
-<details open="">
+<details>
 <summary><b>Prepare Actions:</b></summary><br>
 <p align="left">
 
@@ -225,19 +225,19 @@ Modeling Results
 - When run on test, Logistic Regression yielded an accuracy score of 87.9%, improving baseline accuracy by 37.6%
 
 
-## Conclusions
+## Conclusion:
 - Restaurants with higher Michelin award levels have, on average, longer reviews
 - France, Japan, and Italy have the most Michelin restaurants
 - Two (2) Star Michelin Restaurant reviews have the highest sentiment levels, followed by one (1) star restaurants, three (3) star restaurants, and Bib Gourmand restaurants. However, the difference in sentiment levels between the star categories was not significant.
 - Utilizing the cleaned and lemmatized text of reviews, we produced a model that predicts, with 87.9% accuracy, the award category of a restaurant.
 - Our results suggest that the way Michelin reviewers talk about restaurants is impactful and meaningful, and further exploration could yield valuable results
 
- Recommendations
+### Recommendations
 - To imrpove your chances for Michelin designation, “shoot for the stars”
 - The higher level a restaurant is rated, the more service focused words, groups of two and three words occur in the review
 - An improvement in dining experience, seems to be the biggest driver towards a three-star restaurant review
 
- Next Steps
+### Next Steps
 - Pruning TF/IDF to hone model performance
 - Investigate deep learning to further improve model accuracy
 - Exploration of restaurant cuisine type to feature engineer
