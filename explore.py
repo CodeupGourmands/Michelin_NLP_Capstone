@@ -417,35 +417,31 @@ freq_all_facilities = pd.Series(all_facilities_words).value_counts()
 ## Create Frequency DataFrame ##
 ## -------------------------- ##
 
-data= [freq_all_facilities,
-                        freq_one_star_facilities,
-                        freq_two_star_facilities,
-                        freq_three_star_facilities,
-                        freq_bib_gourmand_facilities,
-                        freq_all_reviews,
-                        freq_one_star_reviews,
-                        freq_two_star_reviews,
-                        freq_three_star_reviews,
-                        freq_bib_gourmand_reviews]
-cols = ['all_facilities',
-                       'one_star_facilities',
-                       'two_star_facilities',
-                       'three_star_facilities',
-                       'bib_gourmand_facilities',
-                       'all_reviews',
-                       'one_star_reviews',
-                       'two_star_reviews',
-                       'three_star_reviews',
-                       'bib_gourmand_reviews']
+word_counts_df = pd.concat([freq_all_facilities,
+                         freq_one_star_facilities, 
+                         freq_two_star_facilities,
+                         freq_three_star_facilities,
+                         freq_bib_gourmand_facilities,
+                         freq_all_reviews,
+                         freq_one_star_reviews,
+                         freq_two_star_reviews,
+                         freq_three_star_reviews,
+                         freq_bib_gourmand_reviews], axis=1
+         ).fillna(0).astype(int)
 
-word_counts = pd.DataFrame(data, cols)
+word_counts_df.columns = ['all_facilities',
+                         'one_star_facilities', 
+                         'two_star_facilities',
+                         'three_star_facilities',
+                         'bib_gourmand_facilities',
+                         'all_reviews',
+                         'one_star_reviews',
+                         'two_star_reviews',
+                         'three_star_reviews',
+                         'bib_gourmand_reviews']
 
-"""
-word_counts = pd.concat(, axis=1
-                        ).fillna(0).astype(int)
+word_counts_df
 
-word_counts.columns = 
-"""
 # Create word_count variables
 facilities_wc_by_award = f_train.groupby('award').word_count.mean()
 reviews_wc_by_award = train.groupby('award').word_count.mean()
@@ -456,6 +452,8 @@ reviews_wc_by_award = train.groupby('award').word_count.mean()
 ##########################
 
 def QMCBT_viz_wc():
+    plt.rc('font', size=20)
+    plt.figure(figsize=(10, 5), dpi=80)
     img = WordCloud(background_color='white'
                 ).generate(' '.join(all_reviews_words))
     plt.imshow(img)
@@ -464,20 +462,21 @@ def QMCBT_viz_wc():
     return plt.show()
 
 def QMCBT_viz_1():
-
-    # Plot Top-20 Review Words and compare by Awards
+    # Plot Top-5 Review Words and compare by Awards
     features_list = ['one_star_reviews','two_star_reviews','three_star_reviews','bib_gourmand_reviews']
 
     fontsize = 20
     plt.rc('font', size=20)
     plt.figure(figsize=(10, 5), dpi=80)
 
-    word_counts.sort('all_reviews', ascending=False)[features_list].head(5).plot.barh()
+    word_counts_df.sort_values('all_reviews', ascending=False)[features_list].head(5).plot.barh()
 
     plt.gca().invert_yaxis()
-    plt.title('Top-5 Review words by Award', fontdict={'fontsize': fontsize})
-
-    return plt.show()
+    plt.ylabel('Top Words')
+    plt.xlabel('Count of word Occurances')
+    plt.title('Top-5 Review words', fontdict={'fontsize': fontsize})
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
+    plt.show()
 
 def QMCBT_viz_2():
 
@@ -491,10 +490,9 @@ def QMCBT_viz_2():
     pd.Series(nltk.bigrams(all_reviews_words)
             ).value_counts().head(5).plot.barh()
     plt.gca().invert_yaxis()
-
+    plt.ylabel('Bigrams')
+    plt.xlabel('Count of Bigram Occurances')
     plt.title('Top-5 Bigrams for All Review words', fontdict={'fontsize': fontsize})
-    plt.ylabel("Bigram")
-    plt.xlabel("Count of Bigrams")
 
     plt.show()
 
@@ -508,10 +506,10 @@ def QMCBT_viz_3():
     pd.Series(nltk.ngrams(all_reviews_words, 3)
             ).value_counts().head(5).plot.barh()
     plt.gca().invert_yaxis()
+    plt.ylabel('Trigrams')
+    plt.xlabel('Count of Trigram Occurances')
     plt.title('Top-5 Trigrams for All Review words', fontdict={'fontsize': fontsize})
-    plt.ylabel("Trigram")
-    plt.xlabel("Count of Bigrams")
-
+    
     plt.show()
 
 def QMCBT_viz_4():
@@ -660,46 +658,15 @@ def var_facilities_freq():
     freq_all_facilities = pd.Series(all_facilities_words).value_counts()
     return freq_one_star_facilities, freq_two_star_facilities, freq_three_star_facilities, freq_bib_gourmand_facilities, freq_all_facilities
 
-## -------------------------- ##
-## Create Frequency DataFrame ##
-## -------------------------- ##
-
-
-def word_counts():
-    word_counts = pd.concat([freq_all_facilities,
-                            freq_one_star_facilities,
-                            freq_two_star_facilities,
-                            freq_three_star_facilities,
-                            freq_bib_gourmand_facilities,
-                            freq_all_reviews,
-                            freq_one_star_reviews,
-                            freq_two_star_reviews,
-                            freq_three_star_reviews,
-                            freq_bib_gourmand_reviews], axis=1
-                            ).fillna(0).astype(int)
-
-    word_counts.columns = ['all_facilities',
-                           'one_star_facilities',
-                           'two_star_facilities',
-                           'three_star_facilities',
-                           'bib_gourmand_facilities',
-                           'all_reviews',
-                           'one_star_reviews',
-                           'two_star_reviews',
-                           'three_star_reviews',
-                           'bib_gourmand_reviews']
-
-    return word_counts
-
 # One Function to wrangle them all
 def universal_variables(train, f_train):
     """
     This Function is used to call all variables
-    """
+    
     all_reviews, one_star_reviews, two_star_reviews, three_star_reviews, bib_gourmand_reviews = var_reviews(train)
     all_reviews_words, one_star_reviews_words, two_star_reviews_words, three_star_reviews_words, bib_gourmand_reviews_words = var_review_words()
     freq_one_star_reviews, freq_two_star_reviews, freq_three_star_reviews, freq_bib_gourmand_reviews, freq_all_reviews = var_review_freq()
     all_facilities, one_star_facilities, two_star_facilities, three_star_facilities, bib_gourmand_facilities = var_facilities(f_train)
     all_facilities_words, one_star_facilities_words, two_star_facilities_words, three_star_facilities_words, bib_gourmand_facilities_words = var_facilities_words()
     freq_one_star_facilities, freq_two_star_facilities, freq_three_star_facilities, freq_bib_gourmand_facilities, freq_all_facilities = var_facilities_freq()
-    word_counts = word_counts()
+    """
