@@ -299,6 +299,114 @@ def get_bib_wordcloud():
     plt.show()
 
 
+def get_croissant_wordcloud():
+    '''
+    '''
+    #Import TXT file of all france words
+    france_text = open("./images/all_france_words.txt",
+            mode='r', encoding='utf-8').read()
+    #Import .png file of croissant image, create a Numpy array mask from the image
+    mask = np.array(Image.open("./images/croissant.png"))
+    # replace 0 with 255 inside the mask to ensure white background
+    mask[mask == 0] = 255
+    # Define Colors
+    colors = ['peru', 'chocolate']
+    custom_cmap = mcolors.ListedColormap(colors)
+    #Make the wordcloud, generate the image
+    wc = WordCloud(
+               mask = mask, background_color = "white",
+               max_words = 500, max_font_size = 500,
+               random_state = 42, width = mask.shape[1],
+               colormap= custom_cmap,
+               contour_color='peru', contour_width=1,
+               height = mask.shape[0])
+    wc.generate(france_text)
+    plt.imshow(wc, interpolation="bilinear")
+    plt.axis('off')
+    plt.show()
+
+
+
+def get_baguette_wordcloud():
+    '''
+    '''
+    #Import TXT file of all france words
+    france_text = open("./images/all_france_words.txt",
+            mode='r', encoding='utf-8').read()
+    #Import .png file of baguette image, create a Numpy array mask from the image
+    mask = np.array(Image.open("./images/baguette.png"))
+    # replace 0 with 255 inside the mask to ensure white background
+    mask[mask == 0] = 255
+    # Define Colors
+    colors = ['peru', 'chocolate']
+    custom_cmap = mcolors.ListedColormap(colors)
+    #Make the wordcloud, generate the image
+    wc = WordCloud(
+               mask = mask, background_color = "white",
+               max_words = 500, max_font_size = 500,
+               random_state = 42, width = mask.shape[1],
+               colormap= custom_cmap,
+               contour_color='peru', contour_width=1.5,
+               height = mask.shape[0])
+    wc.generate(france_text)
+    plt.imshow(wc, interpolation="bilinear")
+    plt.axis('off')
+    plt.show()
+
+
+def get_shrimp_wordcloud():
+    '''
+    '''
+    #Import TXT file of all japan words
+    japan_text = open("./images/all_japan_words.txt",
+            mode='r', encoding='utf-8').read()
+    #Import .png file of shrimp image, create a Numpy array mask from the image
+    mask = np.array(Image.open("./images/shrimp.png"))
+    # replace 0 with 255 inside the mask to ensure white background
+    mask[mask == 0] = 255
+    # Define Colors
+    colors = ['darkorange', 'lightsalmon']
+    custom_cmap = mcolors.ListedColormap(colors)
+    #Make the wordcloud, generate the image
+    wc = WordCloud(
+               mask = mask, background_color = "whitesmoke",
+               max_words = 500, max_font_size = 500,
+               random_state = 42, width = mask.shape[1],
+               colormap= custom_cmap,
+               contour_color='darkorange', contour_width=1,
+               height = mask.shape[0])
+    wc.generate(japan_text)
+    plt.imshow(wc, interpolation="bilinear")
+    plt.axis('off')
+    plt.show()
+
+
+def get_boot_wordcloud():
+    '''
+    '''
+    #Import TXT file of all italy words
+    italy_text = open("./images/all_italy_words.txt",
+            mode='r', encoding='utf-8').read()
+    #Import .png file of italy boot image, create a Numpy array mask from the image
+    mask = np.array(Image.open("./images/italy_boot.png"))
+    # replace 0 with 255 inside the mask to ensure white background
+    mask[mask == 0] = 255
+    # Define Colors
+    colors = ['red', 'green']
+    custom_cmap = mcolors.ListedColormap(colors)
+    #Make the wordcloud, generate the image
+    wc = WordCloud(
+               mask = mask, background_color = "white",
+               max_words = 500, max_font_size = 500,
+               random_state = 42, width = mask.shape[1],
+               colormap= custom_cmap,
+               contour_color='red', contour_width=1,
+               height = mask.shape[0])
+    wc.generate(italy_text)
+    plt.imshow(wc, interpolation="bilinear")
+    plt.axis('off')
+    plt.show()
+
 
 #########################
 ##### Justin's Code #####
