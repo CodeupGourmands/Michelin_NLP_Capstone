@@ -193,7 +193,7 @@ def get_threestar_wordcloud():
                max_words = 400, max_font_size = 500,
                random_state = 42, width = mask.shape[1],
                colormap= custom_cmap,
-               mode='RGBA'
+               mode='RGBA',
                contour_color='gold', contour_width=2,
                height = mask.shape[0])
     wc.generate(threestar_text)
