@@ -220,6 +220,35 @@ def get_boot_wordcloud(colors=['red', 'green']):
     wc.to_file('images/transparent_boot.png')
 
 
+def get_wc(txt_file, png_file, colors=['blue', 'red']):
+    '''
+    This function utilizes a text file of all two-star review
+    words and a pre-selected image to create a word cloud containing
+    all two star words in an image cloud format. It takes the text
+    file and image file from the /images folder.
+    '''
+    # Import TXT file of all two star words
+    temp_text = open(f"./images/{txt_file}.txt",
+                        mode='r', encoding='utf-8').read()
+    # Import .png file of three star logo, create a Numpy array mask from the image
+    mask = np.array(Image.open(f"./images/{png_file}.png"))
+    # replace 0 with 255 inside the mask to ensure white background
+    mask[mask == 0] = 255
+    # Define Colors
+
+    custom_cmap = mcolors.ListedColormap(colors)
+    # Make the wordcloud, generate the image
+    wc = WordCloud(
+        mask=mask, background_color=None,
+        max_words=1000, max_font_size=500,
+        random_state=42, width=mask.shape[1],
+        colormap=custom_cmap,
+        mode='RGBA',
+        height=mask.shape[0])
+    wc.generate(temp_text)
+    wc.to_file(f'images/transparent_{png_file}.png')
+
+
 if __name__ == "__main__":
     get_threestar_wordcloud()
     get_twostar_wordcloud()
@@ -229,3 +258,6 @@ if __name__ == "__main__":
     get_croissant_wordcloud()
     get_shrimp_wordcloud()
     get_boot_wordcloud()
+    get_wc()
+
+
