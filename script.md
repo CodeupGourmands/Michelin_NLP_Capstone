@@ -19,6 +19,7 @@ The amount of secrecy in this process, and importance of this review in the culi
 
 Today for your dining pleasure Team Gourmand will serve you some delectible data we hope you enjoy.
 
+Here's Justin with a Data Hors d'ourve, he'll talk about our Projects goals, where we sourced our data, and how we prepped this meal!
 
 Hors d'oeuvre,
 
@@ -58,12 +59,14 @@ FEATURE ENGINEER:
 * SPLIT the dataset into train, validate and test, stratifying on target of `award`
 * We scaled all numeric columns for modeling
 
+Now here's Cristina to present an exploratory Salad course:
+
 Salade
 
 #1 Our first question begining exploration was: What is the distribution of our target variable (award type)?
 
 Our initial hypothesis was that in comparison all awards would have an evenly distributed slope from bib gourmand being the most while gradually declining to 3 stars. 
-What we discovered was that the slope seemed gradual from bib gourmand to 1 star but the had a steep drop from 1 star to 2 star then gradual decline to 3 stars.
+What we discovered was, as you can see here, the steep decline from one star to two star restaurants, and similarly, to three star Michelin restaurants.
 
 #2 Our next question was: What countries have the most Michelin restaurants?
 
@@ -71,10 +74,10 @@ As you can see, France has the most Michelin restaurants, likely due to it being
 
 #3 What is the average wordcount of restaurant reviews, by award type?
 
-Our hypothesis was confirmed, that three star reviews had a higher wordcount. As you can see there is a small difference in word count between one and two star restaurant reviews, An ANOVA statistical test was conducted to determine if the difference in the wordcounts was significant. The statistical test confirmed that there is significance in difference for the wordcount among the awards categories.
+Our hypothesis was confirmed, that three star reviews had a higher wordcount. As you can see there is a small difference in word count between one and two star restaurant reviews, An ANOVA test was conducted to determine if the difference in the wordcounts was significant. The statistical test confirmed that there is significance in difference for the wordcount among the awards categories.
 
 #4 Do three star Michelin restaurants have the highest sentiment score?
-The concensus was that the 3 star award reviews would have the highest sentiment score. What we found was that in fact 2 star reviews had the highest sentiment score. This finding was surprising, and leads to further questions regarding sentiment analysis and its application to culinary language.
+We expected 3 star Michelin restaurants to have the highest sentiment score. What we found was that in fact 2 star reviews had the highest sentiment score. This finding was surprising, and leads to further questions regarding sentiment analysis and its application to culinary language.
 
 
 #5 What are the most frequent words used in Michelin Restaurant reviews?
@@ -86,6 +89,7 @@ The concensus was that the 3 star award reviews would have the highest sentiment
 - Take a look on the left, you can see "classic, traditional, beef, pork, chicken", a focus on ingredients, on the food
 - In general, what we found is that as a restaurant's Michelin ratings increased, the words used that related to service or unique experiences increased.
 
+Now, here's Woody to talk about today's Entree--Modeling!
 
 Entree
 
@@ -102,9 +106,15 @@ We utilized accuracy as the evaluation metric
 Let's see how our models did.
 
 Modeling Results
+- We utilized the mode of 'Bib Gourmand' as the baseline (50.3%)
+- We utilized accuracy as the evaluation metric
 - We ran grid search on four different models, optimizing hyperparameters
-- Logistic Regression performed the best, over both train and validate
-- When run on test, Logistic Regression yielded an accuracy score of 87.9%, improving baseline accuracy by 37.6%
+- We developed four different models using different model types: (Decision Tree, Random Forest, Logistic Regression, eXtreme Gradient Boosting (XGBoost))
+ The best application, Logistic Regression (via Hyperparameter tuning), was selected for evaluation of test data
+
+ - On unseen data, our Logistic Regression model was 88 percent accurate in predicting the Michelin Star award category of the restaurants in our dataset, nearly 28 percent more accurate than the baseline.
+
+ - Now to Cristina, who has this course's Data Desserts to share.
 
 Dessert
 
