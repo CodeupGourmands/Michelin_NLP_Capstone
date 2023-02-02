@@ -10,7 +10,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import accuracy_score, make_scorer
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import MinMaxScaler
-from sklearnex import patch_sklearn
 patch_sklearn()
 
 
