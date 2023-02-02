@@ -16,6 +16,17 @@ STAR_PALETTE = {'3 michelin stars': '#857f74',
                 '2 michelin stars': '#ddeac1',
                 '1 michelin star':'#8e9189',
                 'bib gourmand' : '#494449'}
+
+COUNTRY_PALETTE = {'france': '#857f74',
+                'japan': '#ddeac1',
+                'italy':'#8e9189',
+                'usa' : '#494449',
+                'germany':'#8e9189',
+                'spain' : '#494449',
+                'switzerland' : '#494449',
+                'belgium':'#8e9189',
+                'united kingdom' : '#494449'}
+
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
     # TODO Docstring
     words = ' '.join(ser).split()
@@ -70,7 +81,8 @@ def get_wordcount_bar(train):
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
     ax = sns.barplot(x=review_wordcount.values,
-                     y=review_wordcount.index, palette=STAR_PALETTE)
+                     y=review_wordcount.index, palette=STAR_PALETTE,
+                     order=['3 michelin stars', '2 michelin stars', '1 michelin star', 'bib gourmand'])
     plt.title('Average Wordcount of Michelin Star Level Restaurants')
     plt.xlabel("Average Word Count")
     plt.ylabel('Award Level')
@@ -89,7 +101,7 @@ def top_10_country_viz(train):
     fig, axes = plt.subplots(figsize=(9, 6))
     ax = sns.barplot(x=top_10_countries.index,
                      y=top_10_countries.values,
-                     palette=STAR_PALETTE)
+                     palette=COUNTRY_PALETTE)
     plt.title('Countries with the Most Michelin Restaurants')
     plt.xlabel("Countries")
     plt.ylabel('Number of Restaurants')
@@ -100,7 +112,7 @@ def sentiment_scores_bar(train):
     dfg = train.groupby(
         ['award'])['sentiment'].mean().sort_values(ascending=False)
     # create a bar plot
-    dfg.plot(kind='bar', color=['#857f74','#ddeac1','#8e9189', '#494449'])
+    dfg.plot(kind='bar', color=['#ddeac1','#8e9189','#857f74','#494449'])
     plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
     plt.xlabel("Award Category")
     plt.ylabel("Sentiment Score")
@@ -627,22 +639,20 @@ def QMCBT_viz_4():
 
     # REVIEWS
     viz_reviews_wc_by_award = reviews_wc_by_award.sort_values(ascending=False)
-    Hex_Codes_Earthy = ['#854d27', '#dd7230', '#f4c95d', '#e7e393', '#04030f']
 
     #create a bar plot
     plt.subplot(1,2,1)
     viz_reviews_wc_by_award.plot(kind='bar', title='Word Count of Reviews\n by Award', ylabel='',
-            xlabel='',fontsize =20, color=Hex_Codes_Earthy)
+            xlabel='',fontsize =20, color=['#ddeac1','#8e9189','#857f74','#494449'])
     plt.xticks(rotation=45, ha='right')
 
     # FACILITIES
     viz_facilities_wc_by_award = facilities_wc_by_award.sort_values(ascending=False)
-    Hex_Codes_Earthy = ['#854d27', '#dd7230', '#f4c95d', '#e7e393', '#04030f']
 
     #create a bar plot
     plt.subplot(1,2,2)
     viz_facilities_wc_by_award.plot(kind='bar', title='Word Count of Facilities\n by Award', ylabel='',
-            xlabel='',fontsize =20, color=Hex_Codes_Earthy)
+            xlabel='',fontsize =20, color=['#857f74','#ddeac1','#8e9189','#494449'])
     plt.xticks(rotation=45, ha='right')
 
     return plt.show()
