@@ -12,7 +12,10 @@ import matplotlib.colors as mcolors
 import scipy.stats as stats
 from scipy.stats import ttest_ind, levene, f_oneway
 
-
+STAR_PALETTE = {'3 michelin stars': '#857f74',
+                '2 michelin stars': '#ddeac1',
+                '1 michelin star':'#8e9189',
+                'bib gourmand' : '#494449'}
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
     # TODO Docstring
     words = ' '.join(ser).split()
@@ -43,11 +46,9 @@ def get_award_freq(train):
     categories in the training dataset'''
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
-    colors = ['#ddeac1','#8e9189', '#494449', '#857f74']
-    sns.set_palette(sns.color_palette(colors))
     cpt = sns.countplot(x='award',
                         data=train,
-                        palette=colors,
+                        palette=STAR_PALETTE,
                         order=train['award'].value_counts().index)
     plt.title('Bib Gourmand is the Most Common Award Level in our Dataset')
     plt.xlabel("Award Level")
@@ -71,7 +72,7 @@ def get_wordcount_bar(train):
     colors = ['#ddeac1','#8e9189', '#494449', '#857f74']
     sns.set_palette(sns.color_palette(colors))
     ax = sns.barplot(x=review_wordcount.values,
-                     y=review_wordcount.index, palette=colors)
+                     y=review_wordcount.index, palette=STAR_PALETTE)
     plt.title('Average Wordcount of Michelin Star Level Restaurants')
     plt.xlabel("Average Word Count")
     plt.ylabel('Award Level')
@@ -90,7 +91,7 @@ def top_10_country_viz(train):
     fig, axes = plt.subplots(figsize=(9, 6))
     ax = sns.barplot(x=top_10_countries.index,
                      y=top_10_countries.values,
-                     palette='mako')
+                     palette=STAR_PALETTE)
     plt.title('Countries with the Most Michelin Restaurants')
     plt.xlabel("Countries")
     plt.ylabel('Number of Restaurants')
