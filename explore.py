@@ -98,16 +98,15 @@ def top_10_country_viz(train):
 
 
 def sentiment_scores_bar(train):
-    dfg = train.groupby(['award'])[
-        'sentiment'].mean().sort_values(ascending=False)
+    dfg = train.groupby(
+        ['award'])['sentiment'].mean().sort_values(ascending=False)
     # create a bar plot
-    dfg.plot(kind='bar', title='Sentiment Score', fontsize=20,
-             color=['#beaed4', '#f0027f', '#7fc97f', '#fdc086'])
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=22)
-    plt.ylabel("Mean Sentiment Score")
+    dfg.plot(kind='bar', color=['#857f74','#ddeac1','#8e9189', '#494449'])
+    plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
     plt.xlabel("Award Category")
+    plt.ylabel("Sentiment Score")
     plt.show()
+
 
 
 def sentiment_country(train):  
