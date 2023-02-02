@@ -1,21 +1,18 @@
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import accuracy_score, make_scorer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.exceptions import NotFittedError
-from IPython.display import Markdown as md
-import logging
-from typing import Dict, List, Tuple, Union
-from datatypes import DataType, ModelType, NumberType
-import numpy as np
+from datatypes import DataType, ModelType, NumberType, ClusterType
 import pandas as pd
+import numpy as np
+from datatypes import DataType, ModelType, NumberType
+from typing import Dict, List, Tuple, Union
+import logging
+from IPython.display import Markdown as md
 from sklearn.exceptions import NotFittedError
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import accuracy_score, make_scorer
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import MinMaxScaler
+from sklearnex import patch_sklearn
+patch_sklearn()
 
-from datatypes import DataType, ModelType, NumberType
 
 N_COUNTRIES = 10
 
@@ -52,6 +49,14 @@ def scale(features: DataType, scaler: MinMaxScaler) -> DataType:
     return pd.DataFrame(scaled_data, index=indexes,
                         columns=columns)
 
+
+def cluster(df: pd.DataFrame, cluster: ClusterType) -> pd.Series:
+    ret_cluster = pd.Series(dtype='int')
+    try:
+        ret_cluster = cluster.predict(df)
+    except NotFittedError as e:
+        ret_cluster = cluster.fit_predict(df)
+    return ret_cluster
 
 def predict(model: ModelType,
             features: pd.DataFrame,
@@ -96,7 +101,8 @@ def tf_idf(documents: pd.Series, tfidf: TfidfVectorizer) -> pd.DataFrame:
 
 def get_features_and_target(df: pd.DataFrame,
                             scaler: MinMaxScaler,
-                            tfidf: TfidfVectorizer) -> Tuple[pd.DataFrame,
+                            tfidf: TfidfVectorizer,
+                            clusterer: ClusterType) -> Tuple[pd.DataFrame,
                                                              pd.Series]:
     '''
     scales relevant variables, performs TFIDF,
@@ -113,9 +119,11 @@ def get_features_and_target(df: pd.DataFrame,
     )[:N_COUNTRIES].index.to_list()
     language_mask = (~df.country.isin(top_n_countries))
     df.loc[language_mask, 'country'] = 'Other'
-    dummies = pd.get_dummies(
-        df[['country', 'price_level']])
     scaled_data = scale(df[['word_count', 'sentiment']], scaler)
+    df['cluster'] = cluster(
+        df[['sentiment', 'latitude', 'longitude']], clusterer)
+    dummies = pd.get_dummies(
+        df[['country', 'price_level', 'cluster']])
     X = pd.concat([tfi_df, dummies, scaled_data], axis=1)
     y = df.award
     return X, y
@@ -131,12 +139,14 @@ def run_train_and_validate(train: pd.DataFrame,
                            validate: pd.DataFrame,
                            models: List[ModelType],
                            tfidf: TfidfVectorizer,
-                           scaler: MinMaxScaler) -> pd.DataFrame:
+                           scaler: MinMaxScaler,
+                           cluster: ClusterType) -> pd.DataFrame:
     logging.info('getting features and target for Train')
-    trainx, trainy = get_features_and_target(train, scaler=scaler, tfidf=tfidf)
+    trainx, trainy = get_features_and_target(
+        train, scaler=scaler, tfidf=tfidf, clusterer=cluster)
     logging.info('getting features and target for Validate')
     validx, validy = get_features_and_target(
-        validate, scaler=scaler, tfidf=tfidf)
+        validate, scaler=scaler, tfidf=tfidf, clusterer=cluster)
     ret_df = pd.DataFrame()
 
     for model in models:
@@ -167,9 +177,11 @@ def tune_model(model: ModelType,
 
 def run_test(test: pd.DataFrame, model: ModelType,
              tfidf: TfidfVectorizer,
-             scaler: MinMaxScaler) -> pd.DataFrame:
+             scaler: MinMaxScaler,
+             cluster: ClusterType) -> pd.DataFrame:
     # TODO Docstring
-    testx, testy = get_features_and_target(test, scaler, tfidf)
+    testx, testy = get_features_and_target(
+        test, scaler, tfidf, clusterer=cluster)
     yhat = predict(model, testx)
     accuracy = accuracy_score(testy, yhat)
     model_name = str(model)
@@ -177,3 +189,4 @@ def run_test(test: pd.DataFrame, model: ModelType,
     return pd.DataFrame([accuracy],
                         columns=['Accuracy Score'],
                         index=[model_name])
+

@@ -1,9 +1,9 @@
-
+<div style="color:blue">
 Hello my name is Yuvia Cardenas your Maitre D, allow me to introduce Team Gourmand
 Justin Evans your Sous Chef
 Woody Sims your Pastry Chef
 & Cristina Lucin your Chef de Cuisine
-
+</p>
 * Menu - Intro Yuvia
 * Hors d'oeuvre - Executive Summary Yuvia
 * Soup du Jour - Acquire Justin
@@ -11,7 +11,7 @@ Woody Sims your Pastry Chef
 * Salad - Explore Cristina 
 * Entree - Modeling Woody
 * Dessert - Conclusion Recommendations Cristina
-
+</div>
 Welcome to all travelers who were lead by the Michelin guide & through our shared love of food, to utilize Data Science to distill the essence of fine dining perfection. At present, a star award from the Michelin Guide is widely accepted as the pre-eminent culinary achievement of restauranteurs and chefs alike. 
 Internally, the company preserves the integrity of the reviews by keeping Michelin reviewers (commonly called "inspectors")anonymous. Externally, "Inspectors" are strictly advised not to disclose their line of work to anyone, not even their parents. 
 The amount of secrecy in this process, and importance of this review in the culinary world, led our Team to ask the following question:
@@ -95,7 +95,7 @@ We expected 3 star Michelin restaurants to have the highest sentiment score. Wha
 
 Now, here's Woody to talk about today's Entree--Modeling!
 
-Entree
+# Entree
 
 
 We developed four different models using different model types: (Decision Tree, Random Forest, Logistic Regression, Gradient Boosting Classifer)
@@ -123,7 +123,7 @@ Modeling Results
  - On unseen data, our Logistic Regression model was 88 percent accurate in predicting the Michelin Star award category of the restaurants in our dataset, nearly 28 percent more accurate than the baseline.
 
  - Now to Cristina, who has this course's Data Desserts to share.
-
+</div>
 Dessert
 
 Our key takeaway's are as follows:
@@ -144,4 +144,4 @@ Conclusions
 - Investigate deep learning to further improve model accuracy
 - Exploration of restaurant cuisine type to feature engineer
 - Investigation and deeper exploration of unique words and phrases
-- Clustering features for modeling
+- Clustering features for modeling``
