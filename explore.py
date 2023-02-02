@@ -69,8 +69,6 @@ def get_wordcount_bar(train):
     # Set style, make a chart
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
-    colors = ['#ddeac1','#8e9189', '#494449', '#857f74']
-    sns.set_palette(sns.color_palette(colors))
     ax = sns.barplot(x=review_wordcount.values,
                      y=review_wordcount.index, palette=STAR_PALETTE)
     plt.title('Average Wordcount of Michelin Star Level Restaurants')
