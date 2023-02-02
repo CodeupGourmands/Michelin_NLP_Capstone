@@ -5,7 +5,7 @@ Woody Sims your Pastry Chef
 & Cristina Lucin your Chef de Cuisine
 
 * Menu - Intro Yuvia
-* Hors d'oeuvre - Project Goal & Overview Yuvia
+* Hors d'oeuvre - Executive Summary Yuvia
 * Soup du Jour - Acquire Justin
 * Aperitif - Prepare Justin
 * Salad - Explore Cristina 
@@ -19,17 +19,21 @@ The amount of secrecy in this process, and importance of this review in the culi
 
 Today for your dining pleasure Team Gourmand will serve you some delectible data we hope you enjoy.
 
-Here's Justin with a Data Hors d'ourve, he'll talk about our Projects goals, where we sourced our data, and how we prepped this meal!
+For the Hors d'oeuvre, here is our Executive Summary:
 
-Hors d'oeuvre,
+Some key part of Acquisition & Preparation:
+- Dataset of all Michelin Awardee restaurants worldwide was acquired January 17, 2023 from Kaggle (Updated quarterly)
+-  We utilized the Michelin Guide URL for each restaurant and Beautiful Soup to scrape the review text, enhancing the original data set.
 
-Our Capstone Team Project utilizes Web-scraping & Natural Language Processing to meet the Project Goal of developing a model that predicts Michelin food star award ratings based on content from the official Michelin review.
+Some highligts from Exploration & Modeling:
+- "Bib Gourmand" was our baseline (50.3% of dataset)
+- 3 Michelin star restaurants had reviews with the most words, but 3 star restaurants had the highest sentiment scores
 
-Following the *Data Science Pipeline* Recipe:
+Some key takeaways from our project:
+- Restaurants with higher Michelin award levels have, on average, longer reviews
+- An improvement in dining experience, seems to be the biggest driver towards a three-star restaurant review
 
-First, our team will acquire and prepare the data for exploration. 
-Then, we will explore the data to gain insight on which features to engineer that ultimately improve our model's accuracy. After we create several types of machine learning models that can effectly predict the Michelin food star award rating we will compare each model's performance on training and validate datasets. 
-Finally, the model that performs the best will move forward with test dataset for final results.
+Now to our Sous Chef Justin, for a little more on how we sourced our data
 
 
 Soup du jour,
