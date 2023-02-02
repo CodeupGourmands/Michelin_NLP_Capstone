@@ -122,6 +122,7 @@ def get_features_and_target(df: pd.DataFrame,
 
 
 def get_baseline(train: pd.DataFrame) -> pd.DataFrame:
+    # TODO Woody Docstring
     baseline = train.award.value_counts(normalize=True)[0]
     return pd.DataFrame([baseline], index=['Baseline'],
                         columns=['Accuracy Score'])
@@ -132,6 +133,7 @@ def run_train_and_validate(train: pd.DataFrame,
                            models: List[ModelType],
                            tfidf: TfidfVectorizer,
                            scaler: MinMaxScaler) -> pd.DataFrame:
+    # TODO Woody Docstring
     logging.info('getting features and target for Train')
     trainx, trainy = get_features_and_target(train, scaler=scaler, tfidf=tfidf)
     logging.info('getting features and target for Validate')
@@ -157,6 +159,7 @@ def run_train_and_validate(train: pd.DataFrame,
 def tune_model(model: ModelType,
                trainx: pd.DataFrame, trainy: pd.DataFrame,
                parameters: Dict[str, List[NumberType]]) -> ModelType:
+    # TODO Woody docstring
     scorer = make_scorer(accuracy_score)
 
     grid_search = GridSearchCV(
@@ -168,7 +171,7 @@ def tune_model(model: ModelType,
 def run_test(test: pd.DataFrame, model: ModelType,
              tfidf: TfidfVectorizer,
              scaler: MinMaxScaler) -> pd.DataFrame:
-    # TODO Docstring
+    # TODO Woody Docstring
     testx, testy = get_features_and_target(test, scaler, tfidf)
     yhat = predict(model, testx)
     accuracy = accuracy_score(testy, yhat)

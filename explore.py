@@ -1,3 +1,4 @@
+import acquire as a
 import prepare as p
 from typing import List, Union, Tuple
 from typing import Union
@@ -11,35 +12,30 @@ from PIL import Image
 import matplotlib.colors as mcolors
 import scipy.stats as stats
 from scipy.stats import ttest_ind, levene, f_oneway
+from IPython.display import Markdown as md
 
 STAR_PALETTE = {'3 michelin stars': '#857f74',
                 '2 michelin stars': '#ddeac1',
-                '1 michelin star':'#8e9189',
-                'bib gourmand' : '#494449'}
+                '1 michelin star': '#8e9189',
+                'bib gourmand': '#494449'}
+
+
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
-    # TODO Docstring
+    '''
+    Extracts ngram frequency from corpus
+    ## Parameters
+    ser: `Series` containing the lemmatized corpus
+    n: n for ngram frequency (default 1)
+    ## Returns
+    a `Series` of the ngrams in corpus and their frequency
+    '''
     words = ' '.join(ser).split()
     if n > 1:
         ngrams = nltk.ngrams(words, n)
         words = [' '.join(n) for n in ngrams]
     return pd.Series(words).value_counts()
 
-
-def generate_word_cloud(ser: pd.Series, ngram: int = 1,
-                        ax: Union[plt.Axes, None] = None,
-                        **kwargs) -> Union[plt.Axes, None]:
-    # TODO Docstring
-    if ser.dtype != np.int64:
-        ser = get_ngram_frequency(ser, ngram)
-    wc = WordCloud(**kwargs).generate_from_frequencies(ser.to_dict())
-    if ax is not None:
-        ax.imshow(wc)
-        return ax
-    plt.imshow(wc)
-    plt.show()
-
-
-def get_award_freq(train):
+def get_award_freq(train:pd.Series)->None:
     '''
     This function takes in the training data set and creates a countplot
     utilizing Seaborn to visualize the range and values of award
@@ -58,7 +54,7 @@ def get_award_freq(train):
     plt.show()
 
 
-def get_wordcount_bar(train):
+def get_wordcount_bar(train:pd.DataFrame)->None:
     '''
     This function takes in the training dataset and creates a bar plot of the
     average wordcount of a review based on the Michelin Star Award
@@ -77,7 +73,7 @@ def get_wordcount_bar(train):
     plt.show()
 
 
-def top_10_country_viz(train):
+def top_10_country_viz(train:pd.DataFrame)->None:
     '''
     This function takes in the training dataset and creates a bar plot of the
     top 10 countries with Michelin restaurants
@@ -96,29 +92,31 @@ def top_10_country_viz(train):
     plt.show()
 
 
-def sentiment_scores_bar(train):
+def sentiment_scores_bar(train:pd.DataFrame)->None:
+    #TODO Cristina Docstring
     dfg = train.groupby(
         ['award'])['sentiment'].mean().sort_values(ascending=False)
     # create a bar plot
-    dfg.plot(kind='bar', color=['#857f74','#ddeac1','#8e9189', '#494449'])
+    dfg.plot(kind='bar', color=['#857f74', '#ddeac1', '#8e9189', '#494449'])
     plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
     plt.xlabel("Award Category")
     plt.ylabel("Sentiment Score")
     plt.show()
 
 
-
-def sentiment_country(train):  
+def sentiment_country(train:pd.DataFrame)->None:
+    #TODO Yuvia Docstring
     dfg = train.groupby(['country'])[
         'sentiment'].mean().sort_values(ascending=False)
     # create a bar plot
     dfg.plot(kind='bar', title='Sentiment Score by Country', ylabel='Mean Sentiment Score',
              xlabel='', fontsize=10)
+    plt.show()
 
 # -----------------------------Stats Tests-------------------------------#
 
 
-def get_anova_wordcount(train):
+def get_anova_wordcount(train:pd.DataFrame)->md:
     '''
     This function creates separate dataframes for
     each award category, and utilizes an ANOVA test
@@ -134,6 +132,7 @@ def get_anova_wordcount(train):
     # set alpha
     alpha = 0.05
     # Run the test
+    # TODO Woody fix this to spit out a Markdown object
     f, p = stats.f_oneway(train_bib.word_count, train_onestar.word_count,
                           train_twostar.word_count, train_threestar.word_count)
     if p < alpha:
@@ -142,10 +141,10 @@ def get_anova_wordcount(train):
               'different between award categories.')
     else:
         print("We fail to reject the null hypothesis.")
-    return print(f'Test Statistic: {f}, P Statistic: {p}')
+        print(f'Test Statistic: {f}, P Statistic: {p}')
 
 
-def get_stats_ttest(df):
+def get_stats_ttest(df:pd.DataFrame)->md:
     '''Function returns statistical T test'''
     Two_Star = df[df.award == '2 michelin stars']
     Three_Star = df[df.award == '3 michelin stars']
@@ -171,213 +170,206 @@ def get_stats_ttest(df):
 
 ###---------------------------------WordClouds--------------------------------###
 
-def get_threestar_wordcloud():
+def get_threestar_wordcloud()->None:
     '''
     This function utilizes a text file of all three-star review
     words and a pre-selected image to create a word cloud containing
     all three star words in an image cloud format. It takes the text
     file and image file from the /images folder.
     '''
-    #Import TXT file of all three star words
+    # Import TXT file of all three star words
     threestar_text = open(
-            "./images/all_threestar_words.txt",
-            mode='r', encoding='utf-8').read()
-    #Import .png file of three star logo, create a Numpy array mask from the image
+        "./images/all_threestar_words.txt",
+        mode='r', encoding='utf-8').read()
+    # Import .png file of three star logo, create a Numpy array mask from the image
     mask = np.array(Image.open("./images/three_stars.png"))
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
     colors = ['purple', 'gold']
     custom_cmap = mcolors.ListedColormap(colors)
-    #Make the wordcloud, generate the image
+    # Make the wordcloud, generate the image
     wc = WordCloud(
-               mask = mask, background_color = None,
-               max_words = 400, max_font_size = 500,
-               random_state = 42, width = mask.shape[1],
-               colormap= custom_cmap,
-               mode='RGBA',
-               contour_color='gold', contour_width=2,
-               height = mask.shape[0])
+        mask=mask, background_color=None,
+        max_words=400, max_font_size=500,
+        random_state=42, width=mask.shape[1],
+        colormap=custom_cmap,
+        mode='RGBA',
+        contour_color='gold', contour_width=2,
+        height=mask.shape[0])
     wc.generate(threestar_text)
     plt.imshow(wc, interpolation="bilinear")
     plt.axis('off')
     plt.show()
 
 
-
-def get_twostar_wordcloud():
+def get_twostar_wordcloud()->None:
     '''
     This function utilizes a text file of all two-star review
     words and a pre-selected image to create a word cloud containing
     all two star words in an image cloud format. It takes the text
     file and image file from the /images folder.
     '''
-    #Import TXT file of all two star words
+    # Import TXT file of all two star words
     twostar_text = open("./images/all_twostar_words.txt",
-            mode='r', encoding='utf-8').read()
-    #Import .png file of three star logo, create a Numpy array mask from the image
+                        mode='r', encoding='utf-8').read()
+    # Import .png file of three star logo, create a Numpy array mask from the image
     mask = np.array(Image.open("./images/two_stars.png"))
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
     colors = ['blue', 'red']
     custom_cmap = mcolors.ListedColormap(colors)
-    #Make the wordcloud, generate the image
+    # Make the wordcloud, generate the image
     wc = WordCloud(
-               mask = mask, background_color = "lightyellow",
-               max_words = 1000, max_font_size = 500,
-               random_state = 42, width = mask.shape[1],
-               colormap= custom_cmap,
-               contour_color='red', contour_width=1,
-               height = mask.shape[0])
+        mask=mask, background_color="lightyellow",
+        max_words=1000, max_font_size=500,
+        random_state=42, width=mask.shape[1],
+        colormap=custom_cmap,
+        contour_color='red', contour_width=1,
+        height=mask.shape[0])
     wc.generate(twostar_text)
     plt.imshow(wc, interpolation="bilinear")
     plt.axis('off')
     plt.show()
 
 
-
-def get_onestar_wordcloud():
+def get_onestar_wordcloud()->None:
     '''
     This function utilizes a text file of all one-star review
     words and a pre-selected image to create a word cloud containing
     all one star words in an image cloud format. It takes the text
     file and image file from the /images folder.
     '''
-    #Import TXT file of all one star words
+    # Import TXT file of all one star words
     onestar_text = open("./images/all_onestar_words.txt",
-            mode='r', encoding='utf-8').read()
-    #Import .png file of three star logo, create a Numpy array mask from the image
+                        mode='r', encoding='utf-8').read()
+    # Import .png file of three star logo, create a Numpy array mask from the image
     mask = np.array(Image.open("./images/one_star_heart.png"))
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
     colors = ['firebrick', 'orangered']
     custom_cmap = mcolors.ListedColormap(colors)
-    #Make the wordcloud, generate the image
+    # Make the wordcloud, generate the image
     wc = WordCloud(
-               mask = mask, background_color = "lightgray",
-               max_words = 250, max_font_size = 500,
-               random_state = 42, width = mask.shape[1],
-               colormap= custom_cmap,
-               contour_color='crimson', contour_width=1.5,
-               height = mask.shape[0])
+        mask=mask, background_color="lightgray",
+        max_words=250, max_font_size=500,
+        random_state=42, width=mask.shape[1],
+        colormap=custom_cmap,
+        contour_color='crimson', contour_width=1.5,
+        height=mask.shape[0])
     wc.generate(onestar_text)
     plt.imshow(wc, interpolation="bilinear")
     plt.axis('off')
     plt.show()
 
 
-
 # Bib Gourmand Word Cloud
 
-def get_bib_wordcloud():
+def get_bib_wordcloud()->None:
     '''
     This function utilizes a text file of all bib gourmand review
     words and a pre-selected image to create a word cloud containing
     all bib gourmand words in an image cloud format. It takes the text
     file and image file from the /images folder.
     '''
-    #Import TXT file of all bib gourmand star words
+    # Import TXT file of all bib gourmand star words
     bib_text = open("./images/all_bib_words.txt",
-            mode='r', encoding='utf-8').read()
-    #Import .png file of bib gourmand image, create a Numpy array mask from the image
+                    mode='r', encoding='utf-8').read()
+    # Import .png file of bib gourmand image, create a Numpy array mask from the image
     mask = np.array(Image.open("./images/bib_gourmand.png"))
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
     colors = ['darkred', 'orangered']
     custom_cmap = mcolors.ListedColormap(colors)
-    #Make the wordcloud, generate the image
+    # Make the wordcloud, generate the image
     wc = WordCloud(
-               mask = mask, background_color = "white",
-               max_words = 500, max_font_size = 500,
-               random_state = 42, width = mask.shape[1],
-               colormap= custom_cmap,
-               contour_color='maroon', contour_width=1.5,
-               height = mask.shape[0])
+        mask=mask, background_color="white",
+        max_words=500, max_font_size=500,
+        random_state=42, width=mask.shape[1],
+        colormap=custom_cmap,
+        contour_color='maroon', contour_width=1.5,
+        height=mask.shape[0])
     wc.generate(bib_text)
     plt.imshow(wc, interpolation="bilinear")
     plt.axis('off')
     plt.show()
 
 
-def get_croissant_wordcloud():
-    '''
-    '''
-    #Import TXT file of all france words
+def get_croissant_wordcloud()->None:
+    #TODO Cristina docstring
+    # Import TXT file of all france words
     france_text = open("./images/all_france_words.txt",
-            mode='r', encoding='utf-8').read()
-    #Import .png file of croissant image, create a Numpy array mask from the image
+                       mode='r', encoding='utf-8').read()
+    # Import .png file of croissant image, create a Numpy array mask from the image
     mask = np.array(Image.open("./images/croissant.png"))
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
     colors = ['peru', 'chocolate']
     custom_cmap = mcolors.ListedColormap(colors)
-    #Make the wordcloud, generate the image
+    # Make the wordcloud, generate the image
     wc = WordCloud(
-               mask = mask, background_color = "white",
-               max_words = 500, max_font_size = 500,
-               random_state = 42, width = mask.shape[1],
-               colormap= custom_cmap,
-               contour_color='peru', contour_width=1,
-               height = mask.shape[0])
+        mask=mask, background_color="white",
+        max_words=500, max_font_size=500,
+        random_state=42, width=mask.shape[1],
+        colormap=custom_cmap,
+        contour_color='peru', contour_width=1,
+        height=mask.shape[0])
     wc.generate(france_text)
     plt.imshow(wc, interpolation="bilinear")
     plt.axis('off')
     plt.show()
 
 
-
-def get_baguette_wordcloud():
-    '''
-    '''
-    #Import TXT file of all france words
+def get_baguette_wordcloud()->None:
+    # TODO Cristina Docstring
+    # Import TXT file of all france words
     france_text = open("./images/all_france_words.txt",
-            mode='r', encoding='utf-8').read()
-    #Import .png file of baguette image, create a Numpy array mask from the image
+                       mode='r', encoding='utf-8').read()
+    # Import .png file of baguette image, create a Numpy array mask from the image
     mask = np.array(Image.open("./images/baguette.png"))
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
     colors = ['peru', 'chocolate']
     custom_cmap = mcolors.ListedColormap(colors)
-    #Make the wordcloud, generate the image
+    # Make the wordcloud, generate the image
     wc = WordCloud(
-               mask = mask, background_color = "white",
-               max_words = 500, max_font_size = 500,
-               random_state = 42, width = mask.shape[1],
-               colormap= custom_cmap,
-               contour_color='peru', contour_width=1.5,
-               height = mask.shape[0])
+        mask=mask, background_color="white",
+        max_words=500, max_font_size=500,
+        random_state=42, width=mask.shape[1],
+        colormap=custom_cmap,
+        contour_color='peru', contour_width=1.5,
+        height=mask.shape[0])
     wc.generate(france_text)
     plt.imshow(wc, interpolation="bilinear")
     plt.axis('off')
     plt.show()
 
 
-def get_shrimp_wordcloud():
-    '''
-    '''
-    #Import TXT file of all japan words
+def get_shrimp_wordcloud()->None:
+    #TODO Cristina Docstring
+    # Import TXT file of all japan words
     japan_text = open("./images/all_japan_words.txt",
-            mode='r', encoding='utf-8').read()
-    #Import .png file of shrimp image, create a Numpy array mask from the image
+                      mode='r', encoding='utf-8').read()
+    # Import .png file of shrimp image, create a Numpy array mask from the image
     mask = np.array(Image.open("./images/shrimp.png"))
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
     colors = ['darkorange', 'lightsalmon']
     custom_cmap = mcolors.ListedColormap(colors)
-    #Make the wordcloud, generate the image
+    # Make the wordcloud, generate the image
     wc = WordCloud(
-               mask = mask, background_color = "whitesmoke",
-               max_words = 500, max_font_size = 500,
-               random_state = 42, width = mask.shape[1],
-               colormap= custom_cmap,
-               contour_color='darkorange', contour_width=1,
-               height = mask.shape[0])
+        mask=mask, background_color="whitesmoke",
+        max_words=500, max_font_size=500,
+        random_state=42, width=mask.shape[1],
+        colormap=custom_cmap,
+        contour_color='darkorange', contour_width=1,
+        height=mask.shape[0])
     wc.generate(japan_text)
     plt.imshow(wc, interpolation="bilinear")
     plt.axis('off')
@@ -387,34 +379,33 @@ def get_shrimp_wordcloud():
 def get_boot_wordcloud():
     '''
     '''
-    #Import TXT file of all italy words
+    # Import TXT file of all italy words
     italy_text = open("./images/all_italy_words.txt",
-            mode='r', encoding='utf-8').read()
-    #Import .png file of italy boot image, create a Numpy array mask from the image
+                      mode='r', encoding='utf-8').read()
+    # Import .png file of italy boot image, create a Numpy array mask from the image
     mask = np.array(Image.open("./images/italy_boot.png"))
     # replace 0 with 255 inside the mask to ensure white background
     mask[mask == 0] = 255
     # Define Colors
     colors = ['red', 'green']
     custom_cmap = mcolors.ListedColormap(colors)
-    #Make the wordcloud, generate the image
+    # Make the wordcloud, generate the image
     wc = WordCloud(
-               mask = mask, background_color = "white",
-               max_words = 500, max_font_size = 500,
-               random_state = 42, width = mask.shape[1],
-               colormap= custom_cmap,
-               contour_color='red', contour_width=1,
-               height = mask.shape[0])
+        mask=mask, background_color="white",
+        max_words=500, max_font_size=500,
+        random_state=42, width=mask.shape[1],
+        colormap=custom_cmap,
+        contour_color='red', contour_width=1,
+        height=mask.shape[0])
     wc.generate(italy_text)
     plt.imshow(wc, interpolation="bilinear")
     plt.axis('off')
     plt.show()
 
-
+# TODO Justin move anything that we're not using in the final notebook into a separate file
 #########################
 ##### Justin's Code #####
 #########################
-
 
 # Custom function to create facilities DataFrame split
 def prepare_facilities(df: pd.DataFrame,
@@ -448,11 +439,10 @@ def prepare_facilities(df: pd.DataFrame,
         return p.tvt_split(df, stratify='award')
     return df
 
+
 ############################
 ##### Global Variables #####
 ############################
-import acquire as a
-import prepare as p
 
 # Get the data
 df = a.get_michelin_pages()
@@ -529,27 +519,27 @@ freq_all_facilities = pd.Series(all_facilities_words).value_counts()
 ## -------------------------- ##
 
 word_counts_df = pd.concat([freq_all_facilities,
-                         freq_one_star_facilities, 
-                         freq_two_star_facilities,
-                         freq_three_star_facilities,
-                         freq_bib_gourmand_facilities,
-                         freq_all_reviews,
-                         freq_one_star_reviews,
-                         freq_two_star_reviews,
-                         freq_three_star_reviews,
-                         freq_bib_gourmand_reviews], axis=1
-         ).fillna(0).astype(int)
+                            freq_one_star_facilities,
+                            freq_two_star_facilities,
+                            freq_three_star_facilities,
+                            freq_bib_gourmand_facilities,
+                            freq_all_reviews,
+                            freq_one_star_reviews,
+                            freq_two_star_reviews,
+                            freq_three_star_reviews,
+                            freq_bib_gourmand_reviews], axis=1
+                           ).fillna(0).astype(int)
 
 word_counts_df.columns = ['all_facilities',
-                         'one_star_facilities', 
-                         'two_star_facilities',
-                         'three_star_facilities',
-                         'bib_gourmand_facilities',
-                         'all_reviews',
-                         'one_star_reviews',
-                         'two_star_reviews',
-                         'three_star_reviews',
-                         'bib_gourmand_reviews']
+                          'one_star_facilities',
+                          'two_star_facilities',
+                          'three_star_facilities',
+                          'bib_gourmand_facilities',
+                          'all_reviews',
+                          'one_star_reviews',
+                          'two_star_reviews',
+                          'three_star_reviews',
+                          'bib_gourmand_reviews']
 
 word_counts_df
 
@@ -562,25 +552,30 @@ reviews_wc_by_award = train.groupby('award').word_count.mean()
 ##### Visualizations #####
 ##########################
 
-def QMCBT_viz_wc():
+def QMCBT_viz_wc()->None:
+    #TODO Justin Docstring
     plt.rc('font', size=20)
     plt.figure(figsize=(10, 5), dpi=80)
     img = WordCloud(background_color='white'
-                ).generate(' '.join(all_reviews_words))
+                    ).generate(' '.join(all_reviews_words))
     plt.imshow(img)
     plt.axis('off')
     plt.title('Most Common Review Words')
-    return plt.show()
+    plt.show()
 
-def QMCBT_viz_1():
+
+def QMCBT_viz_1()->None:
+    #TODO Justin Docstring
     # Plot Top-5 Review Words and compare by Awards
-    features_list = ['one_star_reviews','two_star_reviews','three_star_reviews','bib_gourmand_reviews']
+    features_list = ['one_star_reviews', 'two_star_reviews',
+                     'three_star_reviews', 'bib_gourmand_reviews']
 
     fontsize = 20
     plt.rc('font', size=20)
     plt.figure(figsize=(10, 5), dpi=80)
 
-    word_counts_df.sort_values('all_reviews', ascending=False)[features_list].head(5).plot.barh()
+    word_counts_df.sort_values('all_reviews', ascending=False)[
+        features_list].head(5).plot.barh()
 
     plt.gca().invert_yaxis()
     plt.ylabel('Top Words')
@@ -589,8 +584,9 @@ def QMCBT_viz_1():
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
     plt.show()
 
-def QMCBT_viz_2():
 
+def QMCBT_viz_2():
+    #TODO Justin Docstring
     # Display top Bigrams for All Review words
 
     # Set the plot attributes
@@ -599,53 +595,59 @@ def QMCBT_viz_2():
 
     # Plot
     pd.Series(nltk.bigrams(all_reviews_words)
-            ).value_counts().head(5).plot.barh()
+              ).value_counts().head(5).plot.barh()
     plt.gca().invert_yaxis()
     plt.ylabel('Bigrams')
     plt.xlabel('Count of Bigram Occurances')
-    plt.title('Top-5 Bigrams for All Review words', fontdict={'fontsize': fontsize})
+    plt.title('Top-5 Bigrams for All Review words',
+              fontdict={'fontsize': fontsize})
 
     plt.show()
 
-def QMCBT_viz_3():
 
+def QMCBT_viz_3()->None:
+    #TODO Justin Docstring
     # Display top Trigrams for All Review words
 
     fontsize = 20
     plt.figure(figsize=(10, 5), dpi=80)
 
     pd.Series(nltk.ngrams(all_reviews_words, 3)
-            ).value_counts().head(5).plot.barh()
+              ).value_counts().head(5).plot.barh()
     plt.gca().invert_yaxis()
     plt.ylabel('Trigrams')
     plt.xlabel('Count of Trigram Occurances')
-    plt.title('Top-5 Trigrams for All Review words', fontdict={'fontsize': fontsize})
-    
+    plt.title('Top-5 Trigrams for All Review words',
+              fontdict={'fontsize': fontsize})
+
     plt.show()
 
-def QMCBT_viz_4():
 
+def QMCBT_viz_4()->None:
+    #TODO Justin Docstring
     # REVIEWS
     viz_reviews_wc_by_award = reviews_wc_by_award.sort_values(ascending=False)
     Hex_Codes_Earthy = ['#854d27', '#dd7230', '#f4c95d', '#e7e393', '#04030f']
 
-    #create a bar plot
-    plt.subplot(1,2,1)
+    # create a bar plot
+    plt.subplot(1, 2, 1)
     viz_reviews_wc_by_award.plot(kind='bar', title='Word Count of Reviews\n by Award', ylabel='',
-            xlabel='',fontsize =20, color=Hex_Codes_Earthy)
+                                 xlabel='', fontsize=20, color=Hex_Codes_Earthy)
     plt.xticks(rotation=45, ha='right')
 
     # FACILITIES
-    viz_facilities_wc_by_award = facilities_wc_by_award.sort_values(ascending=False)
+    viz_facilities_wc_by_award = facilities_wc_by_award.sort_values(
+        ascending=False)
     Hex_Codes_Earthy = ['#854d27', '#dd7230', '#f4c95d', '#e7e393', '#04030f']
 
-    #create a bar plot
-    plt.subplot(1,2,2)
+    # create a bar plot
+    plt.subplot(1, 2, 2)
     viz_facilities_wc_by_award.plot(kind='bar', title='Word Count of Facilities\n by Award', ylabel='',
-            xlabel='',fontsize =20, color=Hex_Codes_Earthy)
+                                    xlabel='', fontsize=20, color=Hex_Codes_Earthy)
     plt.xticks(rotation=45, ha='right')
 
     return plt.show()
+
 
 def stat_levene():
     # Levene
@@ -658,13 +660,14 @@ def stat_levene():
 
     if p_val < α:
         print('equal_var = False (we cannot assume equal variance)')
-        
+
     else:
         print('equal_var = True (we will assume equal variance)')
-        
-    print('_______________________________________________________________')  
+
+    print('_______________________________________________________________')
     print(f't-stat: {t_stat}')
     print(f'p-value: {p_val}')
+
 
 def stat_pearson():
 
@@ -672,14 +675,14 @@ def stat_pearson():
 
     alpha = 0.05
     r, p_val = stats.pearsonr(reviews_wc_by_award, facilities_wc_by_award)
-        
+
     if p_val < alpha:
         print('Reject the null hypothesis')
     else:
         print('Fail to reject the null hypothesis')
-    r= r.round(4)
+    r = r.round(4)
     p_val = p_val.round(4)
-    print('_____________________')  
+    print('_____________________')
     print(f'correlation {r}')
     print(f'p-value {p_val}')
 
@@ -770,10 +773,12 @@ def var_facilities_freq():
     return freq_one_star_facilities, freq_two_star_facilities, freq_three_star_facilities, freq_bib_gourmand_facilities, freq_all_facilities
 
 # One Function to wrangle them all
+
+
 def universal_variables(train, f_train):
     """
     This Function is used to call all variables
-    
+
     all_reviews, one_star_reviews, two_star_reviews, three_star_reviews, bib_gourmand_reviews = var_reviews(train)
     all_reviews_words, one_star_reviews_words, two_star_reviews_words, three_star_reviews_words, bib_gourmand_reviews_words = var_review_words()
     freq_one_star_reviews, freq_two_star_reviews, freq_three_star_reviews, freq_bib_gourmand_reviews, freq_all_reviews = var_review_freq()
