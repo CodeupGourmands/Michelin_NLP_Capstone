@@ -14,11 +14,6 @@ import scipy.stats as stats
 from scipy.stats import ttest_ind, levene, f_oneway
 from IPython.display import Markdown as md
 
-STAR_PALETTE = {'3 michelin stars': '#857f74',
-                '2 michelin stars': '#ddeac1',
-                '1 michelin star': '#8e9189',
-                'bib gourmand': '#494449'}
-
 
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
     '''
@@ -47,7 +42,7 @@ def get_award_freq(train:pd.Series)->None:
     fig, axes = plt.subplots(figsize=(9, 6))
     cpt = sns.countplot(x='award',
                         data=train,
-                        palette=STAR_PALETTE,
+                        palette='coolwarm_r',
                         order=train['award'].value_counts().index)
     plt.title('Bib Gourmand is the Most Common Award Level in our Dataset')
     plt.xlabel("Award Level")
@@ -73,7 +68,8 @@ def get_wordcount_bar(train:pd.DataFrame)->None:
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
     ax = sns.barplot(x=review_wordcount.values,
-                     y=review_wordcount.index, palette=STAR_PALETTE)
+                     y=review_wordcount.index, palette='coolwarm_r',
+                     order=['3 michelin stars', '2 michelin stars', '1 michelin star', 'bib gourmand'])
     plt.title('Average Wordcount of Michelin Star Level Restaurants')
     plt.xlabel("Average Word Count")
     plt.ylabel('Award Level')
@@ -95,7 +91,7 @@ def top_10_country_viz(train:pd.DataFrame)->None:
     fig, axes = plt.subplots(figsize=(9, 6))
     ax = sns.barplot(x=top_10_countries.index,
                      y=top_10_countries.values,
-                     palette=STAR_PALETTE)
+                     palette='coolwarm_r')
     plt.title('Countries with the Most Michelin Restaurants')
     plt.xlabel("Countries")
     plt.ylabel('Number of Restaurants')
@@ -112,12 +108,9 @@ def sentiment_scores_bar(train:pd.DataFrame)->None:
     '''
     dfg = train.groupby(
         ['award'])['sentiment'].mean().sort_values(ascending=False)
-    # create a bar plot
-    dfg.plot(kind='bar', title='Sentiment Score', fontsize=20,
-             color=['#040f0f','#0e3013','#656665','#289944'])
-    plt.xticks(fontsize=20)
-    plt.yticks(fontsize=22)
-    plt.ylabel("Mean Sentiment Score")
+    # create a bar plot    
+    dfg.plot(kind='bar', color=['#8ba5e8','#dde2f0','#e4c8bb','#d78b76'])
+    plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
     plt.xlabel("Award Category")
     plt.ylabel("Sentiment Score")
     plt.show()
