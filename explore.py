@@ -38,9 +38,12 @@ def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
 
 def get_award_freq(train: pd.Series) -> None:
     '''
-    This function takes in the training data set and creates a countplot
-    utilizing Seaborn to visualize the range and values of award
-    categories in the training dataset'''
+    Creates bar graph of the frequency of awards in the data.
+    ## Parameters
+    train: the training dataset
+    ## Returns
+    plots graph
+    '''
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
     cpt = sns.countplot(x='award',
@@ -57,8 +60,12 @@ def get_award_freq(train: pd.Series) -> None:
 
 def get_wordcount_bar(train: pd.DataFrame) -> None:
     '''
-    This function takes in the training dataset and creates a bar plot of the
-    average wordcount of a review based on the Michelin Star Award
+    Creates bar graph of the average wordcount of a 
+    review based on the Michelin Star Award.
+    ## Parameters
+    train: the training dataset
+    ## Returns
+    plots graph
     '''
     # Use groupby to get an average length per language
     review_wordcount = train.groupby(
@@ -76,8 +83,11 @@ def get_wordcount_bar(train: pd.DataFrame) -> None:
 
 def top_10_country_viz(train: pd.DataFrame) -> None:
     '''
-    This function takes in the training dataset and creates a bar plot of the
-    top 10 countries with Michelin restaurants
+    Creates bar graph of top 10 countries with Michelin restaurants.
+    ## Parameters
+    train: the training dataset
+    ## Returns
+    plots graph
     '''
     # Use groupby to get an average length per language
     top_10_countries = train['country'].value_counts().head(9)
@@ -94,19 +104,34 @@ def top_10_country_viz(train: pd.DataFrame) -> None:
 
 
 def sentiment_scores_bar(train:pd.DataFrame)->None:
-    #TODO Cristina Docstring
+    '''
+    Creates bar graph of sentiment score by award.
+    ## Parameters
+    train: the training dataset
+    ## Returns
+    plots graph
+    '''
     dfg = train.groupby(
         ['award'])['sentiment'].mean().sort_values(ascending=False)
     # create a bar plot
-    dfg.plot(kind='bar', color=['#857f74', '#ddeac1', '#8e9189', '#494449'])
-    plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
+    dfg.plot(kind='bar', title='Sentiment Score', fontsize=20,
+             color=['#040f0f','#0e3013','#656665','#289944'])
+    plt.xticks(fontsize=20)
+    plt.yticks(fontsize=22)
+    plt.ylabel("Mean Sentiment Score")
     plt.xlabel("Award Category")
     plt.ylabel("Sentiment Score")
     plt.show()
 
 
 def sentiment_country(train:pd.DataFrame)->None:
-    #TODO Yuvia Docstring
+    '''
+    Creates bar graph of sentiment score by country.
+    ## Parameters
+    train: the training dataset
+    ## Returns
+    plots graph
+    '''
     dfg = train.groupby(['country'])[
         'sentiment'].mean().sort_values(ascending=False)
     # create a bar plot
@@ -300,7 +325,12 @@ def get_bib_wordcloud() -> None:
 
 
 def get_croissant_wordcloud()->None:
-    #TODO Cristina docstring
+    '''
+    This function utilizes a text file of all France review
+    words and a pre-selected image to create a word cloud containing
+    all France words in an image cloud format. It takes the text
+    file and image file from the /images folder.
+    '''
     # Import TXT file of all france words
     france_text = open("./images/all_france_words.txt",
                        mode='r', encoding='utf-8').read()
@@ -326,7 +356,12 @@ def get_croissant_wordcloud()->None:
 
 
 def get_baguette_wordcloud()->None:
-    # TODO Cristina Docstring
+    '''
+    This function utilizes a text file of all France review
+    words and a pre-selected image to create a word cloud containing
+    all France words in an image cloud format. It takes the text
+    file and image file from the /images folder.
+    '''
     # Import TXT file of all france words
     france_text = open("./images/all_france_words.txt",
                        mode='r', encoding='utf-8').read()
@@ -352,7 +387,12 @@ def get_baguette_wordcloud()->None:
 
 
 def get_shrimp_wordcloud()->None:
-    #TODO Cristina Docstring
+    '''
+    This function utilizes a text file of all Japan review
+    words and a pre-selected image to create a word cloud containing
+    all Japan words in an image cloud format. It takes the text
+    file and image file from the /images folder.
+    '''
     # Import TXT file of all japan words
     japan_text = open("./images/all_japan_words.txt",
                       mode='r', encoding='utf-8').read()
@@ -379,6 +419,10 @@ def get_shrimp_wordcloud()->None:
 
 def get_boot_wordcloud():
     '''
+    This function utilizes a text file of all italy review
+    words and a pre-selected image to create a word cloud containing
+    all italy words in an image cloud format. It takes the text
+    file and image file from the /images folder.
     '''
     # Import TXT file of all italy words
     italy_text = open("./images/all_italy_words.txt",
