@@ -43,9 +43,11 @@ def get_award_freq(train):
     categories in the training dataset'''
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
+    colors = ['#ddeac1','#8e9189', '#494449', '#857f74']
+    sns.set_palette(sns.color_palette(colors))
     cpt = sns.countplot(x='award',
                         data=train,
-                        palette='RdYlGn_r',
+                        palette=colors,
                         order=train['award'].value_counts().index)
     plt.title('Bib Gourmand is the Most Common Award Level in our Dataset')
     plt.xlabel("Award Level")
@@ -66,8 +68,10 @@ def get_wordcount_bar(train):
     # Set style, make a chart
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
+    colors = ['#ddeac1','#8e9189', '#494449', '#857f74']
+    sns.set_palette(sns.color_palette(colors))
     ax = sns.barplot(x=review_wordcount.values,
-                     y=review_wordcount.index, palette='coolwarm')
+                     y=review_wordcount.index, palette=colors)
     plt.title('Average Wordcount of Michelin Star Level Restaurants')
     plt.xlabel("Average Word Count")
     plt.ylabel('Award Level')
