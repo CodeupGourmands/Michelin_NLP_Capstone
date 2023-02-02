@@ -35,7 +35,8 @@ def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
         words = [' '.join(n) for n in ngrams]
     return pd.Series(words).value_counts()
 
-def get_award_freq(train:pd.Series)->None:
+
+def get_award_freq(train: pd.Series) -> None:
     '''
     This function takes in the training data set and creates a countplot
     utilizing Seaborn to visualize the range and values of award
@@ -54,7 +55,7 @@ def get_award_freq(train:pd.Series)->None:
     plt.show()
 
 
-def get_wordcount_bar(train:pd.DataFrame)->None:
+def get_wordcount_bar(train: pd.DataFrame) -> None:
     '''
     This function takes in the training dataset and creates a bar plot of the
     average wordcount of a review based on the Michelin Star Award
@@ -73,7 +74,7 @@ def get_wordcount_bar(train:pd.DataFrame)->None:
     plt.show()
 
 
-def top_10_country_viz(train:pd.DataFrame)->None:
+def top_10_country_viz(train: pd.DataFrame) -> None:
     '''
     This function takes in the training dataset and creates a bar plot of the
     top 10 countries with Michelin restaurants
@@ -116,7 +117,7 @@ def sentiment_country(train:pd.DataFrame)->None:
 # -----------------------------Stats Tests-------------------------------#
 
 
-def get_anova_wordcount(train:pd.DataFrame)->md:
+def get_anova_wordcount(train: pd.DataFrame) -> md:
     '''
     This function creates separate dataframes for
     each award category, and utilizes an ANOVA test
@@ -144,7 +145,7 @@ def get_anova_wordcount(train:pd.DataFrame)->md:
         print(f'Test Statistic: {f}, P Statistic: {p}')
 
 
-def get_stats_ttest(df:pd.DataFrame)->md:
+def get_stats_ttest(df: pd.DataFrame) -> md:
     '''Function returns statistical T test'''
     Two_Star = df[df.award == '2 michelin stars']
     Three_Star = df[df.award == '3 michelin stars']
@@ -170,7 +171,7 @@ def get_stats_ttest(df:pd.DataFrame)->md:
 
 ###---------------------------------WordClouds--------------------------------###
 
-def get_threestar_wordcloud()->None:
+def get_threestar_wordcloud() -> None:
     '''
     This function utilizes a text file of all three-star review
     words and a pre-selected image to create a word cloud containing
@@ -203,7 +204,7 @@ def get_threestar_wordcloud()->None:
     plt.show()
 
 
-def get_twostar_wordcloud()->None:
+def get_twostar_wordcloud() -> None:
     '''
     This function utilizes a text file of all two-star review
     words and a pre-selected image to create a word cloud containing
@@ -234,7 +235,7 @@ def get_twostar_wordcloud()->None:
     plt.show()
 
 
-def get_onestar_wordcloud()->None:
+def get_onestar_wordcloud() -> None:
     '''
     This function utilizes a text file of all one-star review
     words and a pre-selected image to create a word cloud containing
@@ -267,7 +268,7 @@ def get_onestar_wordcloud()->None:
 
 # Bib Gourmand Word Cloud
 
-def get_bib_wordcloud()->None:
+def get_bib_wordcloud() -> None:
     '''
     This function utilizes a text file of all bib gourmand review
     words and a pre-selected image to create a word cloud containing
@@ -408,6 +409,8 @@ def get_boot_wordcloud():
 #########################
 
 # Custom function to create facilities DataFrame split
+
+
 def prepare_facilities(df: pd.DataFrame,
                        split: bool = True) -> Union[pd.DataFrame,
                                                     Tuple[pd.DataFrame,
@@ -552,8 +555,8 @@ reviews_wc_by_award = train.groupby('award').word_count.mean()
 ##### Visualizations #####
 ##########################
 
-def QMCBT_viz_wc()->None:
-    #TODO Justin Docstring
+def QMCBT_viz_wc() -> None:
+    # TODO Justin Docstring
     plt.rc('font', size=20)
     plt.figure(figsize=(10, 5), dpi=80)
     img = WordCloud(background_color='white'
@@ -564,8 +567,8 @@ def QMCBT_viz_wc()->None:
     plt.show()
 
 
-def QMCBT_viz_1()->None:
-    #TODO Justin Docstring
+def QMCBT_viz_1() -> None:
+    # TODO Justin Docstring
     # Plot Top-5 Review Words and compare by Awards
     features_list = ['one_star_reviews', 'two_star_reviews',
                      'three_star_reviews', 'bib_gourmand_reviews']
@@ -586,7 +589,7 @@ def QMCBT_viz_1()->None:
 
 
 def QMCBT_viz_2():
-    #TODO Justin Docstring
+    # TODO Justin Docstring
     # Display top Bigrams for All Review words
 
     # Set the plot attributes
@@ -605,8 +608,8 @@ def QMCBT_viz_2():
     plt.show()
 
 
-def QMCBT_viz_3()->None:
-    #TODO Justin Docstring
+def QMCBT_viz_3() -> None:
+    # TODO Justin Docstring
     # Display top Trigrams for All Review words
 
     fontsize = 20
@@ -623,8 +626,8 @@ def QMCBT_viz_3()->None:
     plt.show()
 
 
-def QMCBT_viz_4()->None:
-    #TODO Justin Docstring
+def QMCBT_viz_4() -> None:
+    # TODO Justin Docstring
     # REVIEWS
     viz_reviews_wc_by_award = reviews_wc_by_award.sort_values(ascending=False)
     Hex_Codes_Earthy = ['#854d27', '#dd7230', '#f4c95d', '#e7e393', '#04030f']
