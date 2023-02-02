@@ -9,7 +9,7 @@ import pandas as pd
 from nltk.corpus import stopwords as stpwrds
 from sklearn.model_selection import train_test_split
 
-
+# TODO Woody organize based on execution order
 EXTRA_WORDS: List[str] = ['dishes','restaurant','dining','chef',
                           'menu', 'cuisine', 'there',
                           'ingredients', 'flavour', 'also',
@@ -26,10 +26,10 @@ def change_dtype_str(df: pd.DataFrame) -> pd.DataFrame:
     ## Description:
     This is a custom Function to change dtype to string
         as appropraiate for this project.
-    ## Arguments:
-    df = DataFrame
+    ## Parameters:
+    df = `DataFrame` containing michelin data
     ## Returns:
-    df - DataFrame
+    `DataFrame` with dtypes changed as appropriate
     '''
     df.name = df.name.fillna('').astype('string')
     df.address = df.address.fillna('').astype('string')
@@ -118,7 +118,7 @@ def remove_stopwords(string_to_clean: str,
     Removes stopwords from string
     ## Parameters
     string_to_clean: document string to be cleaned
- =a+extra_words: additional stop words to remove from `string_to_clean`
+    extra_words: additional stop words to remove from `string_to_clean`
     exclude_words: stopwords to keep in `string_to_clean`
     ## Returns
     document string with stopwords removed
@@ -222,6 +222,7 @@ def tvt_split(df: pd.DataFrame,
 
 
 def sentiment_score(lemmatized: str, sia: SentimentIntensityAnalyzer) -> float:
+    #TODO Yuvia docstring
     return sia.polarity_scores(lemmatized)['compound']
 
 
@@ -250,7 +251,7 @@ def prepare_michelin(df: pd.DataFrame,
         return tvt_split(df, stratify='award')
     return df
 
-
+# TODO Cristina either move to a new file or delete, as it's not used in the workbook
 def prep_classification_data(train, validate, test):
     '''
     This function takes in train, validate, and test and returns
@@ -281,7 +282,7 @@ def prep_classification_data(train, validate, test):
 
 
 def remove_ngrams(lemmatized: str, ngrams=List[str]) -> str:
-    # TODO Docstring
+    # TODO Woody Docstring
     for n in ngrams:
         lemmatized = ''.join(lemmatized.split(n))
     return lemmatized
