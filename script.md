@@ -96,13 +96,17 @@ Entree
 
 We developed four different models using different model types: (Decision Tree, Random Forest, Logistic Regression, Gradient Boosting Classifer)
 
-The best application (via Hyperparameter tuning) was selected for evaluation of test data.
+We then used grid search, which is a technique of testing multiple models to find the best configuration for our model
 
-We then created a baseline model utilizing the mode of 'Bib Gourmand' as the baseline (50.3%) of our target variable with the expectation that our models will outperform the baseline model.
+Our baseline was to choose Bib Gourmand every time, which was the most common rating, making up about 50% of the data
 
 We explored several methods of NLP modeling. We elected to utilize as much useful text as possible, removing a small number of stopwords and ngrams from the lemmatized dataset.
 
-We utilized accuracy as the evaluation metric
+The features we extracted from the data per our findings included the top 10 countries that showed up in the training data. We also used the word count and sentiment scores
+
+To evaluate the body of the reviews we used a technique called TFIDF, which we briefly explained in our last presentation, but just in case you were absent,
+Term Frequency (how often a term appears in a given document) and Inverse Document Frequency (how often the term appears in all documents)
+We utilized accuracy as the evaluation metric, which essentially what percentage of our predictions we got right
 Let's see how our models did.
 
 Modeling Results
