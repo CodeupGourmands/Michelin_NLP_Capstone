@@ -14,8 +14,8 @@ import scipy.stats as stats
 from scipy.stats import ttest_ind, levene, f_oneway
 from IPython.display import Markdown as md
 
-AWARD_COLORS = {"3 michelin stars" : "indianred", "2 michelin stars":"peachpuff",
-                "1 michelin star":"lightsteelblue", "bib gourmand":"cornflowerblue"}
+AWARD_COLORS = {"3 michelin stars" : "#dc8e78", "2 michelin stars":"#e2c8bb",
+                "1 michelin star":"#c7d4ee", "bib gourmand":"#8ba5e9"}
 
 
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
