@@ -59,7 +59,8 @@ FEATURE ENGINEER:
     * Cleaned column names and data utilizing REGEX and string methods
     * Features 'price_category' and 'country' were encoded into dummy variables
     * There were missing values in the price column that were imputed with the mode
-
+    * We explored several methods of NLP modeling. We elected to utilize as much useful text as possible
+    removing stop words and ngrams common across multiple datasets 
 * SPLIT the dataset into train, validate and test, stratifying on target of `award`
 * We scaled all numeric columns for modeling
 
@@ -97,30 +98,23 @@ Now, here's Woody to talk about today's Entree--Modeling!
 
 Entree
 
-
-We developed four different models using different model types: (Decision Tree, Random Forest, Logistic Regression, Gradient Boosting Classifer)
+For modeling we developed four different models using different model types: (Decision Tree, Random Forest, Logistic Regression, Gradient Boosting Classifer)
 
 We then used grid search, which is a technique of testing multiple models to find the best configuration for our model
 
-Our baseline was to choose Bib Gourmand every time, which was the most common rating, making up about 50% of the data
-
-We explored several methods of NLP modeling. We elected to utilize as much useful text as possible, removing a small number of stopwords and ngrams from the lemmatized dataset.
+Our baseline was determined to be an assumption that each restaurant fell under the “Bib Gourmand” category, which represented roughly half of the total restaurants in our dataset.
 
 The features we extracted from the data per our findings included the top 10 countries that showed up in the training data. We also used the word count and sentiment scores
 
-To evaluate the body of the reviews we used a technique called TFIDF, which we briefly explained in our last presentation, but just in case you were absent,
-Term Frequency (how often a term appears in a given document) and Inverse Document Frequency (how often the term appears in all documents)
+To evaluate the body of the reviews we used a technique called TFIDF, which is a combination of two metrics:
+    - Term Frequency (how often a term appears in a given document)
+    and
+    - Inverse Document Frequency (how often the term appears in all documents)
 We utilized accuracy as the evaluation metric, which essentially what percentage of our predictions we got right
-Let's see how our models did.
 
-Modeling Results
-- We utilized the mode of 'Bib Gourmand' as the baseline (50.3%)
-- We utilized accuracy as the evaluation metric
-- We ran grid search on four different models, optimizing hyperparameters
-- We developed four different models using different model types: (Decision Tree, Random Forest, Logistic Regression, eXtreme Gradient Boosting (XGBoost))
- The best application, Logistic Regression (via Hyperparameter tuning), was selected for evaluation of test data
+To further improve our models, we used a technique called Grid Search with cross validation, running different iterations of models over multiple permutations of the data to find the combination of parameters that yields the best predictions. 
 
- - On unseen data, our Logistic Regression model was 88 percent accurate in predicting the Michelin Star award category of the restaurants in our dataset, nearly 28 percent more accurate than the baseline.
+The final dish: On unseen data, our best-performing model, Logistic Regression, was able to predict the Michelin star award with 89% accuracy, nearly 29 percent more accurate than the baseline.
 
  - Now to Cristina, who has this course's Data Desserts to share.
 
