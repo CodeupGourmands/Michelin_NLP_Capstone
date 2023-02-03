@@ -5,6 +5,7 @@ from datatypes import DataType, ModelType, NumberType
 from typing import Dict, List, Tuple, Union
 import logging
 from IPython.display import Markdown as md
+
 from sklearn.exceptions import NotFittedError
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import accuracy_score, make_scorer
