@@ -116,12 +116,12 @@ def sentiment_scores_bar(train:pd.DataFrame)->None:
     dfg = train.groupby(['award'])['sentiment'].mean().sort_values(ascending=False)
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
-    ax = sns.barplot(x=dfg.index, 
-                 y=dfg.values, palette=AWARD_COLORS,
+    ax = sns.barplot(y=dfg.index, 
+                 x=dfg.values, palette=AWARD_COLORS,
                  order=['2 michelin stars', '1 michelin star', '3 michelin stars', 'bib gourmand'],
-                 orient='v')
+                 orient='h')
     plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
-    ax.set_xticklabels(
+    ax.set_yticklabels(
         ['2 Michelin Stars', '1 Michelin Star', '3 Michelin Stars', 'Bib Gourmand'])
     plt.xlabel("Award Category")
     plt.ylabel("Sentiment Score")
