@@ -71,6 +71,8 @@ def get_wordcount_bar(train: pd.DataFrame) -> None:
     ax = sns.barplot(x=review_wordcount.values,
                      y=review_wordcount.index, palette='coolwarm_r',
                      order=['3 michelin stars', '2 michelin stars', '1 michelin star', 'bib gourmand'])
+    ax.set_yticklabels(
+        ['3 Michelin Stars', '2 Michelin Stars', '1 Michelin Star', 'Bib Gourmand'])
     plt.title('Average Wordcount of Michelin Star Level Restaurants')
     plt.xlabel("Average Word Count")
     plt.ylabel('Award Level')
@@ -107,11 +109,15 @@ def sentiment_scores_bar(train:pd.DataFrame)->None:
     ## Returns
     plots graph
     '''
-    dfg = train.groupby(
-        ['award'])['sentiment'].mean().sort_values(ascending=False)
-    # create a bar plot    
-    dfg.plot(kind='bar', color=['#8ba5e8','#dde2f0','#e4c8bb','#d78b76'])
+    dfg = train.groupby(['award'])['sentiment'].mean().sort_values(ascending=False)
+    sns.set_style("darkgrid")
+    fig, axes = plt.subplots(figsize=(9, 6))
+    ax = sns.barplot(x=dfg.values, 
+                 y=dfg.index, palette='coolwarm_r',
+                 order=['2 michelin stars', '1 michelin star', '3 michelin stars', 'bib gourmand'])
     plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
+    ax.set_yticklabels(
+        ['2 Michelin Stars', '1 Michelin Star', '3 Michelin Stars', 'Bib Gourmand'])
     plt.xlabel("Award Category")
     plt.ylabel("Sentiment Score")
     plt.show()
