@@ -13,7 +13,7 @@ Woody Sims your Pastry Chef
 * Dessert - Conclusion Recommendations Cristina
 
 Welcome to all travelers who were lead by the Michelin guide & through our shared love of food, to utilize Data Science to distill the essence of fine dining perfection. At present, a star award from the Michelin Guide is widely accepted as the pre-eminent culinary achievement of restauranteurs and chefs alike. 
-Internally, the company preserves the integrity of the reviews by keeping Michelin reviewers (commonly called "inspectors")anonymous. Externally, "Inspectors" are strictly advised not to disclose their line of work to anyone, not even their parents. 
+Internally, the company preserves the integrity of the reviews by keeping Michelin reviewers (commonly called "inspectors")anonymous. Externally, "Inspectors" are strictly advised not to disclose their line of work to anyone, not even their parents.
 The amount of secrecy in this process, and importance of this review in the culinary world, led our Team to ask the following question:
     "What factors can be revealed by examining Michelin restaurant reviews?"
 
@@ -74,7 +74,7 @@ What we discovered was, as you can see here, the steep decline from one star to 
 
 #2 Our next question was: What countries have the most Michelin restaurants?
 
-As you can see, France has the most Michelin restaurants, likely due to it being Michelin's country of origion. A surprising discovery was that Japan had the second most Michelin restaurants, more than Italy or other European countries. 
+As you can see, France has the most Michelin restaurants in the world, likely due to it being Michelin's country of origon. A surprising discovery was that Japan had the second most Michelin restaurants, and the highest concentration of 3 star awarded restaurants (9 located in Tokoyo alone).
 
 #3 What is the average wordcount of restaurant reviews, by award type?
 
@@ -120,7 +120,7 @@ Modeling Results
 - We developed four different models using different model types: (Decision Tree, Random Forest, Logistic Regression, eXtreme Gradient Boosting (XGBoost))
  The best application, Logistic Regression (via Hyperparameter tuning), was selected for evaluation of test data
 
- - On unseen data, our Logistic Regression model was 88 percent accurate in predicting the Michelin Star award category of the restaurants in our dataset, nearly 28 percent more accurate than the baseline.
+ - On unseen data, our Logistic Regression model was 89 percent accurate in predicting the Michelin Star award category of the restaurants in our dataset, nearly 28 percent more accurate than the baseline.
 
  - Now to Cristina, who has this course's Data Desserts to share.
 
