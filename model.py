@@ -1,4 +1,14 @@
-from datatypes import DataType, ModelType, NumberType, ClusterType
+
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import accuracy_score, make_scorer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.exceptions import NotFittedError
+from IPython.display import Markdown as md
+import logging
+from typing import Dict, List, Tuple, Union
+from datatypes import DataType, ModelType, ParameterType
+import numpy as np
 import pandas as pd
 import numpy as np
 from datatypes import DataType, ModelType, NumberType
@@ -12,6 +22,7 @@ from sklearn.metrics import accuracy_score, make_scorer
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import MinMaxScaler
 
+from datatypes import DataType, ModelType, ParameterType,ClusterType
 
 N_COUNTRIES = 10
 
@@ -129,6 +140,13 @@ def get_features_and_target(df: pd.DataFrame,
 
 
 def get_baseline(train: pd.DataFrame) -> pd.DataFrame:
+    '''
+    Generates a `DataFrame` with the baseline (mode) for train
+    ## Parameters
+    train: DataFrame containing the michelin training data
+    ## Returns
+    a DataFrame containing the mode of the data
+    '''
     baseline = train.award.value_counts(normalize=True)[0]
     return pd.DataFrame([baseline], index=['Baseline'],
                         columns=['Accuracy Score'])
@@ -140,6 +158,18 @@ def run_train_and_validate(train: pd.DataFrame,
                            tfidf: TfidfVectorizer,
                            scaler: MinMaxScaler,
                            cluster: ClusterType) -> pd.DataFrame:
+    '''
+    Runs models on train and validate
+    ## Parameters
+    train: the training dataset for michelin data
+    validate: the out of sample validation dataset for michelin data
+    models: classification models to run on Train and Validate
+    tfidf: Vectorizer for TFIDF operations
+    scaler: scaler for data
+    ## Returns
+    `DataFrame` containing the accuracy scores for each model
+    on the train and validate datasets
+    '''
     logging.info('getting features and target for Train')
     trainx, trainy = get_features_and_target(
         train, scaler=scaler, tfidf=tfidf, clusterer=cluster)
@@ -165,7 +195,20 @@ def run_train_and_validate(train: pd.DataFrame,
 
 def tune_model(model: ModelType,
                trainx: pd.DataFrame, trainy: pd.DataFrame,
-               parameters: Dict[str, List[NumberType]]) -> ModelType:
+               parameters: Dict[str,
+                                List[ParameterType]]) -> Dict[str,
+                                                              ParameterType]:
+    '''
+        Performs Grid Validation on Michelin data
+        ## Parameters
+        model: model to perform grid validation on
+        trainx: features of the training data
+        trainy: target of the training data
+        parameters: dictionary of lists for each of the
+        hyperparameters to tune in the model
+        ## Returns
+        a `dict` containing the best performing parameters
+        '''
     scorer = make_scorer(accuracy_score)
 
     grid_search = GridSearchCV(
@@ -178,9 +221,17 @@ def run_test(test: pd.DataFrame, model: ModelType,
              tfidf: TfidfVectorizer,
              scaler: MinMaxScaler,
              cluster: ClusterType) -> pd.DataFrame:
-    # TODO Docstring
-    testx, testy = get_features_and_target(
-        test, scaler, tfidf, clusterer=cluster)
+    '''
+    Runs data on test dataset
+    ## Parameters
+    test: test data from Michelin dataset
+    model: final pretrained model
+    tfidf: Vectorizer for TFIDF vectorizer
+    cluster
+    ## Returns
+    
+    '''
+    testx, testy = get_features_and_target(test, scaler, tfidf)
     yhat = predict(model, testx)
     accuracy = accuracy_score(testy, yhat)
     model_name = str(model)

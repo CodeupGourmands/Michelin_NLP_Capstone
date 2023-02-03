@@ -14,13 +14,18 @@ import matplotlib.colors as mcolors
 import scipy.stats as stats
 from scipy.stats import ttest_ind, levene, f_oneway
 from model import scale, MinMaxScaler
+from IPython.display import Markdown as md
 
-STAR_PALETTE = {'3 michelin stars': '#857f74',
-                '2 michelin stars': '#ddeac1',
-                '1 michelin star':'#8e9189',
-                'bib gourmand' : '#494449'}
+
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
-    # TODO Docstring
+    '''
+    Extracts ngram frequency from corpus
+    ## Parameters
+    ser: `Series` containing the lemmatized corpus
+    n: n for ngram frequency (default 1)
+    ## Returns
+    a `Series` of the ngrams in corpus and their frequency
+    '''
     words = ' '.join(ser).split()
     if n > 1:
         ngrams = nltk.ngrams(words, n)
@@ -28,30 +33,19 @@ def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
     return pd.Series(words).value_counts()
 
 
-def generate_word_cloud(ser: pd.Series, ngram: int = 1,
-                        ax: Union[plt.Axes, None] = None,
-                        **kwargs) -> Union[plt.Axes, None]:
-    # TODO Docstring
-    if ser.dtype != np.int64:
-        ser = get_ngram_frequency(ser, ngram)
-    wc = WordCloud(**kwargs).generate_from_frequencies(ser.to_dict())
-    if ax is not None:
-        ax.imshow(wc)
-        return ax
-    plt.imshow(wc)
-    plt.show()
-
-
-def get_award_freq(train):
+def get_award_freq(train: pd.Series) -> None:
     '''
-    This function takes in the training data set and creates a countplot
-    utilizing Seaborn to visualize the range and values of award
-    categories in the training dataset'''
+    Creates bar graph of the frequency of awards in the data.
+    ## Parameters
+    train: the training dataset
+    ## Returns
+    plots graph
+    '''
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
     cpt = sns.countplot(x='award',
                         data=train,
-                        palette=STAR_PALETTE,
+                        palette='coolwarm_r',
                         order=train['award'].value_counts().index)
     plt.title('Bib Gourmand is the Most Common Award Level in our Dataset')
     plt.xlabel("Award Level")
@@ -61,10 +55,14 @@ def get_award_freq(train):
     plt.show()
 
 
-def get_wordcount_bar(train):
+def get_wordcount_bar(train: pd.DataFrame) -> None:
     '''
-    This function takes in the training dataset and creates a bar plot of the
-    average wordcount of a review based on the Michelin Star Award
+    Creates bar graph of the average wordcount of a 
+    review based on the Michelin Star Award.
+    ## Parameters
+    train: the training dataset
+    ## Returns
+    plots graph
     '''
     # Use groupby to get an average length per language
     review_wordcount = train.groupby(
@@ -73,17 +71,21 @@ def get_wordcount_bar(train):
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
     ax = sns.barplot(x=review_wordcount.values,
-                     y=review_wordcount.index, palette=STAR_PALETTE)
+                     y=review_wordcount.index, palette='coolwarm_r',
+                     order=['3 michelin stars', '2 michelin stars', '1 michelin star', 'bib gourmand'])
     plt.title('Average Wordcount of Michelin Star Level Restaurants')
     plt.xlabel("Average Word Count")
     plt.ylabel('Award Level')
     plt.show()
 
 
-def top_10_country_viz(train):
+def top_10_country_viz(train: pd.DataFrame) -> None:
     '''
-    This function takes in the training dataset and creates a bar plot of the
-    top 10 countries with Michelin restaurants
+    Creates bar graph of top 10 countries with Michelin restaurants.
+    ## Parameters
+    train: the training dataset
+    ## Returns
+    plots graph
     '''
     # Use groupby to get an average length per language
     top_10_countries = train['country'].value_counts().head(9)
@@ -92,36 +94,50 @@ def top_10_country_viz(train):
     fig, axes = plt.subplots(figsize=(9, 6))
     ax = sns.barplot(x=top_10_countries.index,
                      y=top_10_countries.values,
-                     palette=STAR_PALETTE)
+                     palette='coolwarm_r')
     plt.title('Countries with the Most Michelin Restaurants')
     plt.xlabel("Countries")
     plt.ylabel('Number of Restaurants')
     plt.show()
 
 
-def sentiment_scores_bar(train):
+def sentiment_scores_bar(train:pd.DataFrame)->None:
+    '''
+    Creates bar graph of sentiment score by award.
+    ## Parameters
+    train: the training dataset
+    ## Returns
+    plots graph
+    '''
     dfg = train.groupby(
         ['award'])['sentiment'].mean().sort_values(ascending=False)
-    # create a bar plot
-    dfg.plot(kind='bar', color=['#857f74','#ddeac1','#8e9189', '#494449'])
+    # create a bar plot    
+    dfg.plot(kind='bar', color=['#8ba5e8','#dde2f0','#e4c8bb','#d78b76'])
     plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
     plt.xlabel("Award Category")
     plt.ylabel("Sentiment Score")
     plt.show()
 
 
-
-def sentiment_country(train):  
+def sentiment_country(train:pd.DataFrame)->None:
+    '''
+    Creates bar graph of sentiment score by country.
+    ## Parameters
+    train: the training dataset
+    ## Returns
+    plots graph
+    '''
     dfg = train.groupby(['country'])[
         'sentiment'].mean().sort_values(ascending=False)
     # create a bar plot
     dfg.plot(kind='bar', title='Sentiment Score by Country', ylabel='Mean Sentiment Score',
              xlabel='', fontsize=10)
+    plt.show()
 
 # -----------------------------Stats Tests-------------------------------#
 
 
-def get_anova_wordcount(train):
+def get_anova_wordcount(train: pd.DataFrame) -> md:
     '''
     This function creates separate dataframes for
     each award category, and utilizes an ANOVA test
@@ -137,6 +153,7 @@ def get_anova_wordcount(train):
     # set alpha
     alpha = 0.05
     # Run the test
+    # TODO Woody fix this to spit out a Markdown object
     f, p = stats.f_oneway(train_bib.word_count, train_onestar.word_count,
                           train_twostar.word_count, train_threestar.word_count)
     if p < alpha:
@@ -145,10 +162,10 @@ def get_anova_wordcount(train):
               'different between award categories.')
     else:
         print("We fail to reject the null hypothesis.")
-    return print(f'Test Statistic: {f}, P Statistic: {p}')
+        print(f'Test Statistic: {f}, P Statistic: {p}')
 
 
-def get_stats_ttest(df):
+def get_stats_ttest(df: pd.DataFrame) -> md:
     '''Function returns statistical T test'''
     Two_Star = df[df.award == '2 michelin stars']
     Three_Star = df[df.award == '3 michelin stars']
@@ -174,7 +191,7 @@ def get_stats_ttest(df):
 
 ###---------------------------------WordClouds--------------------------------###
 
-def get_threestar_wordcloud():
+def get_threestar_wordcloud() -> None:
     '''
     This function utilizes a text file of all three-star review
     words and a pre-selected image to create a word cloud containing
@@ -207,7 +224,7 @@ def get_threestar_wordcloud():
     plt.show()
 
 
-def get_twostar_wordcloud():
+def get_twostar_wordcloud() -> None:
     '''
     This function utilizes a text file of all two-star review
     words and a pre-selected image to create a word cloud containing
@@ -238,7 +255,7 @@ def get_twostar_wordcloud():
     plt.show()
 
 
-def get_onestar_wordcloud():
+def get_onestar_wordcloud() -> None:
     '''
     This function utilizes a text file of all one-star review
     words and a pre-selected image to create a word cloud containing
@@ -271,7 +288,7 @@ def get_onestar_wordcloud():
 
 # Bib Gourmand Word Cloud
 
-def get_bib_wordcloud():
+def get_bib_wordcloud() -> None:
     '''
     This function utilizes a text file of all bib gourmand review
     words and a pre-selected image to create a word cloud containing
@@ -302,8 +319,12 @@ def get_bib_wordcloud():
     plt.show()
 
 
-def get_croissant_wordcloud():
+def get_croissant_wordcloud()->None:
     '''
+    This function utilizes a text file of all France review
+    words and a pre-selected image to create a word cloud containing
+    all France words in an image cloud format. It takes the text
+    file and image file from the /images folder.
     '''
     # Import TXT file of all france words
     france_text = open("./images/all_france_words.txt",
@@ -329,8 +350,12 @@ def get_croissant_wordcloud():
     plt.show()
 
 
-def get_baguette_wordcloud():
+def get_baguette_wordcloud()->None:
     '''
+    This function utilizes a text file of all France review
+    words and a pre-selected image to create a word cloud containing
+    all France words in an image cloud format. It takes the text
+    file and image file from the /images folder.
     '''
     # Import TXT file of all france words
     france_text = open("./images/all_france_words.txt",
@@ -356,8 +381,12 @@ def get_baguette_wordcloud():
     plt.show()
 
 
-def get_shrimp_wordcloud():
+def get_shrimp_wordcloud()->None:
     '''
+    This function utilizes a text file of all Japan review
+    words and a pre-selected image to create a word cloud containing
+    all Japan words in an image cloud format. It takes the text
+    file and image file from the /images folder.
     '''
     # Import TXT file of all japan words
     japan_text = open("./images/all_japan_words.txt",
@@ -385,6 +414,10 @@ def get_shrimp_wordcloud():
 
 def get_boot_wordcloud():
     '''
+    This function utilizes a text file of all italy review
+    words and a pre-selected image to create a word cloud containing
+    all italy words in an image cloud format. It takes the text
+    file and image file from the /images folder.
     '''
     # Import TXT file of all italy words
     italy_text = open("./images/all_italy_words.txt",
@@ -409,13 +442,14 @@ def get_boot_wordcloud():
     plt.axis('off')
     plt.show()
 
-
+# TODO Justin move anything that we're not using in the final notebook into a separate file
 #########################
 ##### Justin's Code #####
 #########################
 
-
 # Custom function to create facilities DataFrame split
+
+
 def prepare_facilities(df: pd.DataFrame,
                        split: bool = True) -> Union[pd.DataFrame,
                                                     Tuple[pd.DataFrame,
@@ -592,7 +626,8 @@ reviews_wc_by_award = train.groupby('award').word_count.mean()
 ##### Visualizations #####
 ##########################
 
-def QMCBT_viz_wc():
+def QMCBT_viz_wc() -> None:
+    # TODO Justin Docstring
     plt.rc('font', size=20)
     plt.figure(figsize=(10, 5), dpi=80)
     img = WordCloud(background_color='white'
@@ -600,10 +635,11 @@ def QMCBT_viz_wc():
     plt.imshow(img)
     plt.axis('off')
     plt.title('Most Common Review Words')
-    return plt.show()
+    plt.show()
 
 
-def QMCBT_viz_1():
+def QMCBT_viz_1() -> None:
+    # TODO Justin Docstring
     # Plot Top-5 Review Words and compare by Awards
     features_list = ['one_star_reviews', 'two_star_reviews',
                      'three_star_reviews', 'bib_gourmand_reviews']
@@ -624,7 +660,7 @@ def QMCBT_viz_1():
 
 
 def QMCBT_viz_2():
-
+    # TODO Justin Docstring
     # Display top Bigrams for All Review words
 
     # Set the plot attributes
@@ -643,8 +679,8 @@ def QMCBT_viz_2():
     plt.show()
 
 
-def QMCBT_viz_3():
-
+def QMCBT_viz_3() -> None:
+    # TODO Justin Docstring
     # Display top Trigrams for All Review words
 
     fontsize = 20
@@ -661,8 +697,8 @@ def QMCBT_viz_3():
     plt.show()
 
 
-def QMCBT_viz_4():
-
+def QMCBT_viz_4() -> None:
+    # TODO Justin Docstring
     # REVIEWS
     viz_reviews_wc_by_award = reviews_wc_by_award.sort_values(ascending=False)
     Hex_Codes_Earthy = ['#854d27', '#dd7230', '#f4c95d', '#e7e393', '#04030f']

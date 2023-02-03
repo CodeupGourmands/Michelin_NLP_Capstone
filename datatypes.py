@@ -9,5 +9,5 @@ from sklearn.tree import DecisionTreeClassifier
 DataType = Union[pd.Series, pd.DataFrame]
 ModelType = Union[DecisionTreeClassifier, RandomForestClassifier,
                   LogisticRegression, GradientBoostingClassifier]
-NumberType = Union[float, int, np.number]
 ClusterType = Union[DBSCAN, KMeans]
+ParameterType = Union[float, int, np.number, str]
