@@ -14,6 +14,9 @@ import scipy.stats as stats
 from scipy.stats import ttest_ind, levene, f_oneway
 from IPython.display import Markdown as md
 
+AWARD_COLORS = {"3 michelin stars" : "indianred", "2 michelin stars":"peachpuff",
+                "1 michelin star":"lightsteelblue", "bib gourmand":"cornflowerblue"}
+
 
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
     '''
@@ -43,7 +46,7 @@ def get_award_freq(train: pd.Series) -> None:
     fig, axes = plt.subplots(figsize=(9, 6))
     cpt = sns.countplot(x='award',
                         data=train,
-                        palette='coolwarm_r',
+                        palette=AWARD_COLORS,
                         order=train['award'].value_counts().index)
     plt.title('Bib Gourmand is the Most Common Award Level in our Dataset')
     plt.xlabel("Award Level")
@@ -51,6 +54,7 @@ def get_award_freq(train: pd.Series) -> None:
     for tick in axes.xaxis.get_major_ticks():
         tick.label1.set_fontsize(10)
     plt.show()
+
 
 
 def get_wordcount_bar(train: pd.DataFrame) -> None:
@@ -69,7 +73,7 @@ def get_wordcount_bar(train: pd.DataFrame) -> None:
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
     ax = sns.barplot(x=review_wordcount.values,
-                     y=review_wordcount.index, palette='coolwarm_r',
+                     y=review_wordcount.index, palette=AWARD_COLORS,
                      order=['3 michelin stars', '2 michelin stars', '1 michelin star', 'bib gourmand'])
     ax.set_yticklabels(
         ['3 Michelin Stars', '2 Michelin Stars', '1 Michelin Star', 'Bib Gourmand'])
@@ -112,12 +116,12 @@ def sentiment_scores_bar(train:pd.DataFrame)->None:
     dfg = train.groupby(['award'])['sentiment'].mean().sort_values(ascending=False)
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
-    ax = sns.barplot(x=dfg.index, 
-                 y=dfg.values, palette='coolwarm_r',
+    ax = sns.barplot(y=dfg.index, 
+                 x=dfg.values, palette=AWARD_COLORS,
                  order=['2 michelin stars', '1 michelin star', '3 michelin stars', 'bib gourmand'],
-                 orient='v')
+                 orient='h')
     plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
-    ax.set_xticklabels(
+    ax.set_yticklabels(
         ['2 Michelin Stars', '1 Michelin Star', '3 Michelin Stars', 'Bib Gourmand'])
     plt.xlabel("Award Category")
     plt.ylabel("Sentiment Score")
