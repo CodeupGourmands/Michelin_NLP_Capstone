@@ -236,3 +236,6 @@ def run_test(test: pd.DataFrame, model: ModelType,
     return pd.DataFrame([accuracy],
                         columns=['Accuracy Score'],
                         index=[model_name])
+
+
+
