@@ -373,7 +373,7 @@ def get_baguette_wordcloud()->None:
     custom_cmap = mcolors.ListedColormap(colors)
     # Make the wordcloud, generate the image
     wc = WordCloud(
-        mask=mask, background_color="white",
+        mask=mask, background_color="#cccccc",
         max_words=500, max_font_size=500,
         random_state=42, width=mask.shape[1],
         colormap=custom_cmap,
@@ -404,11 +404,11 @@ def get_shrimp_wordcloud()->None:
     custom_cmap = mcolors.ListedColormap(colors)
     # Make the wordcloud, generate the image
     wc = WordCloud(
-        mask=mask, background_color="whitesmoke",
+        mask=mask, background_color="#cccccc",
         max_words=500, max_font_size=500,
         random_state=42, width=mask.shape[1],
         colormap=custom_cmap,
-        contour_color='darkorange', contour_width=1,
+        contour_color='darkorange', contour_width=1.5,
         height=mask.shape[0])
     wc.generate(japan_text)
     plt.imshow(wc, interpolation="bilinear")
