@@ -98,21 +98,23 @@ Now, here's Woody to talk about today's Entree--Modeling!
 
 Entree
 
-For modeling we developed four different models using different model types: (Decision Tree, Random Forest, Logistic Regression, Gradient Boosting Classifer)
 
-We then used grid search, which is a technique of testing multiple models to find the best configuration for our model
+For modeling first selected a baseline by which to evaluate our model, a recipe to compare our final creation to. An assumption of Bib Gourmand was chosen, as it represents roughly half of the total restaurants in our dataset. This consequentially was our accuracy score, the metric we selected for this project
 
-Our baseline was determined to be an assumption that each restaurant fell under the “Bib Gourmand” category, which represented roughly half of the total restaurants in our dataset.
+The ingredients we selected from the data per our findings included the top 10 countries that showed up in the training data. We also used the word count and sentiment scores
 
-The features we extracted from the data per our findings included the top 10 countries that showed up in the training data. We also used the word count and sentiment scores
+
+
+
 
 To evaluate the body of the reviews we used a technique called TFIDF, which is a combination of two metrics:
     - Term Frequency (how often a term appears in a given document)
     and
     - Inverse Document Frequency (how often the term appears in all documents)
-We utilized accuracy as the evaluation metric, which essentially what percentage of our predictions we got right
 
-To further improve our models, we used a technique called Grid Search with cross validation, running different iterations of models over multiple permutations of the data to find the combination of parameters that yields the best predictions. 
+We Developed four different models
+
+To further improve our models, we used a technique called Grid Search with cross validation, running different iterations of models over multiple permutations of the data to find the combination of parameters that yields the best predictions, ensuring our model was seasoned to perfection
 
 The final dish: On unseen data, our best-performing model, Logistic Regression, was able to predict the Michelin star award with 89% accuracy, nearly 29 percent more accurate than the baseline.
 
