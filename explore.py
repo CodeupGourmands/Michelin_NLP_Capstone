@@ -447,14 +447,11 @@ def get_boot_wordcloud():
     plt.axis('off')
     plt.show()
 
-# TODO Justin move anything that we're not using in the final notebook into a separate file
 #########################
 ##### Justin's Code #####
 #########################
 
 # Custom function to create facilities DataFrame split
-
-
 def prepare_facilities(df: pd.DataFrame,
                        split: bool = True) -> Union[pd.DataFrame,
                                                     Tuple[pd.DataFrame,
@@ -722,23 +719,95 @@ def QMCBT_viz_4() -> None:
     # REVIEWS
     viz_reviews_wc_by_award = reviews_wc_by_award.sort_values(ascending=False)
 
-    # create a bar plot
-    plt.subplot(1, 2, 1)
-    viz_reviews_wc_by_award.plot(kind='bar', title='Word Count of Reviews\n by Award', ylabel='',
-            xlabel='',fontsize =20, color=['#ddeac1','#8e9189','#857f74','#494449'])
-    plt.xticks(rotation=45, ha='right')
+    ## setting basic style parameters for matplotlib
+    plt.style.use('seaborn-darkgrid')
 
-    # FACILITIES
+    # Set style 
+    sns.set_style("darkgrid")
+    fig, axes = plt.subplots(1,2,figsize=(12, 6)) #,sharex=True)
+    fig.subplots_adjust(hspace=0.5, wspace=0.5)
+
+    # make a chart
+    sns.barplot(y=viz_reviews_wc_by_award.values,
+                     x=viz_reviews_wc_by_award.index, palette='Blues_r',
+                     ax=axes[0], orient='v')
+
+    # Set plot attributes
+    axes[0].set_title('Word Count of Reviews\n by Award')
+    axes[0].set_xlabel("")
+    axes[0].set_ylim(0, 65)
+    axes[0].set_ylabel('Word Count')
+    axes[0].set_xticklabels(['3 Michelin Stars', '2 Michelin Stars', 
+                             '1 Michelin Star', 'Bib Gourmand'], rotation=45)
+    
+    # Facilities
     viz_facilities_wc_by_award = facilities_wc_by_award.sort_values(ascending=False)
 
-    # create a bar plot
-    plt.subplot(1, 2, 2)
-    viz_facilities_wc_by_award.plot(kind='bar', title='Word Count of Facilities\n by Award', ylabel='',
-            xlabel='',fontsize =20, color=['#857f74','#ddeac1','#8e9189','#494449'])
-    plt.xticks(rotation=45, ha='right')
-
+    # make a chart
+    sns.barplot(y=viz_facilities_wc_by_award.values,
+                     x=viz_facilities_wc_by_award.index, palette='Greens_r', 
+                     ax=axes[1], orient='v')
+    
+    # Set plot attributes
+    axes[1].set_title('Word Count of Facilities\n by Award')
+    axes[1].set_xlabel("")
+    axes[1].set_ylim(0, 65)
+    axes[1].set_ylabel('Word Count')
+    axes[1].set_xticklabels(['3 Michelin Stars', '2 Michelin Stars', 
+                             '1 Michelin Star', 'Bib Gourmand'], rotation=45)
+    
     plt.show()
 
+def QMCBT_BiTrigrams_bar() -> None:
+    '''
+    Creates bar graphs for Bigrams and Trigrams of all review words
+    and displays Top-5
+    ## Parameters
+    None
+    ## Returns
+    plot
+    '''
+    # Bigrams
+    # Use ngrams to get a list of Bigrams for all review words
+    review_wordcount = pd.Series(nltk.ngrams(all_reviews_words, 2)
+              ).value_counts().head(5)
+
+    ## setting basic style parameters for matplotlib
+    plt.style.use('seaborn-darkgrid')
+
+    # Set style 
+    sns.set_style("darkgrid")
+    fig, axes = plt.subplots(2,1,figsize=(9, 12)) #,sharex=True)
+    fig.subplots_adjust(hspace=0.5, wspace=0.5)
+
+    #make a chart
+    sns.barplot(x=review_wordcount.values,
+                     y=review_wordcount.index, palette='Blues_r', ax=axes[0])
+
+    # Set plot attributes
+    axes[0].set_title('Top-5 Bigrams for Review word count')
+    axes[0].set_xlabel("Count of Bigram Occurances")
+    axes[0].set_xlim(0, 250)
+    axes[0].set_ylabel('Bigrams')
+    
+    # Trigrams
+    # Use ngrams to get a list of Bigrams for all review words
+    review_wordcount = pd.Series(nltk.ngrams(all_reviews_words, 3)
+              ).value_counts().head(5)
+    # make a chart
+    sns.barplot(x=review_wordcount.values,
+                     y=review_wordcount.index, palette='Greens_r', ax=axes[1])
+    # Set plot attributes
+    axes[1].set_title('Top-5 Trigrams for Review word count')
+    axes[1].set_xlabel("Count of Trigram Occurances")
+    axes[1].set_xlim(0, 250)
+    axes[1].set_ylabel('Trigrams')
+    
+    plt.show()
+
+#################
+##### Stats #####
+#################
 
 def stat_levene():
     '''
