@@ -14,6 +14,9 @@ import scipy.stats as stats
 from scipy.stats import ttest_ind, levene, f_oneway
 from IPython.display import Markdown as md
 
+AWARD_COLORS = {"3 michelin stars" : "#dc8e78", "2 michelin stars":"#e2c8bb",
+                "1 michelin star":"#c7d4ee", "bib gourmand":"#8ba5e9"}
+
 
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
     '''
@@ -43,7 +46,7 @@ def get_award_freq(train: pd.Series) -> None:
     fig, axes = plt.subplots(figsize=(9, 6))
     cpt = sns.countplot(x='award',
                         data=train,
-                        palette='coolwarm_r',
+                        palette=AWARD_COLORS,
                         order=train['award'].value_counts().index)
     plt.title('Bib Gourmand is the Most Common Award Level in our Dataset')
     plt.xlabel("Award Level")
@@ -51,6 +54,7 @@ def get_award_freq(train: pd.Series) -> None:
     for tick in axes.xaxis.get_major_ticks():
         tick.label1.set_fontsize(10)
     plt.show()
+
 
 
 def get_wordcount_bar(train: pd.DataFrame) -> None:
@@ -69,7 +73,7 @@ def get_wordcount_bar(train: pd.DataFrame) -> None:
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
     ax = sns.barplot(x=review_wordcount.values,
-                     y=review_wordcount.index, palette='coolwarm_r',
+                     y=review_wordcount.index, palette=AWARD_COLORS,
                      order=['3 michelin stars', '2 michelin stars', '1 michelin star', 'bib gourmand'])
     ax.set_yticklabels(
         ['3 Michelin Stars', '2 Michelin Stars', '1 Michelin Star', 'Bib Gourmand'])
@@ -112,12 +116,12 @@ def sentiment_scores_bar(train:pd.DataFrame)->None:
     dfg = train.groupby(['award'])['sentiment'].mean().sort_values(ascending=False)
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
-    ax = sns.barplot(x=dfg.index, 
-                 y=dfg.values, palette='coolwarm_r',
+    ax = sns.barplot(y=dfg.index, 
+                 x=dfg.values, palette=AWARD_COLORS,
                  order=['2 michelin stars', '1 michelin star', '3 michelin stars', 'bib gourmand'],
-                 orient='v')
+                 orient='h')
     plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
-    ax.set_xticklabels(
+    ax.set_yticklabels(
         ['2 Michelin Stars', '1 Michelin Star', '3 Michelin Stars', 'Bib Gourmand'])
     plt.xlabel("Award Category")
     plt.ylabel("Sentiment Score")
@@ -447,14 +451,11 @@ def get_boot_wordcloud():
     plt.axis('off')
     plt.show()
 
-# TODO Justin move anything that we're not using in the final notebook into a separate file
 #########################
 ##### Justin's Code #####
 #########################
 
 # Custom function to create facilities DataFrame split
-
-
 def prepare_facilities(df: pd.DataFrame,
                        split: bool = True) -> Union[pd.DataFrame,
                                                     Tuple[pd.DataFrame,
@@ -722,23 +723,95 @@ def QMCBT_viz_4() -> None:
     # REVIEWS
     viz_reviews_wc_by_award = reviews_wc_by_award.sort_values(ascending=False)
 
-    # create a bar plot
-    plt.subplot(1, 2, 1)
-    viz_reviews_wc_by_award.plot(kind='bar', title='Word Count of Reviews\n by Award', ylabel='',
-            xlabel='',fontsize =20, color=['#ddeac1','#8e9189','#857f74','#494449'])
-    plt.xticks(rotation=45, ha='right')
+    ## setting basic style parameters for matplotlib
+    plt.style.use('seaborn-darkgrid')
 
-    # FACILITIES
+    # Set style 
+    sns.set_style("darkgrid")
+    fig, axes = plt.subplots(1,2,figsize=(12, 6)) #,sharex=True)
+    fig.subplots_adjust(hspace=0.5, wspace=0.5)
+
+    # make a chart
+    sns.barplot(y=viz_reviews_wc_by_award.values,
+                     x=viz_reviews_wc_by_award.index, palette='Blues_r',
+                     ax=axes[0], orient='v')
+
+    # Set plot attributes
+    axes[0].set_title('Word Count of Reviews\n by Award')
+    axes[0].set_xlabel("")
+    axes[0].set_ylim(0, 65)
+    axes[0].set_ylabel('Word Count')
+    axes[0].set_xticklabels(['3 Michelin Stars', '2 Michelin Stars', 
+                             '1 Michelin Star', 'Bib Gourmand'], rotation=45)
+    
+    # Facilities
     viz_facilities_wc_by_award = facilities_wc_by_award.sort_values(ascending=False)
 
-    # create a bar plot
-    plt.subplot(1, 2, 2)
-    viz_facilities_wc_by_award.plot(kind='bar', title='Word Count of Facilities\n by Award', ylabel='',
-            xlabel='',fontsize =20, color=['#857f74','#ddeac1','#8e9189','#494449'])
-    plt.xticks(rotation=45, ha='right')
-
+    # make a chart
+    sns.barplot(y=viz_facilities_wc_by_award.values,
+                     x=viz_facilities_wc_by_award.index, palette='Greens_r', 
+                     ax=axes[1], orient='v')
+    
+    # Set plot attributes
+    axes[1].set_title('Word Count of Facilities\n by Award')
+    axes[1].set_xlabel("")
+    axes[1].set_ylim(0, 65)
+    axes[1].set_ylabel('Word Count')
+    axes[1].set_xticklabels(['3 Michelin Stars', '2 Michelin Stars', 
+                             '1 Michelin Star', 'Bib Gourmand'], rotation=45)
+    
     plt.show()
 
+def QMCBT_BiTrigrams_bar() -> None:
+    '''
+    Creates bar graphs for Bigrams and Trigrams of all review words
+    and displays Top-5
+    ## Parameters
+    None
+    ## Returns
+    plot
+    '''
+    # Bigrams
+    # Use ngrams to get a list of Bigrams for all review words
+    review_wordcount = pd.Series(nltk.ngrams(all_reviews_words, 2)
+              ).value_counts().head(5)
+
+    ## setting basic style parameters for matplotlib
+    plt.style.use('seaborn-darkgrid')
+
+    # Set style 
+    sns.set_style("darkgrid")
+    fig, axes = plt.subplots(2,1,figsize=(9, 12)) #,sharex=True)
+    fig.subplots_adjust(hspace=0.5, wspace=0.5)
+
+    #make a chart
+    sns.barplot(x=review_wordcount.values,
+                     y=review_wordcount.index, palette='Blues_r', ax=axes[0])
+
+    # Set plot attributes
+    axes[0].set_title('Top-5 Bigrams for Review word count')
+    axes[0].set_xlabel("Count of Bigram Occurances")
+    axes[0].set_xlim(0, 250)
+    axes[0].set_ylabel('Bigrams')
+    
+    # Trigrams
+    # Use ngrams to get a list of Bigrams for all review words
+    review_wordcount = pd.Series(nltk.ngrams(all_reviews_words, 3)
+              ).value_counts().head(5)
+    # make a chart
+    sns.barplot(x=review_wordcount.values,
+                     y=review_wordcount.index, palette='Greens_r', ax=axes[1])
+    # Set plot attributes
+    axes[1].set_title('Top-5 Trigrams for Review word count')
+    axes[1].set_xlabel("Count of Trigram Occurances")
+    axes[1].set_xlim(0, 250)
+    axes[1].set_ylabel('Trigrams')
+    
+    plt.show()
+
+#################
+##### Stats #####
+#################
 
 def stat_levene():
     '''
