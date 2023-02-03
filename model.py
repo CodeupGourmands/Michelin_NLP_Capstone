@@ -6,7 +6,7 @@ from sklearn.exceptions import NotFittedError
 from IPython.display import Markdown as md
 import logging
 from typing import Dict, List, Tuple, Union
-from datatypes import DataType, ModelType, ParameterType,ClusterType
+from datatypes import DataType, ModelType, ParameterType
 import numpy as np
 import pandas as pd
 from sklearn.exceptions import NotFittedError
@@ -199,8 +199,7 @@ def tune_model(model: ModelType,
 
 def run_test(test: pd.DataFrame, model: ModelType,
              tfidf: TfidfVectorizer,
-             scaler: MinMaxScaler,
-             cluster:ClusterType) -> pd.DataFrame:
+             scaler: MinMaxScaler) -> pd.DataFrame:
     '''
     Runs data on test dataset
     ## Parameters
