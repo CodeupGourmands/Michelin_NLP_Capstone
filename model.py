@@ -7,13 +7,9 @@ from sklearn.exceptions import NotFittedError
 from IPython.display import Markdown as md
 import logging
 from typing import Dict, List, Tuple, Union
-from datatypes import DataType, ModelType, ParameterType
 import numpy as np
 import pandas as pd
 import numpy as np
-from datatypes import DataType, ModelType, NumberType
-from typing import Dict, List, Tuple, Union
-import logging
 from IPython.display import Markdown as md
 
 from sklearn.exceptions import NotFittedError
@@ -22,7 +18,7 @@ from sklearn.metrics import accuracy_score, make_scorer
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import MinMaxScaler
 
-from datatypes import DataType, ModelType, ParameterType,ClusterType
+from datatypes import DataType, ModelType, ParameterType, ClusterType
 
 N_COUNTRIES = 10
 
@@ -67,6 +63,7 @@ def cluster(df: pd.DataFrame, cluster: ClusterType) -> pd.Series:
     except NotFittedError as e:
         ret_cluster = cluster.fit_predict(df)
     return ret_cluster
+
 
 def predict(model: ModelType,
             features: pd.DataFrame,
@@ -229,9 +226,9 @@ def run_test(test: pd.DataFrame, model: ModelType,
     tfidf: Vectorizer for TFIDF vectorizer
     cluster
     ## Returns
-    
+
     '''
-    testx, testy = get_features_and_target(test, scaler, tfidf)
+    testx, testy = get_features_and_target(test, scaler, tfidf, cluster)
     yhat = predict(model, testx)
     accuracy = accuracy_score(testy, yhat)
     model_name = str(model)
@@ -239,4 +236,3 @@ def run_test(test: pd.DataFrame, model: ModelType,
     return pd.DataFrame([accuracy],
                         columns=['Accuracy Score'],
                         index=[model_name])
-
