@@ -387,6 +387,7 @@ def get_baguette_wordcloud()->None:
         contour_color='peru', contour_width=1.5,
         height=mask.shape[0])
     wc.generate(france_text)
+    wc.to_file('images/outlined_baguette.png')
     plt.imshow(wc, interpolation="bilinear")
     plt.axis('off')
     plt.show()
