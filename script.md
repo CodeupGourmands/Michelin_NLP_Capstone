@@ -27,7 +27,7 @@ Some key part of Acquisition & Preparation:
 
 Some highligts from Exploration & Modeling:
 - "Bib Gourmand" was our baseline (50.3% of dataset)
-- 3 Michelin star restaurants had reviews with the most words, but 3 star restaurants had the highest sentiment scores
+- 3 Michelin star restaurants had reviews with the most words, but 2 star restaurants had the highest sentiment scores
 
 Some key takeaways from our project:
 - Restaurants with higher Michelin award levels have, on average, longer reviews
