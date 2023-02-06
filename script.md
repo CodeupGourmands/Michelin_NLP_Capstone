@@ -117,10 +117,11 @@ MOST COMMON WORDS SLIDE
 
 COMPARISON SLIDE
 
-#6 I'd like you to take a look at these two word clouds. On the left, is a wordcloud generated from all Bib Gourmand Reviews. On the right is a wordcloud generated from three star reviews. This graphic is a great representation of what this project has gleaned from the data--that what makes a three-star Michelin restaurant unique is the focus on service.
-- Take a look on the right, you can see "Service", "Experience", "Superb", "Always"
-- Take a look on the left, you can see "classic, traditional, beef, pork, chicken", a focus on ingredients, on the food
-- In general, what we found is that as a restaurant's Michelin ratings increased, the words used that related to service or unique experiences increased.
+#6 I'd like you to take a look at these two word clouds. On the left, is a wordcloud generated from Two Star Michelin Restaurant Reviews. On the right is a wordcloud generated from three star reviews. This graphic is a great representation of what this project has gleaned from the data--that what makes a three-star Michelin restaurant unique is the focus on service.
+- Take a look on the right, you can see "Service", "Experience", "Superb",  "Always"
+- Take a look on the left, you'll see the common words in all award levels, "Modern", "flavour", "creative", culinary", a focus on ingredients, and on the food
+- In general, what we found is that as a restaurant's Michelin ratings increased, the words used that related to service or unique experiences increased. And for three star restaurants, the focus on service and experience, not just the food, was distinctly different than every other category. 
+- We believe that the biggest driver towards a three star michelin review is the experience of the rater, which partly comes from delicious food, but also comes from a unique, potentially one-of-a-kind dining experience that is not easily captured in these fairly short reviews. Three star reviews speak more of the experience than the food, and the data represents that. 
 
 Now, here's Woody to talk about today's Entree--Modeling!
 
