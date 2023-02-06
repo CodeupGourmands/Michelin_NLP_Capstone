@@ -101,6 +101,8 @@ def top_10_country_viz(train: pd.DataFrame) -> None:
                      palette='coolwarm_r')
     plt.title('Countries with the Most Michelin Restaurants')
     plt.xlabel("Countries")
+    ax.set_xticklabels(
+        ['France','Japan','Italy','USA','Germany','Spain','Switzerland','Belgium','United Kingdom'], rotation=45)
     plt.ylabel('Number of Restaurants')
     plt.show()
 
@@ -116,12 +118,12 @@ def sentiment_scores_bar(train:pd.DataFrame)->None:
     dfg = train.groupby(['award'])['sentiment'].mean().sort_values(ascending=False)
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
-    ax = sns.barplot(y=dfg.index, 
-                 x=dfg.values, palette=AWARD_COLORS,
+    ax = sns.barplot(x=dfg.index, 
+                 y=dfg.values, palette=AWARD_COLORS,
                  order=['2 michelin stars', '1 michelin star', '3 michelin stars', 'bib gourmand'],
-                 orient='h')
+                 orient='v')
     plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
-    ax.set_yticklabels(
+    ax.set_xticklabels(
         ['2 Michelin Stars', '1 Michelin Star', '3 Michelin Stars', 'Bib Gourmand'])
     plt.xlabel("Award Category")
     plt.ylabel("Sentiment Score")
@@ -385,6 +387,7 @@ def get_baguette_wordcloud()->None:
         contour_color='peru', contour_width=1.5,
         height=mask.shape[0])
     wc.generate(france_text)
+    wc.to_file('images/outlined_baguette.png')
     plt.imshow(wc, interpolation="bilinear")
     plt.axis('off')
     plt.show()
@@ -789,7 +792,7 @@ def QMCBT_BiTrigrams_bar() -> None:
                      y=review_wordcount.index, palette='Blues_r', ax=axes[0])
 
     # Set plot attributes
-    axes[0].set_title('Top-5 Bigrams for Review word count')
+    axes[0].set_title('Most Common 2-Word Groupings in all Reviews')
     axes[0].set_xlabel("Count of Bigram Occurances")
     axes[0].set_xlim(0, 250)
     axes[0].set_ylabel('Bigrams')
@@ -802,7 +805,7 @@ def QMCBT_BiTrigrams_bar() -> None:
     sns.barplot(x=review_wordcount.values,
                      y=review_wordcount.index, palette='Greens_r', ax=axes[1])
     # Set plot attributes
-    axes[1].set_title('Top-5 Trigrams for Review word count')
+    axes[1].set_title('Most Common 3-Word Groupings in all Reviews')
     axes[1].set_xlabel("Count of Trigram Occurances")
     axes[1].set_xlim(0, 250)
     axes[1].set_ylabel('Trigrams')
