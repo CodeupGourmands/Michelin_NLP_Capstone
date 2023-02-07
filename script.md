@@ -142,7 +142,7 @@ We Developed four different models
 
 To further improve our models, we used a technique called Grid Search with cross validation, running different iterations of models over multiple permutations of the data to find the combination of parameters that yields the best predictions, ensuring our model was seasoned to perfection
 
-The final dish: On unseen data, our best-performing model, Logistic Regression, was able to predict the Michelin star award with 89% accuracy, nearly 29 percent more accurate than the baseline.
+The final dish: On unseen data, our best-performing model, Logistic Regression, was able to predict the Michelin star award with 88% accuracy, nearly 38 percent more accurate than the baseline.
 
 Now to Cristina, who has this course's Data Desserts to share.
 
