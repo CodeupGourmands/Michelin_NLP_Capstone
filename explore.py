@@ -145,6 +145,31 @@ def sentiment_country(train:pd.DataFrame)->None:
              xlabel='', fontsize=10)
     plt.show()
 
+
+def top_10_words(train):
+    '''
+    Creates bar graph of top words in all review text.
+    ## Parameters
+    train: the training dataset
+    ## Returns
+    plots chart
+    '''
+    words = []
+    for i in train['lemmatized']:
+        for word in i.split():
+            words.append(word)
+    word_freq = pd.Series(words).value_counts()
+    top_10 = word_freq.sort_values(ascending=False).head(10)
+    # Set Style
+    sns.set_style("darkgrid")
+    fig, axes = plt.subplots(figsize=(9, 6))
+    ax = sns.barplot(x=top_10.index,
+                     y=top_10.values,
+                     palette='magma')
+    plt.ylabel("# Times Word Occurs")
+    plt.show()
+
+
 # -----------------------------Stats Tests-------------------------------#
 
 
