@@ -120,11 +120,11 @@ def sentiment_scores_bar(train:pd.DataFrame)->None:
     fig, axes = plt.subplots(figsize=(9, 6))
     ax = sns.barplot(x=dfg.index, 
                  y=dfg.values, palette=AWARD_COLORS,
-                 order=['2 michelin stars', '1 michelin star', '3 michelin stars', 'bib gourmand'],
+                 order=['3 michelin stars', '2 michelin stars',
+                            '1 michelin star', 'bib gourmand'],
                  orient='v')
+    plt.xticks(ticks=[0,1,2,3],labels=[' ',' ',' ',' '])
     plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
-    ax.set_xticklabels(
-        ['2 Michelin Stars', '1 Michelin Star', '3 Michelin Stars', 'Bib Gourmand'])
     plt.xlabel("Award Category")
     plt.ylabel("Sentiment Score")
     plt.show()
@@ -144,6 +144,31 @@ def sentiment_country(train:pd.DataFrame)->None:
     dfg.plot(kind='bar', title='Sentiment Score by Country', ylabel='Mean Sentiment Score',
              xlabel='', fontsize=10)
     plt.show()
+
+
+def top_10_words(train):
+    '''
+    Creates bar graph of top words in all review text.
+    ## Parameters
+    train: the training dataset
+    ## Returns
+    plots chart
+    '''
+    words = []
+    for i in train['lemmatized']:
+        for word in i.split():
+            words.append(word)
+    word_freq = pd.Series(words).value_counts()
+    top_10 = word_freq.sort_values(ascending=False).head(10)
+    # Set Style
+    sns.set_style("darkgrid")
+    fig, axes = plt.subplots(figsize=(9, 6))
+    ax = sns.barplot(x=top_10.index,
+                     y=top_10.values,
+                     palette='magma')
+    plt.ylabel("# Times Word Occurs")
+    plt.show()
+
 
 # -----------------------------Stats Tests-------------------------------#
 
@@ -789,7 +814,7 @@ def QMCBT_BiTrigrams_bar() -> None:
 
     #make a chart
     sns.barplot(x=review_wordcount.values,
-                     y=review_wordcount.index, palette='Blues_r', ax=axes[0])
+                     y=[' '.join(b) for b in review_wordcount.index], palette='Blues_r', ax=axes[0])
 
     # Set plot attributes
     axes[0].set_title('Most Common 2-Word Groupings in all Reviews')
@@ -803,7 +828,7 @@ def QMCBT_BiTrigrams_bar() -> None:
               ).value_counts().head(5)
     # make a chart
     sns.barplot(x=review_wordcount.values,
-                     y=review_wordcount.index, palette='Greens_r', ax=axes[1])
+                     y=[' '.join(t) for t in review_wordcount.index], palette='Greens_r', ax=axes[1])
     # Set plot attributes
     axes[1].set_title('Most Common 3-Word Groupings in all Reviews')
     axes[1].set_xlabel("Count of Trigram Occurances")
