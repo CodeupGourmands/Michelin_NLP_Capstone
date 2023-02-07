@@ -106,7 +106,7 @@ Three star restaurant reviews have the most amount of words. As you can see ther
 SENTIMENT SLIDE
 
 #4 Do three star Michelin restaurants have the highest sentiment score?
-We expected 3 star Michelin restaurants to have the highest sentiment score. What we found was that 2 star Michelin restaurants, followed by one star Michelin restaurants had the highest sentiment score. This finding was surprising, but lead us to our next question:
+We expected 3 star Michelin restaurants to have the highest sentiment score. What we found was that 2 star Michelin restaurants, followed by one star Michelin restaurants had the highest sentiment score. This finding was surprising, our team just assumed that naturally 3 star awards would have the highest sentiment score....but lead us to our next question:
 
 MOST COMMON WORDS SLIDE
 
