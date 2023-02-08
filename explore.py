@@ -14,8 +14,8 @@ import scipy.stats as stats
 from scipy.stats import ttest_ind, levene, f_oneway
 from IPython.display import Markdown as md
 
-AWARD_COLORS = {"3 michelin stars" : "#dc8e78", "2 michelin stars":"#e2c8bb",
-                "1 michelin star":"#c7d4ee", "bib gourmand":"#8ba5e9"}
+AWARD_COLORS = {"3 michelin stars": "#dc8e78", "2 michelin stars": "#e2c8bb",
+                "1 michelin star": "#c7d4ee", "bib gourmand": "#8ba5e9"}
 
 
 def get_ngram_frequency(ser: pd.Series, n: int = 1) -> pd.Series:
@@ -54,7 +54,6 @@ def get_award_freq(train: pd.Series) -> None:
     for tick in axes.xaxis.get_major_ticks():
         tick.label1.set_fontsize(10)
     plt.show()
-
 
 
 def get_wordcount_bar(train: pd.DataFrame) -> None:
@@ -105,7 +104,7 @@ def top_10_country_viz(train: pd.DataFrame) -> None:
     plt.show()
 
 
-def sentiment_scores_bar(train:pd.DataFrame)->None:
+def sentiment_scores_bar(train: pd.DataFrame) -> None:
     '''
     Creates bar graph of sentiment score by award.
     ## Parameters
@@ -113,13 +112,15 @@ def sentiment_scores_bar(train:pd.DataFrame)->None:
     ## Returns
     plots graph
     '''
-    dfg = train.groupby(['award'])['sentiment'].mean().sort_values(ascending=False)
+    dfg = train.groupby(['award'])[
+        'sentiment'].mean().sort_values(ascending=False)
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
-    ax = sns.barplot(y=dfg.index, 
-                 x=dfg.values, palette=AWARD_COLORS,
-                 order=['2 michelin stars', '1 michelin star', '3 michelin stars', 'bib gourmand'],
-                 orient='h')
+    ax = sns.barplot(y=dfg.index,
+                     x=dfg.values, palette=AWARD_COLORS,
+                     order=['2 michelin stars', '1 michelin star',
+                            '3 michelin stars', 'bib gourmand'],
+                     orient='h')
     plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
     ax.set_yticklabels(
         ['2 Michelin Stars', '1 Michelin Star', '3 Michelin Stars', 'Bib Gourmand'])
@@ -128,7 +129,7 @@ def sentiment_scores_bar(train:pd.DataFrame)->None:
     plt.show()
 
 
-def sentiment_country(train:pd.DataFrame)->None:
+def sentiment_country(train: pd.DataFrame) -> None:
     '''
     Creates bar graph of sentiment score by country.
     ## Parameters
@@ -328,7 +329,7 @@ def get_bib_wordcloud() -> None:
     plt.show()
 
 
-def get_croissant_wordcloud()->None:
+def get_croissant_wordcloud() -> None:
     '''
     This function utilizes a text file of all France review
     words and a pre-selected image to create a word cloud containing
@@ -359,7 +360,7 @@ def get_croissant_wordcloud()->None:
     plt.show()
 
 
-def get_baguette_wordcloud()->None:
+def get_baguette_wordcloud() -> None:
     '''
     This function utilizes a text file of all France review
     words and a pre-selected image to create a word cloud containing
@@ -390,7 +391,7 @@ def get_baguette_wordcloud()->None:
     plt.show()
 
 
-def get_shrimp_wordcloud()->None:
+def get_shrimp_wordcloud() -> None:
     '''
     This function utilizes a text file of all Japan review
     words and a pre-selected image to create a word cloud containing
@@ -455,146 +456,6 @@ def get_boot_wordcloud():
 ##### Justin's Code #####
 #########################
 
-# Custom function to create facilities DataFrame split
-def prepare_facilities(df: pd.DataFrame,
-                       split: bool = True) -> Union[pd.DataFrame,
-                                                    Tuple[pd.DataFrame,
-                                                          pd.DataFrame,
-                                                          pd.DataFrame]]:
-    '''
-    #### Description:
-    Prepares Michelin DataFrame
-
-    #### Required Imports:
-    from typing import List, Union, Tuple
-    import pandas as pd
-    import prepare as p
-
-    #### Parameters:
-    df: `DataFrame` with Michelin data
-    split: Boolean for whether or not to split the data, default True
-
-    #### Returns:
-    either a DataFrame or a tuple of the Train, Validate, and Test
-    `DataFrame`
-    '''
-
-    df = p.create_features(df)
-    df = p.change_dtype_str(df)
-    df = pd.concat([df, p.process_nl(df.facilities_and_services)], axis=1)
-    df['word_count'] = df.lemmatized.str.split().apply(len)
-    if split:
-        return p.tvt_split(df, stratify='award')
-    return df
-
-
-############################
-##### Global Variables #####
-############################
-
-# Get the data
-df = a.get_michelin_pages()
-
-# Splitting our data (56% Train, 24% Validate, 20% Test)
-train, validate, test = p.prepare_michelin(df)
-
-# Run Facilities split
-f_train, f_validate, f_test = prepare_facilities(df)
-train.head(2)
-
-# Assign all, 1_star, 2_star, 3_star and bib_gourmand reviews by passing the function with a join
-all_reviews = (' '.join(train['lemmatized']))
-one_star_reviews = (
-    ' '.join(train[train.award == '1 michelin star']['lemmatized']))
-two_star_reviews = (
-    ' '.join(train[train.award == '2 michelin stars']['lemmatized']))
-three_star_reviews = (
-    ' '.join(train[train.award == '3 michelin stars']['lemmatized']))
-bib_gourmand_reviews = (
-    ' '.join(train[train.award == 'bib gourmand']['lemmatized']))
-
-# Break them all into word lists with split
-all_reviews_words = all_reviews.split()
-one_star_reviews_words = one_star_reviews.split()
-two_star_reviews_words = two_star_reviews.split()
-three_star_reviews_words = three_star_reviews.split()
-bib_gourmand_reviews_words = bib_gourmand_reviews.split()
-
-# Assign word counts to Frequency Variables
-freq_one_star_reviews = pd.Series(one_star_reviews_words).value_counts()
-freq_two_star_reviews = pd.Series(two_star_reviews_words).value_counts()
-freq_three_star_reviews = pd.Series(
-    three_star_reviews_words).value_counts()
-freq_bib_gourmand_reviews = pd.Series(
-    bib_gourmand_reviews_words).value_counts()
-freq_all_reviews = pd.Series(all_reviews_words).value_counts()
-
-## --------------------------- ##
-## CREATE facilities variables ##
-## --------------------------- ##
-
-# Assign all, 1_star, 2_star, 3_star and bib_gourmand lists by passing the clean function with a join
-all_facilities = ' '.join(f_train['lemmatized'])
-one_star_facilities = ' '.join(
-    f_train[f_train.award == '1 michelin star']['lemmatized'])
-two_star_facilities = ' '.join(
-    f_train[f_train.award == '2 michelin stars']['lemmatized'])
-three_star_facilities = ' '.join(
-    f_train[f_train.award == '3 michelin stars']['lemmatized'])
-bib_gourmand_facilities = ' '.join(
-    f_train[f_train.award == 'bib gourmand']['lemmatized'])
-
-# Break them all into word lists with split
-all_facilities_words = all_facilities.split()
-one_star_facilities_words = one_star_facilities.split()
-two_star_facilities_words = two_star_facilities.split()
-three_star_facilities_words = three_star_facilities.split()
-bib_gourmand_facilities_words = bib_gourmand_facilities.split()
-
-# Assign word counts to Frequency Variables
-freq_one_star_facilities = pd.Series(
-    one_star_facilities_words).value_counts()
-freq_two_star_facilities = pd.Series(
-    two_star_facilities_words).value_counts()
-freq_three_star_facilities = pd.Series(
-    three_star_facilities_words).value_counts()
-freq_bib_gourmand_facilities = pd.Series(
-    bib_gourmand_facilities_words).value_counts()
-freq_all_facilities = pd.Series(all_facilities_words).value_counts()
-
-## -------------------------- ##
-## Create Frequency DataFrame ##
-## -------------------------- ##
-
-word_counts_df = pd.concat([freq_all_facilities,
-                            freq_one_star_facilities,
-                            freq_two_star_facilities,
-                            freq_three_star_facilities,
-                            freq_bib_gourmand_facilities,
-                            freq_all_reviews,
-                            freq_one_star_reviews,
-                            freq_two_star_reviews,
-                            freq_three_star_reviews,
-                            freq_bib_gourmand_reviews], axis=1
-                           ).fillna(0).astype(int)
-
-word_counts_df.columns = ['all_facilities',
-                          'one_star_facilities',
-                          'two_star_facilities',
-                          'three_star_facilities',
-                          'bib_gourmand_facilities',
-                          'all_reviews',
-                          'one_star_reviews',
-                          'two_star_reviews',
-                          'three_star_reviews',
-                          'bib_gourmand_reviews']
-
-word_counts_df
-
-# Create word_count variables
-facilities_wc_by_award = f_train.groupby('award').word_count.mean()
-reviews_wc_by_award = train.groupby('award').word_count.mean()
-
 
 ##########################
 ##### Visualizations #####
@@ -651,7 +512,7 @@ def QMCBT_viz_1() -> None:
     plt.xlabel('Count of word Occurances')
     plt.title('Top-5 Review words', fontdict={'fontsize': fontsize})
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
- 
+
     plt.show()
 
 
@@ -723,46 +584,48 @@ def QMCBT_viz_4() -> None:
     # REVIEWS
     viz_reviews_wc_by_award = reviews_wc_by_award.sort_values(ascending=False)
 
-    ## setting basic style parameters for matplotlib
+    # setting basic style parameters for matplotlib
     plt.style.use('seaborn-darkgrid')
 
-    # Set style 
+    # Set style
     sns.set_style("darkgrid")
-    fig, axes = plt.subplots(1,2,figsize=(12, 6)) #,sharex=True)
+    fig, axes = plt.subplots(1, 2, figsize=(12, 6))  # ,sharex=True)
     fig.subplots_adjust(hspace=0.5, wspace=0.5)
 
     # make a chart
     sns.barplot(y=viz_reviews_wc_by_award.values,
-                     x=viz_reviews_wc_by_award.index, palette='Blues_r',
-                     ax=axes[0], orient='v')
+                x=viz_reviews_wc_by_award.index, palette='Blues_r',
+                ax=axes[0], orient='v')
 
     # Set plot attributes
     axes[0].set_title('Word Count of Reviews\n by Award')
     axes[0].set_xlabel("")
     axes[0].set_ylim(0, 65)
     axes[0].set_ylabel('Word Count')
-    axes[0].set_xticklabels(['3 Michelin Stars', '2 Michelin Stars', 
+    axes[0].set_xticklabels(['3 Michelin Stars', '2 Michelin Stars',
                              '1 Michelin Star', 'Bib Gourmand'], rotation=45)
-    
+
     # Facilities
-    viz_facilities_wc_by_award = facilities_wc_by_award.sort_values(ascending=False)
+    viz_facilities_wc_by_award = facilities_wc_by_award.sort_values(
+        ascending=False)
 
     # make a chart
     sns.barplot(y=viz_facilities_wc_by_award.values,
-                     x=viz_facilities_wc_by_award.index, palette='Greens_r', 
-                     ax=axes[1], orient='v')
-    
+                x=viz_facilities_wc_by_award.index, palette='Greens_r',
+                ax=axes[1], orient='v')
+
     # Set plot attributes
     axes[1].set_title('Word Count of Facilities\n by Award')
     axes[1].set_xlabel("")
     axes[1].set_ylim(0, 65)
     axes[1].set_ylabel('Word Count')
-    axes[1].set_xticklabels(['3 Michelin Stars', '2 Michelin Stars', 
+    axes[1].set_xticklabels(['3 Michelin Stars', '2 Michelin Stars',
                              '1 Michelin Star', 'Bib Gourmand'], rotation=45)
-    
+
     plt.show()
 
-def QMCBT_BiTrigrams_bar() -> None:
+
+def QMCBT_BiTrigrams_bar(train: pd.DataFrame) -> None:
     '''
     Creates bar graphs for Bigrams and Trigrams of all review words
     and displays Top-5
@@ -773,45 +636,44 @@ def QMCBT_BiTrigrams_bar() -> None:
     '''
     # Bigrams
     # Use ngrams to get a list of Bigrams for all review words
-    review_wordcount = pd.Series(nltk.ngrams(all_reviews_words, 2)
-              ).value_counts().head(5)
+    review_wordcount = get_ngram_frequency(train.lemmatized,2).head()
 
-    ## setting basic style parameters for matplotlib
+    # setting basic style parameters for matplotlib
     plt.style.use('seaborn-darkgrid')
 
-    # Set style 
+    # Set style
     sns.set_style("darkgrid")
-    fig, axes = plt.subplots(2,1,figsize=(9, 12)) #,sharex=True)
+    fig, axes = plt.subplots(2, 1, figsize=(9, 12))  # ,sharex=True)
     fig.subplots_adjust(hspace=0.5, wspace=0.5)
 
-    #make a chart
+    # make a chart
     sns.barplot(x=review_wordcount.values,
-                     y=review_wordcount.index, palette='Blues_r', ax=axes[0])
+                y=review_wordcount.index, palette='Blues_r', ax=axes[0])
 
     # Set plot attributes
     axes[0].set_title('Top-5 Bigrams for Review word count')
     axes[0].set_xlabel("Count of Bigram Occurances")
     axes[0].set_xlim(0, 250)
     axes[0].set_ylabel('Bigrams')
-    
+
     # Trigrams
     # Use ngrams to get a list of Bigrams for all review words
-    review_wordcount = pd.Series(nltk.ngrams(all_reviews_words, 3)
-              ).value_counts().head(5)
+    review_wordcount = get_ngram_frequency(train.lemmatized, 3)
     # make a chart
     sns.barplot(x=review_wordcount.values,
-                     y=review_wordcount.index, palette='Greens_r', ax=axes[1])
+                y=review_wordcount.index, palette='Greens_r', ax=axes[1])
     # Set plot attributes
     axes[1].set_title('Top-5 Trigrams for Review word count')
     axes[1].set_xlabel("Count of Trigram Occurances")
     axes[1].set_xlim(0, 250)
     axes[1].set_ylabel('Trigrams')
-    
+
     plt.show()
 
 #################
 ##### Stats #####
 #################
+
 
 def stat_levene():
     '''
@@ -869,4 +731,3 @@ def stat_pearson():
     print('_____________________')
     print(f'correlation {r}')
     print(f'p-value {p_val}')
-
