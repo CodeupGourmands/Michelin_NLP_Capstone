@@ -814,10 +814,10 @@ def QMCBT_BiTrigrams_bar() -> None:
 
     #make a chart
     sns.barplot(x=review_wordcount.values,
-                     y=review_wordcount.index, palette='Blues_r', ax=axes[0])
+                     y=review_wordcount.index, palette='magma', ax=axes[0])
 
     # Set plot attributes
-    axes[0].set_title('Most Common 2-Word Groupings in all Reviews')
+    axes[0].set_title('')#'Most Common 2-Word Groupings in all Reviews')
     axes[0].set_xlabel("Count of Bigram Occurances")
     axes[0].set_xlim(0, 250)
     axes[0].set_ylabel('Bigrams')
@@ -828,9 +828,9 @@ def QMCBT_BiTrigrams_bar() -> None:
               ).value_counts().head(5)
     # make a chart
     sns.barplot(x=review_wordcount.values,
-                     y=review_wordcount.index, palette='Greens_r', ax=axes[1])
+                     y=review_wordcount.index, palette='magma', ax=axes[1])
     # Set plot attributes
-    axes[1].set_title('Most Common 3-Word Groupings in all Reviews')
+    axes[1].set_title('')#'Most Common 3-Word Groupings in all Reviews')
     axes[1].set_xlabel("Count of Trigram Occurances")
     axes[1].set_xlim(0, 250)
     axes[1].set_ylabel('Trigrams')
