@@ -49,8 +49,8 @@ def get_award_freq(train: pd.Series) -> None:
                         palette=AWARD_COLORS,
                         order=train['award'].value_counts().index)
     plt.title('Bib Gourmand is the Most Common Award Level in our Dataset')
-    plt.xlabel("Award Level")
-    plt.ylabel('Count of Restaurants')
+    plt.xlabel("Award Level", fontsize=14)
+    plt.ylabel('Count of Restaurants', fontsize=14)
     for tick in axes.xaxis.get_major_ticks():
         tick.label1.set_fontsize(10)
     plt.show()
@@ -78,8 +78,8 @@ def get_wordcount_bar(train: pd.DataFrame) -> None:
     ax.set_yticklabels(
         ['3 Michelin Stars', '2 Michelin Stars', '1 Michelin Star', 'Bib Gourmand'])
     plt.title('Average Wordcount of Michelin Star Level Restaurants')
-    plt.xlabel("Average Word Count")
-    plt.ylabel('Award Level')
+    plt.xlabel("Average Word Count", fontsize=14)
+    plt.ylabel('Award Level', fontsize=14)
     plt.show()
 
 
@@ -125,8 +125,8 @@ def sentiment_scores_bar(train:pd.DataFrame)->None:
                  orient='v')
     plt.xticks(ticks=[0,1,2,3],labels=[' ',' ',' ',' '])
     plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
-    plt.xlabel("Award Category")
-    plt.ylabel("Sentiment Score")
+    plt.xlabel("Award Category", fontsize=14)
+    plt.ylabel("Sentiment Score", fontsize=14)
     plt.show()
 
 
@@ -166,7 +166,7 @@ def top_10_words(train):
     ax = sns.barplot(x=top_10.index,
                      y=top_10.values,
                      palette='magma')
-    plt.ylabel("# Times Word Occurs")
+    plt.ylabel("# Times Word Occurs", fontsize=14)
     plt.show()
 
 
