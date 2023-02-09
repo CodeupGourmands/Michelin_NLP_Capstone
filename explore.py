@@ -100,10 +100,12 @@ def top_10_country_viz(train: pd.DataFrame) -> None:
                      y=top_10_countries.values,
                      palette='coolwarm_r')
     plt.title('Countries with the Most Michelin Restaurants')
-    plt.xlabel("Countries")
+    plt.xlabel("Countries", fontsize=14)
     ax.set_xticklabels(
-        ['France','Japan','Italy','USA','Germany','Spain','Switzerland','Belgium','United Kingdom'], rotation=45)
-    plt.ylabel('Number of Restaurants')
+        ['France','Japan','Italy','USA','Germany','Spain','Switzerland','Belgium','United Kingdom'],
+        rotation=45,
+        fontsize=12)
+    plt.ylabel('Number of Restaurants', fontsize=14)
     plt.show()
 
 
