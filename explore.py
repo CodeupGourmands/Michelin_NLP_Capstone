@@ -101,7 +101,7 @@ def top_10_country_viz(train: pd.DataFrame) -> None:
     plt.title('Countries with the Most Michelin Restaurants')
     plt.xlabel("Countries")
     ax.set_xticklabels(
-        ['France','Japan','Italy','USA','Germany','Spain','Switzerland','Belgium','United Kingdom'], rotation=45)
+        ['France', 'Japan', 'Italy', 'USA', 'Germany', 'Spain', 'Switzerland', 'Belgium', 'United Kingdom'], rotation=45)
     plt.ylabel('Number of Restaurants')
     plt.show()
 
@@ -118,12 +118,12 @@ def sentiment_scores_bar(train: pd.DataFrame) -> None:
         'sentiment'].mean().sort_values(ascending=False)
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(figsize=(9, 6))
-    ax = sns.barplot(x=dfg.index, 
-                 y=dfg.values, palette=AWARD_COLORS,
-                 order=['3 michelin stars', '2 michelin stars',
+    ax = sns.barplot(x=dfg.index,
+                     y=dfg.values, palette=AWARD_COLORS,
+                     order=['3 michelin stars', '2 michelin stars',
                             '1 michelin star', 'bib gourmand'],
-                 orient='v')
-    plt.xticks(ticks=[0,1,2,3],labels=[' ',' ',' ',' '])
+                     orient='v')
+    plt.xticks(ticks=[0, 1, 2, 3], labels=[' ', ' ', ' ', ' '])
     plt.title("Two Star Restaurant Reviews Have the Highest Sentiment Scores")
     plt.xlabel("Award Category")
     plt.ylabel("Sentiment Score")
@@ -484,6 +484,8 @@ def get_boot_wordcloud():
 #########################
 
 # Custom function to create facilities DataFrame split
+
+
 def prepare_facilities(df: pd.DataFrame,
                        split: bool = True) -> Union[pd.DataFrame,
                                                     Tuple[pd.DataFrame,
@@ -518,6 +520,7 @@ def prepare_facilities(df: pd.DataFrame,
     ############################
 ##### Global Variables #####
 ############################
+
 
 # Get the data
 df = a.get_michelin_pages()
@@ -626,7 +629,8 @@ reviews_wc_by_award = train.groupby('award').word_count.mean()
 ##### Visualizations #####
 ##########################
 
-def QMCBT_viz_wc() -> None:
+
+def QMCBT_viz_wc(train: pd.DataFrame) -> None:
     '''
     #### Description:
     Custom Function to display visualization of Most Common Review words
@@ -640,7 +644,7 @@ def QMCBT_viz_wc() -> None:
     # Set the plot attributes
     plt.rc('font', size=20)
     plt.figure(figsize=(10, 5), dpi=80)
-
+    all_review_words = (' '.join(train.lemmatized)).split()
     img = WordCloud(background_color='white'
                     ).generate(' '.join(all_reviews_words))
     plt.imshow(img)
@@ -681,7 +685,7 @@ def QMCBT_viz_1() -> None:
     plt.show()
 
 
-def QMCBT_viz_2():
+def QMCBT_viz_2(train:pd.DataFrame):
     '''
     #### Description:
     Custom Function to Display visualization of Top-5 Review Bigrams
@@ -697,8 +701,7 @@ def QMCBT_viz_2():
     plt.figure(figsize=(10, 5), dpi=80)
 
     # Plot
-    pd.Series(nltk.bigrams(all_reviews_words)
-              ).value_counts().head(5).plot.barh()
+    get_ngram_frequency(train.lemmatized, n=2).head().plot.barh()
     plt.gca().invert_yaxis()
     plt.ylabel('Bigrams')
     plt.xlabel('Count of Bigram Occurances')
@@ -708,7 +711,7 @@ def QMCBT_viz_2():
     plt.show()
 
 
-def QMCBT_viz_3() -> None:
+def QMCBT_viz_3(train:pd.DataFrame) -> None:
     '''
     #### Description:
     Custom Function to Display visualization of Top-5 Review Trigrams
@@ -723,8 +726,7 @@ def QMCBT_viz_3() -> None:
     fontsize = 20
     plt.figure(figsize=(10, 5), dpi=80)
 
-    pd.Series(nltk.ngrams(all_reviews_words, 3)
-              ).value_counts().head(5).plot.barh()
+    get_ngram_frequency(train.lemmatized, 3).head(5).plot.barh()
     plt.gca().invert_yaxis()
     plt.ylabel('Trigrams')
     plt.xlabel('Count of Trigram Occurances')
@@ -734,60 +736,60 @@ def QMCBT_viz_3() -> None:
     plt.show()
 
 
-# def QMCBT_viz_4() -> None:
-#     '''
-#     #### Description:
-#     Custom Function to Display visualization for Word Count of Reviews by Award
-#     #### Required Imports:
-#     import matplotlib as plt
-#     import pandas as pd
-#     #### Parameters:
-#     None
-#     #### Returns:
-#     Plot
-#     '''
-#     # REVIEWS
-#     viz_reviews_wc_by_award = reviews_wc_by_award.sort_values(ascending=False)
+def QMCBT_viz_4(train:pd.DataFrame) -> None:
+    '''
+    #### Description:
+    Custom Function to Display visualization for Word Count of Reviews by Award
+    #### Required Imports:
+    import matplotlib as plt
+    import pandas as pd
+    #### Parameters:
+    None
+    #### Returns:
+    Plot
+    '''
+    # REVIEWS
+    viz_reviews_wc_by_award = train.groupby('award').word_count.mean()
 
-#     # setting basic style parameters for matplotlib
-#     plt.style.use('seaborn-darkgrid')
+    # setting basic style parameters for matplotlib
+    plt.style.use('seaborn-darkgrid')
 
-#     # Set style
-#     sns.set_style("darkgrid")
-#     fig, axes = plt.subplots(1, 2, figsize=(12, 6))  # ,sharex=True)
-#     fig.subplots_adjust(hspace=0.5, wspace=0.5)
+    # Set style
+    sns.set_style("darkgrid")
+    fig, axes = plt.subplots(1, 2, figsize=(12, 6))  # ,sharex=True)
+    fig.subplots_adjust(hspace=0.5, wspace=0.5)
 
-#     # make a chart
-#     sns.barplot(y=viz_reviews_wc_by_award.values,
-#                 x=viz_reviews_wc_by_award.index, palette='Blues_r',
-#                 ax=axes[0], orient='v')
+    # make a chart
+    sns.barplot(y=viz_reviews_wc_by_award.values,
+                x=viz_reviews_wc_by_award.index, palette='Blues_r',
+                ax=axes[0], orient='v')
 
-#     # Set plot attributes
-#     axes[0].set_title('Word Count of Reviews\n by Award')
-#     axes[0].set_xlabel("")
-#     axes[0].set_ylim(0, 65)
-#     axes[0].set_ylabel('Word Count')
-#     axes[0].set_xticklabels(['3 Michelin Stars', '2 Michelin Stars',
-#                              '1 Michelin Star', 'Bib Gourmand'], rotation=45)
+    # Set plot attributes
+    axes[0].set_title('Word Count of Reviews\n by Award')
+    axes[0].set_xlabel("")
+    axes[0].set_ylim(0, 65)
+    axes[0].set_ylabel('Word Count')
+    axes[0].set_xticklabels(['3 Michelin Stars', '2 Michelin Stars',
+                             '1 Michelin Star', 'Bib Gourmand'], rotation=45)
 
-#     # Facilities
-#     viz_facilities_wc_by_award = facilities_wc_by_award.sort_values(
-#         ascending=False)
+    # Facilities
+    viz_facilities_wc_by_award = facilities_wc_by_award.sort_values(
+        ascending=False)
 
-#     # make a chart
-#     sns.barplot(y=viz_facilities_wc_by_award.values,
-#                 x=viz_facilities_wc_by_award.index, palette='Greens_r',
-#                 ax=axes[1], orient='v')
+    # make a chart
+    sns.barplot(y=viz_facilities_wc_by_award.values,
+                x=viz_facilities_wc_by_award.index, palette='Greens_r',
+                ax=axes[1], orient='v')
 
-#     # Set plot attributes
-#     axes[1].set_title('Word Count of Facilities\n by Award')
-#     axes[1].set_xlabel("")
-#     axes[1].set_ylim(0, 65)
-#     axes[1].set_ylabel('Word Count')
-#     axes[1].set_xticklabels(['3 Michelin Stars', '2 Michelin Stars',
-#                              '1 Michelin Star', 'Bib Gourmand'], rotation=45)
+    # Set plot attributes
+    axes[1].set_title('Word Count of Facilities\n by Award')
+    axes[1].set_xlabel("")
+    axes[1].set_ylim(0, 65)
+    axes[1].set_ylabel('Word Count')
+    axes[1].set_xticklabels(['3 Michelin Stars', '2 Michelin Stars',
+                             '1 Michelin Star', 'Bib Gourmand'], rotation=45)
 
-#     plt.show()
+    plt.show()
 
 
 def QMCBT_BiTrigrams_bar(train: pd.DataFrame) -> None:
@@ -801,7 +803,7 @@ def QMCBT_BiTrigrams_bar(train: pd.DataFrame) -> None:
     '''
     # Bigrams
     # Use ngrams to get a list of Bigrams for all review words
-    review_wordcount = get_ngram_frequency(train.lemmatized,2).head()
+    review_wordcount = get_ngram_frequency(train.lemmatized, 2).head()
 
     # setting basic style parameters for matplotlib
     plt.style.use('seaborn-darkgrid')
@@ -813,7 +815,7 @@ def QMCBT_BiTrigrams_bar(train: pd.DataFrame) -> None:
 
     # make a chart
     sns.barplot(x=review_wordcount.values,
-                     y=[' '.join(b) for b in review_wordcount.index], palette='Blues_r', ax=axes[0])
+                y=review_wordcount.index, palette='magma', ax=axes[0])
 
     # Set plot attributes
     axes[0].set_title('Most Common 2-Word Groupings in all Reviews')
@@ -823,10 +825,11 @@ def QMCBT_BiTrigrams_bar(train: pd.DataFrame) -> None:
 
     # Trigrams
     # Use ngrams to get a list of Bigrams for all review words
-    review_wordcount = get_ngram_frequency(train.lemmatized, 3)
+    review_wordcount = get_ngram_frequency(train.lemmatized, 3).head()
     # make a chart
     sns.barplot(x=review_wordcount.values,
-                     y=[' '.join(t) for t in review_wordcount.index], palette='Greens_r', ax=axes[1])
+                y=review_wordcount.index,
+                palette='magma', ax=axes[1])
     # Set plot attributes
     axes[1].set_title('Most Common 3-Word Groupings in all Reviews')
     axes[1].set_xlabel("Count of Trigram Occurances")
@@ -840,7 +843,7 @@ def QMCBT_BiTrigrams_bar(train: pd.DataFrame) -> None:
 #################
 
 
-def stat_levene():
+def stat_levene(train:pd.DataFrame):
     '''
     #### Description:
     Custom Function to run Levene test explicitely for this project
@@ -851,7 +854,6 @@ def stat_levene():
     #### Returns:
     Print Statements
     '''
-    from scipy import stats
 
     # Run the test and assign tstat & pval
     t_stat, p_val = stats.levene(reviews_wc_by_award, facilities_wc_by_award)
