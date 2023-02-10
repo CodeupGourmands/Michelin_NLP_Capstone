@@ -812,7 +812,7 @@ def QMCBT_BiTrigrams_bar() -> None:
     # Set style 
     sns.set_style("darkgrid")
     fig, axes = plt.subplots(2,1,figsize=(9, 12)) #,sharex=True)
-    fig.subplots_adjust(hspace=0.5, wspace=0.5)
+    fig.subplots_adjust(hspace=0.3, wspace=0.5)
 
     # make a chart
     sns.barplot(x=review_wordcount.values,
