@@ -51,12 +51,11 @@ Can be accomplished by simply cloning our project and running the final notebook
 * Clone the Repository using this code in your terminal ```git clone git@github.com:CodeupGourmands/Michelin_NLP_Capstone.git``` then run the ```mvp_notebook.ipynb``` Jupyter Notebook.  
 
 * You will need to ensure the below listed files, at a minimum, are included in the repo in order to be able to run.
-   * `Final_Report_NLP-Project.ipynb`
+   * `mvp_notebook.ipynb`
    * `acquire.py`
    * `prepare.py`
    * `explore.py`
-   * `model.py`
-   * `evaluate.py`  
+   * `model.py`  
 <br>
 </details>
 
