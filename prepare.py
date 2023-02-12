@@ -244,11 +244,14 @@ def prepare_michelin(df: pd.DataFrame,
     '''
     df = create_features(df)
     df = change_dtype_str(df)
-    lemmatized = process_nl(df.data)
-    df = pd.concat([df, lemmatized], axis=1)
+    review_lemmatized = process_nl(df.data)
+    facility_lemmatized = process_nl(df.facilities_and_services)
+    df = pd.concat([df, review_lemmatized, facility_lemmatized], axis=1)
     sia = SentimentIntensityAnalyzer()
-    df['sentiment'] = df.lemmatized.apply(sentiment_score, sia=sia)
-    df['word_count'] = df.lemmatized.str.split().apply(len)
+    df['review_sentiment'] = df.review_lemmatized.apply(sentiment_score, sia=sia)
+    df['review_word_count'] = df.review_lemmatized.str.split().apply(len)
+    df['facility_sentiment'] = df.facility_lemmatized.apply(sentiment_score, sia=sia)
+    df['facility_word_count'] = df.facility_lemmatized.str.split().apply(len)
     if split:
         return tvt_split(df, stratify='award')
     return df
