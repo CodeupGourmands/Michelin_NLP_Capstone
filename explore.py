@@ -485,7 +485,9 @@ def get_boot_wordcloud():
 ##### Justin's Code #####
 #########################
 
+#TODO Remove this after verifying correction to add it in prepare module
 # Custom function to create facilities DataFrame split
+"""
 def prepare_facilities(df: pd.DataFrame,
                        split: bool = True) -> Union[pd.DataFrame,
                                                     Tuple[pd.DataFrame,
@@ -516,7 +518,7 @@ def prepare_facilities(df: pd.DataFrame,
     if split:
         return p.tvt_split(df, stratify='award')
     return df
-
+"""
 
 ############################
 ##### Global Variables #####
@@ -528,9 +530,10 @@ df = a.get_michelin_pages()
 # Splitting our data (56% Train, 24% Validate, 20% Test)
 train, validate, test = p.prepare_michelin(df)
 
+#TODO Remove this after verifying correction to add it in prepare module
 # Run Facilities split
-f_train, f_validate, f_test = prepare_facilities(df)
-train.head(2)
+#f_train, f_validate, f_test = prepare_facilities(df)
+#train.head(2)
 
 # Assign all, 1_star, 2_star, 3_star and bib_gourmand reviews by passing the function with a join
 all_reviews = (' '.join(train['lemmatized']))
