@@ -123,10 +123,10 @@ Our initial thoughts are that country, cuisine, and words/groups of words (bigra
 |price_level|Numeric value from 1 to 4 (min-max) representing the same relative level of expense across all countries|
 |city|City as captured by the first position of the location feature|
 |country|Country as captured by the second position of the location feature; also captures provinces that only had one entry in the location feature|
-|clean|Tokenized text in lower case, with latin symbols only from the original data column containing the scraped reviews|
-|lemmatized |Data column containing the web-scraped reviews after being cleaned and lemmatzed|
-|word_count|Word count of each corresponding review|
-|sentiment|Compound sentiment score of each observation|
+|review_clean|Tokenized text in lower case, with latin symbols only from the original data column containing the scraped reviews|
+|review_lemmatized |Data column containing the web-scraped reviews after being cleaned and lemmatzed|
+|review_word_count|Word count of each corresponding review|
+|review_sentiment|Compound sentiment score of each observation|
 
 
 </details>
